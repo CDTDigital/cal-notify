@@ -127,8 +127,11 @@ namespace CalNotify
               
                 ConfigureDB(services);          // We need a persitant storage laye
                 ConfigurePolicies(services);    // Our authorization requrires policies to be set
-                ConfigureSMS(services);         // Twillo integration 
-                ConfigureConfigRoot(services);  // Global configuratio
+                services.AddTransient<ValidationSender>();
+
+                ConfigureConfigRoot(services);  // Global configuration
+
+                services.AddTransient<GeocodeIO>();
                 ConfigureMemoryCaches(services); // short lived, memory based persistance
                 ConfigureTokens(services);      // jwt service provider
                 ConfigureSwagger(services);
@@ -239,11 +242,7 @@ namespace CalNotify
 
      
 
-        public virtual void ConfigureSMS(IServiceCollection services)
-        {
-            services.AddTransient<ISmsSender, TwilioSmsSender>();
-
-        }
+     
 
    
 

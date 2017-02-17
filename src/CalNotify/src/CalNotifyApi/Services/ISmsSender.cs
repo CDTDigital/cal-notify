@@ -5,6 +5,6 @@ namespace CalNotify.Services
 {
     public interface ISmsSender
     {
-        Task<string> SendValidationToken(ITokenAble model);
+        Task<string> SendValidationToSms(ITokenAble model);
     }
 }

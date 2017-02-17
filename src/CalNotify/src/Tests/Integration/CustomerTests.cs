@@ -58,7 +58,7 @@ namespace Tests.Integration
         {
            
 
-            var refreshToken = new TempUserRefreshTempUserSmsWithSms()
+            var refreshToken = new RefreshTempUser()
             {
                 PhoneNumber = Constants.Testing.TestUsers.First().PhoneNumber
             };

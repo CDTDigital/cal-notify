@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using CalNotify.Models.Auth;
+using CalNotify.Models.Interfaces;
 using CalNotify.Models.User;
 using CalNotify.Services;
 using Serilog;
@@ -10,7 +11,7 @@ namespace CalNotify.Events
     public class CreateUserEvent
     {
         public GenericUser Process(BusinessDbContext context,
-                TempUserWithSms tempUser)
+                ITokenAble tempUser)
         {
 
             var exisitingUser = context.Users.FirstOrDefault(x => x.PhoneNumber == tempUser.PhoneNumber);

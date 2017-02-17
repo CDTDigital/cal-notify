@@ -49,7 +49,7 @@ namespace CalNotify.Controllers
 
         [HttpPost("refresh"), Consumes("application/json"), Produces("application/json", Type = typeof(ResponseShell<SimpleSuccess>))]
         [SwaggerOperation(operationId: "RefreshTokens", Tags = new[] { Constants.AuthorizationTag })]
-        public async Task<IActionResult> Refresh([FromBody] TempUserRefreshTempUserSmsWithSms model)
+        public async Task<IActionResult> Refresh([FromBody] RefreshTempUser model)
         {
  
             var existing = _context.Users.FirstOrDefault(user => user.PhoneNumber == model.PhoneNumber);
@@ -66,18 +66,18 @@ namespace CalNotify.Controllers
             {
                 existing.Token = Constants.Testing.TestValidationToken;
                 // Hold our token and model for a while to give our user a chance to validate their info
-                _memoryCache.SetForChallenge(new TempUserWithSms(existing));
+                _memoryCache.SetForChallenge(new TempUser(existing));
 
                 // All good thus far, now we just wait on our user to validate
                 return ResponseShell.Ok( new SimpleSuccess() {Success = true});
             }
 
             // Fire off our validation
-            var token = await _smsSender.SendValidationToken(existing);
+            var token = await _smsSender.SendValidationToSms(existing);
 
             existing.Token = token;
             // Hold our token and model for a while to give our user a chance to validate their info
-            _memoryCache.SetForChallenge(new TempUserWithSms(existing));
+            _memoryCache.SetForChallenge(new TempUser(existing));
 
             
             // All good thus far, now we just wait on our user to validate

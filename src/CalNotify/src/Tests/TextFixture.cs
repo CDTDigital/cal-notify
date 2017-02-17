@@ -77,8 +77,8 @@ namespace Tests
         {
            var  mockedSmsSender = new Mock<ISmsSender>();
             mockedSmsSender.Setup(x =>
-                x.SendValidationToken(It.IsAny<ITokenAble>())).ReturnsAsync(FakeToken);
-            services.Remove(new ServiceDescriptor(typeof(ISmsSender), typeof(TwilioSmsSender)));
+                x.SendValidationToSms(It.IsAny<ITokenAble>())).ReturnsAsync(FakeToken);
+            services.Remove(new ServiceDescriptor(typeof(ISmsSender), typeof(ValidationSender)));
             services.AddSingleton(provider => mockedSmsSender.Object);
         }
 
@@ -310,7 +310,7 @@ namespace Tests
 
         public async Task<TokenInfo> GetToken(GenericUser user)
         {
-            var refreshToken = new TempUserRefreshTempUserSmsWithSms()
+            var refreshToken = new RefreshTempUser()
             {
                 PhoneNumber = user.PhoneNumber
             };

@@ -12,8 +12,13 @@ namespace CalNotify.Models.Auth
         [DataMember(Name = "token")]
         public string Token { get; set; }
 
-        [Required]
+        [DataMember(Name = "name")]
+        public  string Name { get; set; }
+      
         [DataMember(Name = "phone")]
         public string PhoneNumber { get; set; }
+
+        [DataMember(Name = "email")]
+        public string Email { get; set; }
     }
 }

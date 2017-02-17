@@ -6,28 +6,27 @@ using CalNotify.Models.User;
 namespace CalNotify.Models.Auth
 {
     [DataContract]
-    public class TempUserRefreshTempUserSmsWithSms : ITokenAble
+    public class RefreshTempUser : ITokenAble
     {
-        public TempUserRefreshTempUserSmsWithSms()
+        public RefreshTempUser()
         {
         }
 
      
 
-        public TempUserRefreshTempUserSmsWithSms(GenericUser user)
+        public RefreshTempUser(GenericUser user)
         {
             PhoneNumber = user.PhoneNumber;
             Token = user.Token;
         }
 
-        public TempUserRefreshTempUserSmsWithSms(string phone)
+        public RefreshTempUser(string phone)
         {
             PhoneNumber = phone;
         }
 
 
         [DataMember(Name = "phone")]
-        [Required]
         [Phone]
         public virtual string PhoneNumber { get; set; }
 
@@ -37,5 +36,11 @@ namespace CalNotify.Models.Auth
 
 
         public string Token { get; set; }
+
+        [DataMember(Name = "name")]
+        public string Name { get; set; }
+
+        [DataMember(Name = "email")]
+        public string Email { get; set; }
     }
 }

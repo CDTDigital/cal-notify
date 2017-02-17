@@ -17,15 +17,7 @@ namespace CalNotify.Utils
         }
 
 
-        public static string CreateToken()
-        {
-            var r = new Random((int)DateTime.Now.Ticks);
-
-            // Generate four-digit token
-            var token = r.Next(1000, 9999).ToString();
-            return token;
-        }
-
+     
         public static double FromMilesToMeters(this double miles)
         {
             return miles * 1609.34;

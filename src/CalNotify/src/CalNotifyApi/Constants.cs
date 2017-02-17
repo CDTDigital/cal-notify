@@ -47,6 +47,9 @@ namespace CalNotify
         public const string AdminConfigurationEndpoint = "admin";
 
 
+        public const string ValidationAction = "validate";
+
+
         #endregion
 
 
@@ -71,6 +74,9 @@ namespace CalNotify
         /// Role a user is in if a technician
         /// </summary>
         public const string TechRole = "Tech";
+
+
+       
 
         /// <summary>
         /// Complete list of roles used in the system
@@ -208,7 +214,7 @@ namespace CalNotify
 
             }
 
-            public static bool CheckIfOverride(TempUserWithSms user)
+            public static bool CheckIfOverride(TempUser user)
             {
                 return TestNumbers.Contains(user.PhoneNumber) || user.Name.Contains(UserOverride);
 
