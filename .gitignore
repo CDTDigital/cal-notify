@@ -35,3 +35,6 @@ src/CalNotify/src/CalNotifyApi/appsettings\.Local\.json
 src/CalNotify/src/CalNotifyApi/logs/
 
 src/CalNotify/src/CalNotifyApi/key\.json
+
+node_modules
+

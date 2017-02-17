@@ -1,0 +1,68 @@
+@import "_variables.less";
+@import "spacing.less";
+
+
+
+
+
+
+// PREVIEW TOGGLE CONTROLS
+.preview-toggle {
+    margin-bottom: 10px;
+    
+    a {
+        color: #666;
+        font-size: 1.5em;
+        padding: 10px;
+        text-decoration: none;
+        
+        &:hover {
+            color: @link-hover-color;
+        }
+    }
+}
+
+
+
+
+// ACCORDION FIX
+
+.panel-heading {
+    padding: 0;
+    
+    a {
+        display: block;
+        padding: 11px 15px;
+        position: relative;
+        
+        &.collapsed {
+            &:after {
+                content: "\e081";    // plus sign
+                font-family: 'Glyphicons Halflings';
+                text-align: right;
+                position: absolute;
+                right: 15px;
+            }
+        }
+        
+        &:after {
+            content: "\e082";        // minus sign
+            font-family: 'Glyphicons Halflings';
+            text-align: right;
+            position: absolute;
+            right: 15px;
+        }
+        
+        
+    }
+}
+
+
+
+#panel-filter {
+    .form-inline {
+        .row:first-child {
+            margin-bottom: 11px !important;
+        }
+    }
+}
