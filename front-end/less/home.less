@@ -1,0 +1,23 @@
+@import "_variables.less";
+@import "spacing.less";
+
+
+
+// DEFAULT PANEL
+.panel-default {
+    .panel-footer {
+        background: none;
+        border: none;
+    }
+}
+
+@media (min-width: @screen-sm-min) {
+    // PANELS ON HOMEPAGE
+    .inner .panel-body {
+        margin: 30px 30px 0 30px;
+    }
+
+    .inner .panel-footer {
+        margin: 15px 30px 30px 30px
+    }
+}
