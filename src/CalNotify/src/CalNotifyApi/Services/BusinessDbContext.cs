@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -10,6 +11,7 @@ using CalNotify.Models.Admins;
 using CalNotify.Models.User;
 using CalNotifyApi.Models.Admins;
 using CsvHelper;
+using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -95,8 +97,10 @@ namespace CalNotify.Services
             var path = Path.Combine(contentRoot, "zipcodes.csv");
             var file = File.OpenRead(path);
             var csv = new CsvReader(new StreamReader(file));
+            csv.Configuration.RegisterClassMap<ZipCodeInfoMap>();
             foreach (var record in csv.GetRecords<ZipCodeInfo>())
             {
+              
                 if (context.ZipCodes.FirstOrDefault(zip => zip.Zipcode == record.Zipcode) == null)
                 {
                     context.ZipCodes.Add(record);
@@ -129,9 +133,25 @@ namespace CalNotify.Services
 
 
         public string Region { get; set; }
+        public PostgisPoint Location { get; set; }
 
-
-        public string Latitude { get; set; }
-        public string Longitude { get; set; }
+        
+     
     }
+
+    public sealed class ZipCodeInfoMap : CsvClassMap<ZipCodeInfo>
+    {
+        public ZipCodeInfoMap()
+        {
+            Map(z => z.Zipcode).Name("Zipcode");
+            Map(z => z.City).Name("City");
+            Map(z => z.Region).Name("Region");
+            Map(x => x.County).Name("County");
+            Map(x => x.Location).ConvertUsing(row => new PostgisPoint(row.GetField<double>("Latitude"), row.GetField<double>("Longitude")) {SRID = Constants.SRID});
+          
+
+        }
+    }
+
+   
 }
