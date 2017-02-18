@@ -9,7 +9,7 @@ using CalNotify.Models.User;
 namespace CalNotify.Models.Auth
 {
     [DataContract]
-    public class TempUser : SimpleAddress, ITokenAble, IValidatableObject
+    public class TempUser : AddressWithLatLng, ITokenAble, IValidatableObject
     {
         public TempUser()
         {

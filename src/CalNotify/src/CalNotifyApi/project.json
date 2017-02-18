@@ -41,7 +41,8 @@
     "ImageSharp": "1.0.0-alpha2-00050",
     "ImageSharp.Processing": "1.0.0-alpha2-00038",
     "ImageSharp.Formats.Jpeg": "1.0.0-alpha2-00050",
-    "MailKit": "1.10.2"
+    "MailKit": "1.10.2",
+    "CsvHelper": "3.0.0-beta7"
   },
 
   "tools": {

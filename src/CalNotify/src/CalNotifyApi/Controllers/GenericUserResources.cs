@@ -7,6 +7,7 @@ using CalNotify.Models.Responses;
 using CalNotify.Services;
 using CalNotify.Models;
 using CalNotify.Models.User;
+using CalNotifyApi.Events;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -93,8 +94,6 @@ namespace CalNotify.Controllers.GenericUsers
         // ENDPOINTS FOR UPDATING GenericUserS
         #region updates
 
-     
-
         /// <summary>
         /// Updates a GenericUser's properties such as Name via their unique id.
         /// </summary>
@@ -103,15 +102,15 @@ namespace CalNotify.Controllers.GenericUsers
         /// For the time being this only can update a users name
         /// </remarks>
         /// <param name="modelUpdates"></param>
+        /// <param name="validationSender"></param>
         /// <returns></returns>
         [HttpPut("")]
         [SwaggerOperation("UPDATE_GENERICUSER_BY_ID", Tags = new[] { Constants.GenericUserEndpoint })]
-        public virtual IActionResult UpdateById( [FromBody] UserRelatedEvent modelUpdates)
+        public virtual async Task<IActionResult> UpdateById([FromBody] UpdateUserEvent modelUpdates, [FromServices] ValidationSender validationSender)
         {
-            var user = modelUpdates.GetUser(_context);
+            var user = await modelUpdates.Process(_context, validationSender);
             _context.SaveChanges();
-           // return ResponseShell.Ok(user);
-            return ResponseShell.NotImplementated();
+            return ResponseShell.Ok(user);  
         }
 
         #endregion

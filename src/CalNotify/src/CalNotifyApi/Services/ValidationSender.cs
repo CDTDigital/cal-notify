@@ -37,12 +37,14 @@ namespace CalNotify.Services
         public virtual async Task<string> SendValidationToSms(ITokenAble model)
         {
            var token = SetShortToken(model);
-            var msg = $"Cal Notify - Here is your verification code:\n {token} \n. If you did not ask for this. See {_config.Email.Validation.Domain}/help";
+            var msg = string.Format(Constants.Messages.SmsValidationMsg, token, _config.Email.Validation.Domain);
+           
             await SendMessage(model.PhoneNumber, msg);
            
             return token;
         }
 
+   
 
         private string SetShortToken(ITokenAble model)
         {
@@ -150,10 +152,10 @@ namespace CalNotify.Services
 
             var builder = new BodyBuilder();
 
-            builder.HtmlBody = string.Format($@"<center><p>HI {model.Name},<br>
-<a href=""{ _config.Email.Validation.Domain}{Constants.V1Prefix}/{ Constants.GenericUserEndpoint}/{ Constants.ValidationAction}?token={ token}"">Click to activate your account</a><br>
-<p>-- Cal Notify <br>
-</center>");
+            builder.HtmlBody = string.Format(Constants.Messages.EmailValidationMsg, model.Name,
+                                             $"{_config.Email.Validation.Domain}{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/{Constants.ValidationAction}",
+                                             token);
+          
 
              emailMessage.Body = builder.ToMessageBody();
             using (var client = new SmtpClient())

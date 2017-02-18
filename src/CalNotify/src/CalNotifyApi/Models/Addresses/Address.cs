@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using CalNotify.Models.Auth;
 using CalNotify.Models.User;
 using Newtonsoft.Json;
 using NpgsqlTypes;
@@ -101,7 +102,17 @@ namespace CalNotify.Models.Addresses
             State = addre.State;
             Zip = addre.Zip;
             City = addre.City;
-            GeoLocation = new NpgsqlPoint(addre.Latitude, addre.Longitude);
+            GeoLocation = new PostgisPoint(addre.Latitude, addre.Longitude) { SRID = Constants.SRID };
+        }
+
+        public Address(TempUser user)
+        {
+            Number = user.Number;
+            Street = user.Street;
+            State = user.State;
+            Zip = user.Zip;
+            City = user.City;
+            GeoLocation = new PostgisPoint(user.Latitude, user.Longitude) { SRID = Constants.SRID };
         }
 
         /// <summary>
@@ -123,7 +134,7 @@ namespace CalNotify.Models.Addresses
         ///     Gets or Sets GeoLocation
         /// </summary>
         [DataMember(Name = "location")]
-        public NpgsqlPoint GeoLocation { get; set; }
+        public PostgisPoint GeoLocation { get; set; }
 
         /// <summary>
         /// The User which used this address

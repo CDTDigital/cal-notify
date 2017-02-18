@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using CalNotify.Models.Addresses;
@@ -12,7 +14,7 @@ namespace CalNotify.Models.User
     /// The primary way in which we store users across our system.
     /// </summary>
     [DataContract]
-    public class GenericUser :  ITokenAble, IUserIdentity
+    public class GenericUser :  ITokenAble, IUserIdentity, IValidatableObject
     {
         /// <summary>
         /// The unique identifier for the user. Used throughout the system!
@@ -42,7 +44,7 @@ namespace CalNotify.Models.User
         /// <summary>
         ///    The user's phone number which they will use to login to the service
         /// </summary>
-        [DataMember(Name = "phone")]
+        [DataMember(Name = "phone"), Phone]
         public  string PhoneNumber { get; set; }
 
         /// <summary>
@@ -59,7 +61,7 @@ namespace CalNotify.Models.User
         /// <summary>
         ///    The user's email
         /// </summary>
-        [DataMember(Name = "email")]
+        [DataMember(Name = "email"), EmailAddress]
         public  string Email { get; set; }
 
         /// <summary>
@@ -87,15 +89,24 @@ namespace CalNotify.Models.User
 
         public void SetPassword(string password)
         {
-            Password = PasswordHasher.HashPassword(UserName, password);
+            Password = PasswordHasher.HashPassword(Id.ToString(), password);
         }
 
 
         public PasswordVerificationResult VerifyPassowrd(string password)
         {
-            return PasswordHasher.VerifyHashedPassword(UserName, Password, password);
+            return PasswordHasher.VerifyHashedPassword(Id.ToString(), Password, password);
         }
 
         private static readonly PasswordHasher<string> PasswordHasher = new PasswordHasher<string>();
+
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (string.IsNullOrWhiteSpace(Email) && string.IsNullOrWhiteSpace(PhoneNumber))
+            {
+                yield return new ValidationResult("Need to prodivde atleast an Email of Phone number.");
+            }
+        }
     }
 }
