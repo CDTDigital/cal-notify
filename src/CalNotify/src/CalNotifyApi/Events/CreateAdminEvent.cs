@@ -36,7 +36,7 @@ namespace CalNotifyApi.Events
         public WebAdmin Process(BusinessDbContext context)
         {
 
-            var validatedUser = context.Users.OfType<WebAdmin>().FirstOrDefault(x => x.Email == this.Email);
+            var validatedUser = context.Admins.FirstOrDefault(x => x.Email == this.Email);
             if (validatedUser != null)
             {
                 return validatedUser;

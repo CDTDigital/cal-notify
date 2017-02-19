@@ -95,7 +95,7 @@ namespace CalNotifyApi
                 .WriteTo.RollingFile("logs/all-{Date}.txt");
         
 
-            Log.Logger = loggerConfig.CreateLogger();
+          //  Log.Logger = loggerConfig.CreateLogger();
 
             Log.Information("Our Content Root is {ContentRoot}", _hostingEnv.ContentRootPath);
             Log.Information("Running server under a {env} environment", env.EnvironmentName);
@@ -186,6 +186,16 @@ namespace CalNotifyApi
             AppConfigureJWT(app);
 
             app.UseStaticFiles();
+            // Expose our endpoints to clients across domains
+            // TODO: [SECURITY] check if can be removed
+            app.UseCors(builder =>
+            {
+                // Should only be used during development
+                builder.AllowAnyOrigin();
+                builder.AllowAnyHeader();
+                builder.AllowAnyMethod();
+            });
+
 
             // .net core MVC pipeline for routing and other goodies
             app.UseMvc();
@@ -197,15 +207,7 @@ namespace CalNotifyApi
                 ConfigureSagger(app);
             }
 
-            // Expose our endpoints to clients across domains
-            // TODO: [SECURITY] check if can be removed
-            app.UseCors(builder =>
-            {
-                // Should only be used during development
-                builder.AllowAnyOrigin();
-                builder.AllowAnyHeader();
-                builder.AllowAnyMethod();
-            });
+           
 
 
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())

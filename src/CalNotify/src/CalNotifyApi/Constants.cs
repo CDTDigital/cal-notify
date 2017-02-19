@@ -121,7 +121,7 @@ namespace CalNotifyApi
             /// <summary>
             /// Quick and dirty message to send to users when validating their phone numbers.
             /// </summary>
-            public static readonly string SmsValidationMsg = $"Cal Notify - Here is your verification code:\n {0} \n. If you did not ask for this. See {1}/help";
+            public static readonly string SmsValidationMsg = "Cal Notify - Here is your verification code:\n {0} \n. If you did not ask for this. See {1}/help";
 
             /// <summary>
             /// Simple message with link for users validating their email addresses.
@@ -130,6 +130,8 @@ namespace CalNotifyApi
                             <a href=""{1}?token={1}"">Click to activate your account</a><br>
                             <p>-- Cal Notify <br>
                             </center>";
+
+            public const string EmailValidationFailure = "Email validation is unable to function properly. Check the conifguration and make sure the values are properly set";
 
             /// <summary>
             /// The message returned when an unauthenticated request hits our non-anonyomous endpoints
@@ -232,7 +234,7 @@ namespace CalNotifyApi
             }
             public static bool CheckIfOverride(TempUser user)
             {
-                return TestNumbers.Contains(user.PhoneNumber) || user.Name.Contains(UserOverride);
+                return TestNumbers.Contains(user.PhoneNumber);
 
             }
 
