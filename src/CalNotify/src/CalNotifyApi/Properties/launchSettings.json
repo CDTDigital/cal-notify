@@ -18,7 +18,7 @@
     "CalNotifyApi": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:50001/swagger/",
+      "launchUrl": "http://localhost:3002/swagger/index.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

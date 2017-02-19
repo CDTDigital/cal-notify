@@ -28,17 +28,14 @@ namespace CalNotifyApi.Models.Auth
         }
 
         [DataMember(Name = "name")]
-        [Required]
         public virtual string Name { get; set; }
 
 
         [DataMember(Name = "email")]
-        [EmailAddress]
         public virtual string Email { get; set; }
 
 
         [DataMember(Name = "phone")]
-        [Phone]
         public virtual string PhoneNumber { get; set; }
 
 

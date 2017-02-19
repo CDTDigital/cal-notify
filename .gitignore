@@ -38,3 +38,5 @@ src/CalNotify/src/CalNotifyApi/key\.json
 
 node_modules
 
+
+src/CalNotify/src/Tests/logs/

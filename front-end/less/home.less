@@ -10,6 +10,12 @@
         border: none;
     }
 }
+.btn[aria-expanded="true"] {
+    //background: linear-gradient(to left, lighten(#67B26F,40%) , lighten(#4ca2cd,40%)); 
+    background-color: lighten(@brand-success,30%);
+    //  background-color: lighten(#67B26F,30%);
+}
+
 
 @media (min-width: @screen-sm-min) {
     // PANELS ON HOMEPAGE
@@ -21,3 +27,29 @@
         margin: 15px 30px 30px 30px
     }
 }
+
+.form-wrapper-signup .panel{
+  box-sizing: border-box;
+  background-color: #fff;
+  opacity: 0;
+
+  transform-origin: top center;
+  transition: all 0.5s ease-in-out;
+  text-align: center;
+  position: absolute;
+  width: 100%;
+  min-height: 300px
+}
+
+
+
+.form-wrapper-signup .panel.is-active{
+  opacity: 1;
+  -webkit-transform: scale(1, 1);
+  -ms-transform: scale(1, 1);
+  -o-transform: scale(1, 1);
+  transform: scale(1, 1);
+  z-index: 10;
+}
+
+

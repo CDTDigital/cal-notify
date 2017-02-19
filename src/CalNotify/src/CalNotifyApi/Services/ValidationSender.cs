@@ -5,12 +5,14 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using CalNotifyApi.Events.Exceptions;
 using CalNotifyApi.Models.Interfaces;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using MimeKit;
+using Serilog;
 
 namespace CalNotifyApi.Services
 {
@@ -157,21 +159,31 @@ namespace CalNotifyApi.Services
           
 
              emailMessage.Body = builder.ToMessageBody();
-            using (var client = new SmtpClient())
+            try
             {
-                await client.ConnectAsync(_config.Email.Validation.Server, _config.Email.Validation.Port, SecureSocketOptions.None).ConfigureAwait(false);
-                // Note: since we don't have an OAuth2 token, disable
-                // the XOAUTH2 authentication mechanism.
-                client.AuthenticationMechanisms.Remove("XOAUTH2");
+                using (var client = new SmtpClient())
+                {
+                    await client.ConnectAsync(_config.Email.Validation.Server, _config.Email.Validation.Port, SecureSocketOptions.None).ConfigureAwait(false);
+                    // Note: since we don't have an OAuth2 token, disable
+                    // the XOAUTH2 authentication mechanism.
+                    client.AuthenticationMechanisms.Remove("XOAUTH2");
 
-                // Note: only needed if the SMTP server requires authentication
-                client.Authenticate(_config.Email.Validation.Username, _config.Email.Validation.Password);
-               
-                await client.SendAsync(emailMessage).ConfigureAwait(false);
-                await client.DisconnectAsync(true).ConfigureAwait(false);
+                    // Note: only needed if the SMTP server requires authentication
+                    client.Authenticate(_config.Email.Validation.Username, _config.Email.Validation.Password);
+
+                    await client.SendAsync(emailMessage).ConfigureAwait(false);
+                    await client.DisconnectAsync(true).ConfigureAwait(false);
+                }
+
+                return token;
+
             }
-
-            return token;
+            catch (Exception e)
+            {
+                Log.Fatal(e, Constants.Messages.EmailValidationFailure);
+                throw new ProcessEventException(Constants.Messages.EmailValidationFailure, new List<string>() {e.Message ,e.HelpLink,e.Source});
+            }
+            
         }
 
         #endregion

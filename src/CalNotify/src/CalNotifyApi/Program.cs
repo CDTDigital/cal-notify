@@ -9,7 +9,7 @@ namespace CalNotifyApi
         {
             var host = new WebHostBuilder()
                 .UseKestrel()
-                .UseUrls("http://*:5001")
+                .UseUrls("http://*:3002")
                  .UseWebRoot(Directory.GetCurrentDirectory())
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
