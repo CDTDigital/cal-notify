@@ -1,7 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CalNotify.Controllers
+namespace CalNotifyApi.Controllers
 {
     
     [Route(Constants.V1Prefix + "/" + Constants.UtilsEndpoint)]

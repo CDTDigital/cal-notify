@@ -2,11 +2,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Reflection;
-using CalNotify.Services;
+using CalNotifyApi.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.PlatformAbstractions;
 
-namespace CalNotify.Utils
+namespace CalNotifyApi.Utils
 {
     public static class Extensions
     {

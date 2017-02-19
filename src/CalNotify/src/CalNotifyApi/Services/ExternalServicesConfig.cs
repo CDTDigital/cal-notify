@@ -1,4 +1,4 @@
-﻿namespace CalNotify.Services
+﻿namespace CalNotifyApi.Services
 {
     public class ExternalServicesConfig
     {

@@ -1,13 +1,7 @@
 # Build up our database from our schema
 
-make sure we are in the directory `\src\CalNotify` 
 
-```
-dotnet ef database update
-```
-
-
-# Update Schema
+# Update or build our Schema for the first time
 
 Make sure your build is up to date and then make the command line call:
 

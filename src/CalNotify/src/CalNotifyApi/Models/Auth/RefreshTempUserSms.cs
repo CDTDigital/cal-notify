@@ -1,12 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
-using CalNotify.Models.Interfaces;
-using CalNotify.Models.User;
 
-namespace CalNotify.Models.Auth
+namespace CalNotifyApi.Models.Auth
 {
     [DataContract]
-    public class RefreshTempUser : ITokenAble
+    public class RefreshTempUser : Interfaces.ITempUser
     {
         public RefreshTempUser()
         {

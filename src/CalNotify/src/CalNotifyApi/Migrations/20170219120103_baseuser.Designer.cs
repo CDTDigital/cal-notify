@@ -9,8 +9,8 @@ using NpgsqlTypes;
 namespace CalNotifyApi.Migrations
 {
     [DbContext(typeof(BusinessDbContext))]
-    [Migration("20170218002415_initial")]
-    partial class initial
+    [Migration("20170219120103_baseuser")]
+    partial class baseuser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,21 +25,26 @@ namespace CalNotifyApi.Migrations
                     b.Property<long?>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("City");
+                    b.Property<string>("City")
+                        .IsRequired();
 
                     b.Property<string>("FormattedAddress");
 
                     b.Property<PostgisPoint>("GeoLocation");
 
-                    b.Property<string>("Number");
+                    b.Property<string>("Number")
+                        .IsRequired();
 
-                    b.Property<string>("State");
+                    b.Property<string>("State")
+                        .IsRequired();
 
-                    b.Property<string>("Street");
+                    b.Property<string>("Street")
+                        .IsRequired();
 
                     b.Property<Guid>("UserId");
 
-                    b.Property<string>("Zip");
+                    b.Property<string>("Zip")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -59,40 +64,6 @@ namespace CalNotifyApi.Migrations
                     b.ToTable("Configurations");
                 });
 
-            modelBuilder.Entity("CalNotify.Models.User.GenericUser", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("uuid_generate_v4()");
-
-                    b.Property<byte[]>("Avatar");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
-
-                    b.Property<string>("Email");
-
-                    b.Property<string>("Enabled");
-
-                    b.Property<DateTime>("JoinDate");
-
-                    b.Property<DateTime>("LastLogin");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("Password");
-
-                    b.Property<string>("PhoneNumber");
-
-                    b.Property<string>("UserName");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AllUsers");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("GenericUser");
-                });
-
             modelBuilder.Entity("CalNotify.Services.ZipCodeInfo", b =>
                 {
                     b.Property<string>("Zipcode")
@@ -102,9 +73,7 @@ namespace CalNotifyApi.Migrations
 
                     b.Property<string>("County");
 
-                    b.Property<string>("Latitude");
-
-                    b.Property<string>("Longitude");
+                    b.Property<PostgisPoint>("Location");
 
                     b.Property<string>("Region");
 
@@ -113,9 +82,52 @@ namespace CalNotifyApi.Migrations
                     b.ToTable("ZipCodes");
                 });
 
+            modelBuilder.Entity("CalNotifyApi.Models.BaseUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("uuid_generate_v4()");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired();
+
+                    b.Property<string>("Enabled");
+
+                    b.Property<DateTime>("JoinDate");
+
+                    b.Property<DateTime>("LastLogin");
+
+                    b.Property<string>("Password");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AllUsers");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("BaseUser");
+                });
+
+            modelBuilder.Entity("CalNotifyApi.Models.GenericUser", b =>
+                {
+                    b.HasBaseType("CalNotifyApi.Models.BaseUser");
+
+                    b.Property<byte[]>("Avatar");
+
+                    b.Property<string>("Email");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<string>("UserName");
+
+                    b.ToTable("GenericUser");
+
+                    b.HasDiscriminator().HasValue("GenericUser");
+                });
+
             modelBuilder.Entity("CalNotify.Models.Admins.WebAdmin", b =>
                 {
-                    b.HasBaseType("CalNotify.Models.User.GenericUser");
+                    b.HasBaseType("CalNotifyApi.Models.GenericUser");
 
 
                     b.ToTable("WebAdmin");
@@ -125,7 +137,7 @@ namespace CalNotifyApi.Migrations
 
             modelBuilder.Entity("CalNotify.Models.Addresses.Address", b =>
                 {
-                    b.HasOne("CalNotify.Models.User.GenericUser", "User")
+                    b.HasOne("CalNotifyApi.Models.GenericUser", "User")
                         .WithOne("Address")
                         .HasForeignKey("CalNotify.Models.Addresses.Address", "UserId")
                         .OnDelete(DeleteBehavior.Cascade);

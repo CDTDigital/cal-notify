@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using CalNotify.Events;
-using CalNotify.Models.Addresses;
-using CalNotify.Models.Auth;
-using CalNotify.Models.User;
+using CalNotifyApi.Events;
+using CalNotifyApi.Models;
+using CalNotifyApi.Models.Addresses;
+using CalNotifyApi.Models.Auth;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using NpgsqlTypes;
 
-namespace CalNotify
+namespace CalNotifyApi
 {
     /// <summary>
     /// All of our static or constant variables which are used throughout the api
@@ -229,8 +230,12 @@ namespace CalNotify
                 return TestNumbers.Contains(user.PhoneNumber) || user.Name.Contains(UserOverride);
 
             }
+            public static bool CheckIfOverride(TempUser user)
+            {
+                return TestNumbers.Contains(user.PhoneNumber) || user.Name.Contains(UserOverride);
 
-          
+            }
+
 
             public static string[] TestNumbers = new[]
             {
@@ -250,7 +255,16 @@ namespace CalNotify
                 {
                     Email = "testUser1@test.com",
                     PhoneNumber = TestNumbers[0],
-                    Name = UserOverride + "0"
+                    Name = UserOverride + "0",
+                    Address =  new Address()
+                {
+                    City = "Sacramento",
+                    State = "California",
+                    Street = "Test Street",
+                    Zip = "12345",
+                    GeoLocation = new PostgisPoint( 38.5816, -121.4944) {SRID = Constants.SRID}
+
+                }
                 },
                  new GenericUser()
                 {
@@ -260,6 +274,23 @@ namespace CalNotify
                 },
             };
          
+            public static TempUser[] TempUsers = new TempUser[]
+            {
+                    new TempUser()
+                {
+                    Email = "testUser2@test.com",
+                    PhoneNumber = TestNumbers[1],
+                    Name = UserOverride + "1",
+                    City ="Antelope",
+                    Latitude = 38.5816,
+                    Longitude = -121.4944,
+                    Number = "5344", 
+                    State = "CA",
+                    Street = "Test Street",
+                    Zip = "95843"
+
+                },
+            };
 
             public static CreateAdminEvent[] TestAdmins = new[]
             {
@@ -274,16 +305,16 @@ namespace CalNotify
 
         
 
-            public static AddressWithLatLng[] TestAddressWithLatLngs = new[]
+            public static Address[] TestAddressWithLatLngs = new[]
             {
-                new AddressWithLatLng()
+                new Address()
                 {
                     City = "Sacramento",
                     State = "California",
                     Street = "Test Street",
                     Zip = "12345",
-                    Latitude = 38.5816,
-                    Longitude = -121.4944
+                    GeoLocation = new PostgisPoint( 38.5816, -121.4944) {SRID = Constants.SRID}
+                    
                 }
             };
 

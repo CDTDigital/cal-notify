@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CalNotify.Models.Interfaces
+namespace CalNotifyApi.Models.Interfaces
 {
     public interface IUserIdentity
     {

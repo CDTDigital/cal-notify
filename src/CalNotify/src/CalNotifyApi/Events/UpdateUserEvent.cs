@@ -4,14 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using CalNotify;
-using CalNotify.Events.Exceptions;
-using CalNotify.Events.Simple;
-using CalNotify.Models.Addresses;
-using CalNotify.Models.Auth;
-using CalNotify.Models.User;
-using CalNotify.Services;
-using CalNotify.Utils;
+using CalNotifyApi.Events.Exceptions;
+using CalNotifyApi.Events.Simple;
+using CalNotifyApi.Models;
+using CalNotifyApi.Models.Addresses;
+using CalNotifyApi.Services;
+using CalNotifyApi.Utils;
 using Microsoft.AspNetCore.Identity;
 
 namespace CalNotifyApi.Events

@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CalNotify.Events.Simple;
-using CalNotify.Models.Responses;
-using CalNotify.Services;
-using CalNotify.Models;
-using CalNotify.Models.User;
 using CalNotifyApi.Events;
+using CalNotifyApi.Models;
+using CalNotifyApi.Models.Responses;
+using CalNotifyApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -15,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace CalNotify.Controllers.GenericUsers
+namespace CalNotifyApi.Controllers
 {
     /// <summary>
     /// </summary>
@@ -63,6 +61,7 @@ namespace CalNotify.Controllers.GenericUsers
         /// <param name="pagination"></param>
         /// <returns></returns>
         [HttpGet("")]
+        [Authorize(Constants.AdminRole)]
         [Produces("application/json", Type = typeof(ResponseShell<List<GenericUser>>))]
         [SwaggerOperation("GET_ALL_GENERICUSERS", Tags = new[] { Constants.GenericUserEndpoint })]
         public virtual async Task<IActionResult> GetAll([FromQuery] Pagination pagination)

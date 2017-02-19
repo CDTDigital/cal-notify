@@ -5,15 +5,14 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using CalNotify.Models.Interfaces;
-using CalNotify.Utils;
+using CalNotifyApi.Models.Interfaces;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 
-namespace CalNotify.Services
+namespace CalNotifyApi.Services
 {
     public class ValidationSender : ISmsSender, IEmailSender
     {
@@ -34,7 +33,7 @@ namespace CalNotify.Services
             _log = log;
         }
 
-        public virtual async Task<string> SendValidationToSms(ITokenAble model)
+        public virtual async Task<string> SendValidationToSms(ITempUser model)
         {
            var token = SetShortToken(model);
             var msg = string.Format(Constants.Messages.SmsValidationMsg, token, _config.Email.Validation.Domain);
@@ -46,7 +45,7 @@ namespace CalNotify.Services
 
    
 
-        private string SetShortToken(ITokenAble model)
+        private string SetShortToken(ITempUser model)
         {
             var r = new Random((int)DateTime.Now.Ticks);
 
@@ -58,7 +57,7 @@ namespace CalNotify.Services
         }
 
 
-        private string SetToken(ITokenAble model)
+        private string SetToken(ITempUser model)
         {
           
             var guid = Guid.NewGuid().ToString();
@@ -140,7 +139,7 @@ namespace CalNotify.Services
 
       
 
-        public async Task<string> SendValidationToEmail(ITokenAble model)
+        public async Task<string> SendValidationToEmail(ITempUser model)
         {
             var token = SetToken(model);
 

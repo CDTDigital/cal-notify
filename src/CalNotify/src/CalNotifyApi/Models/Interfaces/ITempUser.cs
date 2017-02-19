@@ -1,6 +1,6 @@
-﻿namespace CalNotify.Models.Interfaces
+﻿namespace CalNotifyApi.Models.Interfaces
 {
-    public interface ITokenAble 
+    public interface ITempUser 
     {
         string Token { get; set; }
         string Name { get; set; }

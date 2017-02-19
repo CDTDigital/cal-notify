@@ -1,0 +1,46 @@
+2017-02-19 02:10:07.972 -08:00 [Information] Our Content Root is "C:\Development\cal-notify\src\CalNotify\src\CalNotifyApi"
+2017-02-19 02:10:07.993 -08:00 [Information] Running server under a "Testing" environment
+2017-02-19 02:10:08.159 -08:00 [Warning] Waiting for postgres and will retry later 9000
+Npgsql.PostgresException: 28P01: password authentication failed for user "calnotify"
+   at Npgsql.NpgsqlConnector.DoReadMessage(DataRowLoadingMode dataRowLoadingMode, Boolean isPrependedMessage)
+   at Npgsql.NpgsqlConnector.ReadMessageWithPrepended(DataRowLoadingMode dataRowLoadingMode)
+   at Npgsql.NpgsqlConnector.HandleAuthentication(String username, NpgsqlTimeout timeout)
+   at Npgsql.NpgsqlConnector.Open(NpgsqlTimeout timeout)
+   at Npgsql.ConnectorPool.Allocate(NpgsqlConnection conn, NpgsqlTimeout timeout)
+   at Npgsql.NpgsqlConnection.OpenInternal()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Open()
+   at Microsoft.EntityFrameworkCore.ExecutionStrategyExtensions.<>c__2`1.<Execute>b__2_0(<>f__AnonymousType0`2 s)
+   at CalNotify.Startup.TryDBConnect(BusinessDbContext dbContext) in C:\Development\cal-notify\src\CalNotify\src\CalNotifyApi\Startup.cs:line 475
+2017-02-19 02:10:17.181 -08:00 [Warning] Waiting for postgres and will retry later 6000
+Npgsql.PostgresException: 28P01: password authentication failed for user "calnotify"
+   at Npgsql.NpgsqlConnector.DoReadMessage(DataRowLoadingMode dataRowLoadingMode, Boolean isPrependedMessage)
+   at Npgsql.NpgsqlConnector.ReadMessageWithPrepended(DataRowLoadingMode dataRowLoadingMode)
+   at Npgsql.NpgsqlConnector.HandleAuthentication(String username, NpgsqlTimeout timeout)
+   at Npgsql.NpgsqlConnector.Open(NpgsqlTimeout timeout)
+   at Npgsql.ConnectorPool.Allocate(NpgsqlConnection conn, NpgsqlTimeout timeout)
+   at Npgsql.NpgsqlConnection.OpenInternal()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Open()
+   at Microsoft.EntityFrameworkCore.ExecutionStrategyExtensions.<>c__2`1.<Execute>b__2_0(<>f__AnonymousType0`2 s)
+   at CalNotify.Startup.TryDBConnect(BusinessDbContext dbContext) in C:\Development\cal-notify\src\CalNotify\src\CalNotifyApi\Startup.cs:line 475
+2017-02-19 02:10:23.192 -08:00 [Warning] Waiting for postgres and will retry later 3000
+Npgsql.PostgresException: 28P01: password authentication failed for user "calnotify"
+   at Npgsql.NpgsqlConnector.DoReadMessage(DataRowLoadingMode dataRowLoadingMode, Boolean isPrependedMessage)
+   at Npgsql.NpgsqlConnector.ReadMessageWithPrepended(DataRowLoadingMode dataRowLoadingMode)
+   at Npgsql.NpgsqlConnector.HandleAuthentication(String username, NpgsqlTimeout timeout)
+   at Npgsql.NpgsqlConnector.Open(NpgsqlTimeout timeout)
+   at Npgsql.ConnectorPool.Allocate(NpgsqlConnection conn, NpgsqlTimeout timeout)
+   at Npgsql.NpgsqlConnection.OpenInternal()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Open()
+   at Microsoft.EntityFrameworkCore.ExecutionStrategyExtensions.<>c__2`1.<Execute>b__2_0(<>f__AnonymousType0`2 s)
+   at CalNotify.Startup.TryDBConnect(BusinessDbContext dbContext) in C:\Development\cal-notify\src\CalNotify\src\CalNotifyApi\Startup.cs:line 475
+2017-02-19 02:10:26.204 -08:00 [Warning] Waiting for postgres and will retry later 000
+Npgsql.PostgresException: 28P01: password authentication failed for user "calnotify"
+   at Npgsql.NpgsqlConnector.DoReadMessage(DataRowLoadingMode dataRowLoadingMode, Boolean isPrependedMessage)
+   at Npgsql.NpgsqlConnector.ReadMessageWithPrepended(DataRowLoadingMode dataRowLoadingMode)
+   at Npgsql.NpgsqlConnector.HandleAuthentication(String username, NpgsqlTimeout timeout)
+   at Npgsql.NpgsqlConnector.Open(NpgsqlTimeout timeout)
+   at Npgsql.ConnectorPool.Allocate(NpgsqlConnection conn, NpgsqlTimeout timeout)
+   at Npgsql.NpgsqlConnection.OpenInternal()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Open()
+   at Microsoft.EntityFrameworkCore.ExecutionStrategyExtensions.<>c__2`1.<Execute>b__2_0(<>f__AnonymousType0`2 s)
+   at CalNotify.Startup.TryDBConnect(BusinessDbContext dbContext) in C:\Development\cal-notify\src\CalNotify\src\CalNotifyApi\Startup.cs:line 475

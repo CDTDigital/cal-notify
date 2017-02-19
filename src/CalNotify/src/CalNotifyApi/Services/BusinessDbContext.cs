@@ -1,25 +1,19 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using CalNotify.Models.Addresses;
-using CalNotify.Models.Admins;
-using CalNotify.Models.User;
+using CalNotifyApi.Models;
+using CalNotifyApi.Models.Addresses;
 using CalNotifyApi.Models.Admins;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 using NpgsqlTypes;
 
-
-namespace CalNotify.Services
+namespace CalNotifyApi.Services
 {
     public class BusinessDbContext : DbContext
     {
@@ -38,7 +32,7 @@ namespace CalNotify.Services
 
         #region Entities
 
-        public DbSet<GenericUser> AllUsers { get; set; }
+        public DbSet<BaseUser> AllUsers { get; set; }
 
         public DbSet<Address> Address { get; set; }
         private DbSet<AdminConfiguration> Configurations { get; set; }
@@ -64,7 +58,7 @@ namespace CalNotify.Services
 
 
         public IQueryable<WebAdmin> Admins => this.AllUsers.OfType<WebAdmin>();
-        public IQueryable<GenericUser> Users => this.AllUsers.OfType<GenericUser>();
+        public IQueryable<GenericUser> Users => this.AllUsers.OfType<GenericUser>().Include(u => u.Address);
 
         #endregion
         protected override void OnModelCreating(ModelBuilder builder)
@@ -75,8 +69,9 @@ namespace CalNotify.Services
             builder.HasPostgresExtension("postgis");
             builder.HasPostgresExtension("uuid-ossp");
       
-
+            builder.Entity<BaseUser>();
             builder.Entity<WebAdmin>();
+            builder.Entity<GenericUser>();
 
             builder
             .Entity<GenericUser>()

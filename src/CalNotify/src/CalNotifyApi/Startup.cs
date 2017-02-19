@@ -3,14 +3,14 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using CalNotify.Events.Attributes;
-using CalNotify.Events.Exceptions;
-using CalNotify.Models.Auth;
-using CalNotify.Models.Responses;
-using CalNotify.Models.Services;
-using CalNotify.Services;
-using CalNotify.Utils;
-using CalNotify.Utils.Swagger;
+using CalNotifyApi.Events.Attributes;
+using CalNotifyApi.Events.Exceptions;
+using CalNotifyApi.Models.Auth;
+using CalNotifyApi.Models.Responses;
+using CalNotifyApi.Models.Services;
+using CalNotifyApi.Services;
+using CalNotifyApi.Utils;
+using CalNotifyApi.Utils.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -28,10 +28,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Serilog;
 using Serilog.Filters;
-
 using Swashbuckle.AspNetCore.Swagger;
 
-namespace CalNotify
+namespace CalNotifyApi
 {
     public class Startup
     {
@@ -69,7 +68,7 @@ namespace CalNotify
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile(path: "appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile(path: $"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
-               .AddJsonFile(path: "appsettings.Local.json", optional: false, reloadOnChange: true);
+               .AddJsonFile(path: "appsettings.Local.json", optional: true, reloadOnChange: true);
             //.AddEnvironmentVariables();  // not adding environment variables for now
 
             Configuration = builder.Build();

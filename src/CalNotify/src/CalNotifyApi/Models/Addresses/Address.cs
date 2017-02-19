@@ -1,12 +1,12 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
-using CalNotify.Models.Auth;
-using CalNotify.Models.User;
+using CalNotifyApi.Models.Auth;
 using Newtonsoft.Json;
 using NpgsqlTypes;
 
-namespace CalNotify.Models.Addresses
+namespace CalNotifyApi.Models.Addresses
 {
     /// <summary>
     ///     Base class which holds the simple and most used aspects of an address.
@@ -15,20 +15,20 @@ namespace CalNotify.Models.Addresses
     [DataContract]
     public abstract class SimpleAddress
     {
-        [DataMember(Name = "number")]
+        [DataMember(Name = "number"),Required]
         public string Number { get; set; }
 
-        [DataMember(Name = "street")]
+        [DataMember(Name = "street"), Required]
         public string Street { get; set; }
 
-        [DataMember(Name = "state")]
+        [DataMember(Name = "state"), Required]
         public string State { get; set; }
 
 
-        [DataMember(Name = "zip")]
+        [DataMember(Name = "zip"), Required]
         public string Zip { get; set; }
 
-        [DataMember(Name = "city")]
+        [DataMember(Name = "city"), Required]
         public string City { get; set; }
     }
 
@@ -52,7 +52,7 @@ namespace CalNotify.Models.Addresses
     /// is the primary address type which gets sent down the wire to clients
     /// </summary>
     [DataContract]
-    public class AddressWithLatLng : SimpleAddress, IAddress
+    public class AddressWithLatLng : SimpleAddress, IAddress, IGeoLocation
     {
         /// <summary>
         /// Latitude position
@@ -80,7 +80,7 @@ namespace CalNotify.Models.Addresses
     [DataContract]
     public class Address : SimpleAddress
     {
-        [Obsolete(Constants.ObsoleteOnlyForBinding, true)]
+       
         public Address() {}
 
         /// <summary>

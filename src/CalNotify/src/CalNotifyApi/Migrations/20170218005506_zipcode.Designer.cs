@@ -1,9 +1,9 @@
 ﻿using System;
+using CalNotifyApi.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using CalNotify.Services;
 using NpgsqlTypes;
 
 namespace CalNotifyApi.Migrations

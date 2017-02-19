@@ -1,4 +1,4 @@
-﻿namespace CalNotify.Models.Addresses
+﻿namespace CalNotifyApi.Models.Addresses
 {
     public interface IAddress
     {

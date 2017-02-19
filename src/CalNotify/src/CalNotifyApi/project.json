@@ -36,13 +36,9 @@
     "Serilog.Extensions.Logging": "1.4.0-dev-10138",
     "Serilog.Sinks.Console": "2.2.0-dev-00719",
     "Swashbuckle.AspNetCore": "1.0.0-rc1",
-    "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0",
-    "ImageSharp.Formats.Png": "1.0.0-alpha2-00046",
-    "ImageSharp": "1.0.0-alpha2-00050",
-    "ImageSharp.Processing": "1.0.0-alpha2-00038",
-    "ImageSharp.Formats.Jpeg": "1.0.0-alpha2-00050",
     "MailKit": "1.10.2",
-    "CsvHelper": "3.0.0-beta7"
+    "CsvHelper": "3.0.0-beta7",
+    "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0"
   },
 
   "tools": {

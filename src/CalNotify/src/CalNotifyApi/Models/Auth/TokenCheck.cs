@@ -1,11 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
-using CalNotify.Models.Interfaces;
 
-namespace CalNotify.Models.Auth
+namespace CalNotifyApi.Models.Auth
 {
     [DataContract]
-    public struct TokenCheck : ITokenAble
+    public struct TokenCheck : Interfaces.ITempUser
     {
         // Making the token required
         [Required]

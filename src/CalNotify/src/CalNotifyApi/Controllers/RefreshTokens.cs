@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CalNotify.Events;
-using CalNotify.Models.Auth;
-using CalNotify.Models.Responses;
-using CalNotify.Models.Services;
-using CalNotify.Services;
+using CalNotifyApi.Events;
+using CalNotifyApi.Models.Auth;
+using CalNotifyApi.Models.Responses;
+using CalNotifyApi.Models.Services;
+using CalNotifyApi.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-
-namespace CalNotify.Controllers
+namespace CalNotifyApi.Controllers
 {
     [Route(Constants.V1Prefix + "/" + Constants.TokenEndpoint)]
     public class RefreshTokens : Controller

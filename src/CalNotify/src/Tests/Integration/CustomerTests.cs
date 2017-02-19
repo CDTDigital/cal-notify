@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using CalNotifyApi;
 using Xunit;
-using CalNotify;
-using CalNotify.Models.Auth;
-using CalNotify.Models.Responses;
-using CalNotify.Models.User;
+using CalNotifyApi.Models;
+using CalNotifyApi.Models.Auth;
+using CalNotifyApi.Models.Responses;
 using Tests.Utils;
 
 namespace Tests.Integration
@@ -31,7 +32,7 @@ namespace Tests.Integration
         {
 
 
-            var temp = Constants.Testing.TestUsers.First();
+            var temp = Constants.Testing.TempUsers.First();
             var json = await _fixture.Post<SimpleSuccess>($"{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/create",temp);
 
 
@@ -39,13 +40,14 @@ namespace Tests.Integration
             Assert.Equal(200, json.Meta.Code);
             Assert.NotNull(json.Result);
 
-            // Act 2
-            var checkToken = new TokenCheck()
-            {
-                PhoneNumber = temp.PhoneNumber,
-                Token = _fixture.FakeToken
-            };
-            var resValidate = await _fixture.Post<TokenInfo>($"{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/validate", checkToken);
+      
+            var queryParams = new FormUrlEncodedContent(new KeyValuePair<string, string>[]
+                       {
+                            new KeyValuePair<string, string>("token", _fixture.FakeToken),
+                       });
+
+
+            var resValidate = await _fixture.Get<TokenInfo>($"{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/validate", queryParams);
 
             // Assert
             Assert.Equal(200, resValidate.Meta.Code);
@@ -56,11 +58,22 @@ namespace Tests.Integration
         [Fact, TestPriority(1)]
         public async Task CheckGettingTokenForCustomer()
         {
-           
+            // Call just in case of test called alone
+            var temp = Constants.Testing.TempUsers.First();
+            var json = await _fixture.Post<SimpleSuccess>($"{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/create", temp);
+
+            var queryParams = new FormUrlEncodedContent(new KeyValuePair<string, string>[]
+                       {
+                            new KeyValuePair<string, string>("token", _fixture.FakeToken),
+                       });
+
+
+             await _fixture.Get<TokenInfo>($"{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/validate", queryParams);
+
 
             var refreshToken = new RefreshTempUser()
             {
-                PhoneNumber = Constants.Testing.TestUsers.First().PhoneNumber
+                PhoneNumber = Constants.Testing.TempUsers.First().PhoneNumber
             };
 
             var resValidate = await _fixture.Post<SimpleSuccess>($"{Constants.V1Prefix}/{Constants.TokenEndpoint}/refresh", refreshToken);
@@ -96,26 +109,52 @@ namespace Tests.Integration
         [Fact, TestPriority(3)]
         public async Task CheckGettingSingleCustomer()
         {
+            // Call just in case of test called alone
+            var temp = Constants.Testing.TempUsers.First();
+            var json = await _fixture.Post<SimpleSuccess>($"{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/create", temp);
 
-            var token = await _fixture.GetToken(Constants.Testing.TestUsers.First());
-            var res = await _fixture.Get<GenericUser>($"{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/{token.UserId}", token);
+            var queryParams = new FormUrlEncodedContent(new KeyValuePair<string, string>[]
+                       {
+                            new KeyValuePair<string, string>("token", _fixture.FakeToken),
+                       });
+
+
+            var resValidate = await _fixture.Get<TokenInfo>($"{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/validate", queryParams);
+
+
+            var token = await _fixture.AdminLogin();
+            var res = await _fixture.Get<GenericUser>($"{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/{resValidate.Result.UserId}", token);
             // Make suer we get back our customer and their properties
             Assert.Equal(200, res.Meta.Code);
             Assert.NotNull(res.Result);
             Assert.NotNull(res.Result);
-            Assert.Equal(token.UserId, res.Result.Id.ToString());
+            Assert.Equal(resValidate.Result.UserId, res.Result.Id.ToString());
         }
 
-
+       
         [Fact, TestPriority(4)]
         public async Task CheckGettingAllCustomers()
         {
-            var token = await _fixture.GetToken(Constants.Testing.TestUsers.First());
+
+            // Call just in case of test called alone
+            var temp = Constants.Testing.TempUsers.First();
+            var json = await _fixture.Post<SimpleSuccess>($"{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/create", temp);
+
+            var queryParams = new FormUrlEncodedContent(new KeyValuePair<string, string>[]
+                       {
+                            new KeyValuePair<string, string>("token", _fixture.FakeToken),
+                       });
+
+
+            var resValidate = await _fixture.Get<TokenInfo>($"{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/validate", queryParams);
+
+
+            var token = await _fixture.AdminLogin();
             var res = await _fixture.Get<List<GenericUser>>($"{Constants.V1Prefix}/{Constants.GenericUserEndpoint}", token);
             Assert.Equal(200, res.Meta.Code);
             Assert.NotNull(res.Result);
             Assert.True(res.Result.Count >=1 );
-            var foundCustomer = res.Result.FirstOrDefault(u => u.Name == Constants.Testing.TestUsers.First().Name);
+            var foundCustomer = res.Result.FirstOrDefault(u => u.Name == Constants.Testing.TempUsers.First().Name);
             //Make sure we have our customer in there
             Assert.NotNull(foundCustomer);
         }

@@ -3,12 +3,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using CalNotify.Models.Admins;
-using CalNotify.Models.Auth;
-using CalNotify.Models.Interfaces;
-using CalNotify.Models.User;
+using CalNotifyApi.Models;
+using CalNotifyApi.Models.Admins;
+using CalNotifyApi.Models.Auth;
+using CalNotifyApi.Models.Interfaces;
 
-namespace CalNotify.Services
+namespace CalNotifyApi.Services
 {
     /// <summary>
     /// Provides the services required to create the full token required for all api endpoints.

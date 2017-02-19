@@ -1,8 +1,8 @@
-﻿using CalNotify.Models.Responses;
+﻿using CalNotifyApi.Models.Responses;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Serilog;
 
-namespace CalNotify.Events.Exceptions
+namespace CalNotifyApi.Events.Exceptions
 {
     public class EventExceptionFilter : ExceptionFilterAttribute
     {

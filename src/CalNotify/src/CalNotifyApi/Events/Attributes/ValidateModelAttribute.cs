@@ -1,7 +1,7 @@
-﻿using CalNotify.Models.Responses;
+﻿using CalNotifyApi.Models.Responses;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace CalNotify.Events.Attributes
+namespace CalNotifyApi.Events.Attributes
 {
     /// <summary>
     /// We deduplicate alot of logic related to bailing early and fast in the request lifecycle, 

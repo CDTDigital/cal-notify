@@ -1,7 +1,7 @@
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace CalNotify.Utils.Swagger
+namespace CalNotifyApi.Utils.Swagger
 {
     public class ModelValidationParameterFilter : IOperationFilter
     {

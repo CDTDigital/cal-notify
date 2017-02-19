@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace CalNotify.Models.Auth
+namespace CalNotifyApi.Models.Auth
 {
     /// <summary>
     /// </summary>

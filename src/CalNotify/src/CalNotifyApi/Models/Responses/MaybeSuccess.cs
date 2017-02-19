@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace CalNotify.Models.Responses
+namespace CalNotifyApi.Models.Responses
 {
     [DataContract]
     public class MaybeSuccess

@@ -6,7 +6,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using TypeExtensions = System.Reflection.TypeExtensions;
 
-namespace CalNotify.Utils.Swagger
+namespace CalNotifyApi.Utils.Swagger
 {
 
     /// <summary>

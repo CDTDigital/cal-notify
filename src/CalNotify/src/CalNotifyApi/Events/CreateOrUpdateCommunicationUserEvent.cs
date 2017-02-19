@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Linq;
-using CalNotify.Models.Addresses;
-using CalNotify.Models.Auth;
-using CalNotify.Models.Interfaces;
-using CalNotify.Models.User;
-using CalNotify.Services;
+using CalNotifyApi.Models;
+using CalNotifyApi.Models.Addresses;
+using CalNotifyApi.Models.Auth;
+using CalNotifyApi.Models.Interfaces;
+using CalNotifyApi.Services;
 using Serilog;
 
-namespace CalNotify.Events
+namespace CalNotifyApi.Events
 {
     public class CreateOrUpdateCommunicationUserEvent
     {
+        
+
         public GenericUser Process(BusinessDbContext context,
                 TempUser tempUser)
         {
@@ -22,10 +24,10 @@ namespace CalNotify.Events
             {
                 return Update(context, tempUser, exisitingUser);
             }
-
+          
             var addr = new Address(tempUser);
             context.Address.Add(addr);
-          
+
             var genericUser = new GenericUser()
             {
                 Name = tempUser.Name,
@@ -39,7 +41,7 @@ namespace CalNotify.Events
 
         }
 
-        public GenericUser Update(BusinessDbContext context, TempUser tempUser, GenericUser exisitingUser)
+        public GenericUser Update(BusinessDbContext context, ITempUser tempUser, GenericUser exisitingUser)
         {
 
             exisitingUser.Email = tempUser.Email;

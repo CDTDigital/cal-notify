@@ -1,7 +1,7 @@
-﻿using CalNotify.Models.Admins;
-using CalNotify.Services;
+﻿using CalNotifyApi.Models.Admins;
+using CalNotifyApi.Services;
 
-namespace CalNotify.Events.Interfaces
+namespace CalNotifyApi.Events.Interfaces
 {
     public interface IAdminEvent
     {

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using CalNotify.Models.Addresses;
+using CalNotifyApi.Models.Addresses;
 
-namespace CalNotify.Models.Services
+namespace CalNotifyApi.Models.Services
 {
     [DataContract]
     public class GeocodeioQueryWrapper

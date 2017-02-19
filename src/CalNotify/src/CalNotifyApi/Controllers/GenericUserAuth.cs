@@ -2,24 +2,19 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using CalNotify.Events;
-using CalNotify.Models.Addresses;
-using CalNotify.Models.Auth;
-using CalNotify.Models.Responses;
-using CalNotify.Models.Services;
-using CalNotify.Models.User;
-using CalNotify.Services;
-using MailKit.Net.Smtp;
-using MailKit.Security;
+using CalNotifyApi.Events;
+using CalNotifyApi.Models.Auth;
+using CalNotifyApi.Models.Responses;
+using CalNotifyApi.Models.Services;
+using CalNotifyApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using MimeKit;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace CalNotify.Controllers.GenericUsers
+namespace CalNotifyApi.Controllers
 {
     [AllowAnonymous]
     [Route(Constants.V1Prefix + "/" + Constants.GenericUserEndpoint)]
@@ -73,7 +68,7 @@ namespace CalNotify.Controllers.GenericUsers
         [HttpPost("create"), Consumes("application/json"), Produces("application/json", Type = typeof(ResponseShell<SimpleSuccess>))]
         [SwaggerOperation(operationId: "CreateUser", Tags = new[] { Constants.GenericUserEndpoint })]
 
-        public async Task<IActionResult> CreateWithChallenge([FromBody] GenericUser model)
+        public async Task<IActionResult> CreateWithChallenge([FromBody] TempUser model)
         {
 
 
@@ -150,7 +145,7 @@ namespace CalNotify.Controllers.GenericUsers
             // Get our Saved User from Memory
             var savedUser = new CheckValidationTokenEvent().Process(_memoryCache, token);
             // Create our GenericUser if need be
-            var createdGenericUser = new CreateOrUpdateCommunicationUserEvent().Process(_context, (TempUser)savedUser);
+            var createdGenericUser = new CreateOrUpdateCommunicationUserEvent().Process(_context, savedUser);
             // Get our token
             var endToken = await _tokenService.GetToken(createdGenericUser);
 

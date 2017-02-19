@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using CalNotify.Models.Interfaces;
+using CalNotifyApi.Models.Interfaces;
 
-namespace CalNotify.Services
+namespace CalNotifyApi.Services
 {
     public interface IEmailSender
     {
-        Task<string> SendValidationToEmail(ITokenAble model);
+        Task<string> SendValidationToEmail(ITempUser model);
     }
 }

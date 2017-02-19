@@ -1,7 +1,7 @@
-﻿using CalNotify.Models.User;
-using CalNotify.Services;
+﻿using CalNotifyApi.Models;
+using CalNotifyApi.Services;
 
-namespace CalNotify.Events.Interfaces
+namespace CalNotifyApi.Events.Interfaces
 {
     public interface IUserEvent
     {

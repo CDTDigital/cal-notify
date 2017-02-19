@@ -1,16 +1,14 @@
 ﻿using System;
-using CalNotify.Models.Auth;
-using CalNotify.Models.Interfaces;
-using CalNotify.Models.Responses;
-using CalNotify.Models.Services;
-using CalNotify.Services;
+using CalNotifyApi.Models.Auth;
+using CalNotifyApi.Models.Responses;
+using CalNotifyApi.Models.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CalNotify.Events
+namespace CalNotifyApi.Events
 {
     public class CheckValidationTokenEvent
     {
-        public ITokenAble  Process(ITokenMemoryCache memoryCache,TokenCheck model)
+        public TempUser  Process(ITokenMemoryCache memoryCache,TokenCheck model)
         {
             var savedUser = memoryCache.GetForChallenge(model);
 
@@ -27,14 +25,13 @@ namespace CalNotify.Events
             return savedUser;
         }
 
-        public ITokenAble Process(ITokenMemoryCache memoryCache, string model)
+        public TempUser Process(ITokenMemoryCache memoryCache, string model)
         {
             var savedUser = memoryCache.GetForChallenge(model);
 
-
             if (savedUser == null)
             {
-                throw new CheckValidationTokenException("Customer never recieved a challenge token");
+                throw new CheckValidationTokenException("Customer never received a challenge token");
             }
 
             if (!memoryCache.IsEqual(savedUser, model))

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using CalNotifyApi.Utils;
 using Microsoft.Extensions.Configuration;
 
 namespace Tests
@@ -15,7 +16,7 @@ namespace Tests
         public BaseFixture()
         {
          
-            ContentRoot =  CalNotify.Utils.Extensions.GetProjectPath(Path.Combine("src"));
+            ContentRoot =  Extensions.GetProjectPath(Path.Combine("src"));
 
             Configuration = new ConfigurationBuilder()
                 .SetBasePath(ContentRoot)

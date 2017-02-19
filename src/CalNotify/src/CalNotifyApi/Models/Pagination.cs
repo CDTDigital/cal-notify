@@ -1,10 +1,9 @@
 ﻿using System.Linq;
 using System.Runtime.Serialization;
-using CalNotify.Models.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace CalNotify.Models
+namespace CalNotifyApi.Models
 {
     /// <summary>
     /// Allows users to modify the result of a query for a list of objects.
