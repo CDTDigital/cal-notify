@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
-namespace CalNotify.Utils.Swagger
+namespace CalNotifyApi.Utils.Swagger
 {
     public class LowerCaseQueryParametersApiDescriptionProvider : IApiDescriptionProvider
     {

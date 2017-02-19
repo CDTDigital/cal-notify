@@ -1,6 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 
-namespace CalNotify.Models.Auth
+namespace CalNotifyApi.Models.Auth
 {
     public class TokenAuthOptions
     {

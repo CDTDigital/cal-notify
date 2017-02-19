@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace CalNotify.Events
+namespace CalNotifyApi.Events
 {
     [DataContract]
     [SwaggerSchemaFilter(typeof(ExampleAdminLogin))]

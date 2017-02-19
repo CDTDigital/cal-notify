@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using CalNotify.Events;
-using CalNotify.Models.Addresses;
-using CalNotify.Models.Auth;
-using CalNotify.Models.User;
+using CalNotifyApi.Events;
+using CalNotifyApi.Models;
+using CalNotifyApi.Models.Addresses;
+using CalNotifyApi.Models.Auth;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using NpgsqlTypes;
 
-namespace CalNotify
+namespace CalNotifyApi
 {
     /// <summary>
     /// All of our static or constant variables which are used throughout the api
@@ -47,6 +48,9 @@ namespace CalNotify
         public const string AdminConfigurationEndpoint = "admin";
 
 
+        public const string ValidationAction = "validate";
+
+
         #endregion
 
 
@@ -71,6 +75,9 @@ namespace CalNotify
         /// Role a user is in if a technician
         /// </summary>
         public const string TechRole = "Tech";
+
+
+       
 
         /// <summary>
         /// Complete list of roles used in the system
@@ -111,6 +118,19 @@ namespace CalNotify
 
         public static class Messages
         {
+            /// <summary>
+            /// Quick and dirty message to send to users when validating their phone numbers.
+            /// </summary>
+            public static readonly string SmsValidationMsg = $"Cal Notify - Here is your verification code:\n {0} \n. If you did not ask for this. See {1}/help";
+
+            /// <summary>
+            /// Simple message with link for users validating their email addresses.
+            /// </summary>
+            public static readonly string EmailValidationMsg = $@"<center><p>HI {0},<br>
+                            <a href=""{1}?token={1}"">Click to activate your account</a><br>
+                            <p>-- Cal Notify <br>
+                            </center>";
+
             /// <summary>
             /// The message returned when an unauthenticated request hits our non-anonyomous endpoints
             /// </summary>
@@ -157,7 +177,10 @@ namespace CalNotify
  
         public  const string ObsoleteOnlyForBinding = "Only for model Binding";
 
-
+        /// <summary>
+        /// The default Spatial reference system used.
+        /// </summary>
+        public const int SRID = 4326;
 
         /// <summary>
         /// Default JSON serialization options used via mvc actions
@@ -207,12 +230,12 @@ namespace CalNotify
                 return TestNumbers.Contains(user.PhoneNumber) || user.Name.Contains(UserOverride);
 
             }
-
-            public static bool CheckIfOverride(TempUserWithSms user)
+            public static bool CheckIfOverride(TempUser user)
             {
                 return TestNumbers.Contains(user.PhoneNumber) || user.Name.Contains(UserOverride);
 
             }
+
 
             public static string[] TestNumbers = new[]
             {
@@ -232,7 +255,16 @@ namespace CalNotify
                 {
                     Email = "testUser1@test.com",
                     PhoneNumber = TestNumbers[0],
-                    Name = UserOverride + "0"
+                    Name = UserOverride + "0",
+                    Address =  new Address()
+                {
+                    City = "Sacramento",
+                    State = "California",
+                    Street = "Test Street",
+                    Zip = "12345",
+                    GeoLocation = new PostgisPoint( 38.5816, -121.4944) {SRID = Constants.SRID}
+
+                }
                 },
                  new GenericUser()
                 {
@@ -242,6 +274,23 @@ namespace CalNotify
                 },
             };
          
+            public static TempUser[] TempUsers = new TempUser[]
+            {
+                    new TempUser()
+                {
+                    Email = "testUser2@test.com",
+                    PhoneNumber = TestNumbers[1],
+                    Name = UserOverride + "1",
+                    City ="Antelope",
+                    Latitude = 38.5816,
+                    Longitude = -121.4944,
+                    Number = "5344", 
+                    State = "CA",
+                    Street = "Test Street",
+                    Zip = "95843"
+
+                },
+            };
 
             public static CreateAdminEvent[] TestAdmins = new[]
             {
@@ -256,16 +305,16 @@ namespace CalNotify
 
         
 
-            public static AddressWithLatLng[] TestAddressWithLatLngs = new[]
+            public static Address[] TestAddressWithLatLngs = new[]
             {
-                new AddressWithLatLng()
+                new Address()
                 {
                     City = "Sacramento",
                     State = "California",
                     Street = "Test Street",
                     Zip = "12345",
-                    Latitude = 38.5816,
-                    Longitude = -121.4944
+                    GeoLocation = new PostgisPoint( 38.5816, -121.4944) {SRID = Constants.SRID}
+                    
                 }
             };
 

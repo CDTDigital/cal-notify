@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CalNotify.Events.Simple;
-using CalNotify.Models.Responses;
-using CalNotify.Services;
-using CalNotify.Models;
-using CalNotify.Models.User;
+using CalNotifyApi.Events;
+using CalNotifyApi.Models;
+using CalNotifyApi.Models.Responses;
+using CalNotifyApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -14,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace CalNotify.Controllers.GenericUsers
+namespace CalNotifyApi.Controllers
 {
     /// <summary>
     /// </summary>
@@ -62,6 +61,7 @@ namespace CalNotify.Controllers.GenericUsers
         /// <param name="pagination"></param>
         /// <returns></returns>
         [HttpGet("")]
+        [Authorize(Constants.AdminRole)]
         [Produces("application/json", Type = typeof(ResponseShell<List<GenericUser>>))]
         [SwaggerOperation("GET_ALL_GENERICUSERS", Tags = new[] { Constants.GenericUserEndpoint })]
         public virtual async Task<IActionResult> GetAll([FromQuery] Pagination pagination)
@@ -93,8 +93,6 @@ namespace CalNotify.Controllers.GenericUsers
         // ENDPOINTS FOR UPDATING GenericUserS
         #region updates
 
-     
-
         /// <summary>
         /// Updates a GenericUser's properties such as Name via their unique id.
         /// </summary>
@@ -103,15 +101,15 @@ namespace CalNotify.Controllers.GenericUsers
         /// For the time being this only can update a users name
         /// </remarks>
         /// <param name="modelUpdates"></param>
+        /// <param name="validationSender"></param>
         /// <returns></returns>
         [HttpPut("")]
         [SwaggerOperation("UPDATE_GENERICUSER_BY_ID", Tags = new[] { Constants.GenericUserEndpoint })]
-        public virtual IActionResult UpdateById( [FromBody] UserRelatedEvent modelUpdates)
+        public virtual async Task<IActionResult> UpdateById([FromBody] UpdateUserEvent modelUpdates, [FromServices] ValidationSender validationSender)
         {
-            var user = modelUpdates.GetUser(_context);
+            var user = await modelUpdates.Process(_context, validationSender);
             _context.SaveChanges();
-           // return ResponseShell.Ok(user);
-            return ResponseShell.NotImplementated();
+            return ResponseShell.Ok(user);  
         }
 
         #endregion

@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Linq;
-using CalNotify.Models.Auth;
-using CalNotify.Models.User;
-using CalNotify.Services;
+using CalNotifyApi.Models;
+using CalNotifyApi.Models.Addresses;
+using CalNotifyApi.Models.Auth;
+using CalNotifyApi.Models.Interfaces;
+using CalNotifyApi.Services;
 using Serilog;
 
-namespace CalNotify.Events
+namespace CalNotifyApi.Events
 {
-    public class CreateUserEvent
+    public class CreateOrUpdateCommunicationUserEvent
     {
+        
+
         public GenericUser Process(BusinessDbContext context,
-                TempUserWithSms tempUser)
+                TempUser tempUser)
         {
 
             var exisitingUser = context.Users.FirstOrDefault(x => x.PhoneNumber == tempUser.PhoneNumber);
@@ -18,18 +22,33 @@ namespace CalNotify.Events
             // instead of throwing out an error we will do the right thing and just retoken them
             if (exisitingUser != null)
             {
-                return exisitingUser;
+                return Update(context, tempUser, exisitingUser);
             }
+          
+            var addr = new Address(tempUser);
+            context.Address.Add(addr);
+
             var genericUser = new GenericUser()
             {
                 Name = tempUser.Name,
                 Email = tempUser.Email,
                 PhoneNumber = tempUser.PhoneNumber,
+                Address = addr,
                 UserName = string.IsNullOrEmpty(tempUser.Email) ? tempUser.PhoneNumber : tempUser.Email
             };
 
             return Process(context, genericUser);
 
+        }
+
+        public GenericUser Update(BusinessDbContext context, ITempUser tempUser, GenericUser exisitingUser)
+        {
+
+            exisitingUser.Email = tempUser.Email;
+            exisitingUser.PhoneNumber = tempUser.PhoneNumber;
+            context.SaveChanges();
+            Log.Information("Updating  User {exisitingUser}", exisitingUser);
+            return exisitingUser;
         }
 
         public GenericUser Process(BusinessDbContext context,

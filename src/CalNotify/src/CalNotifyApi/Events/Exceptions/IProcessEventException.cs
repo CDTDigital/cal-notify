@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace CalNotify.Events.Exceptions
+namespace CalNotifyApi.Events.Exceptions
 {
     public interface IProcessEventException
     {

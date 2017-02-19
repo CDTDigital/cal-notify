@@ -1,7 +1,7 @@
 ﻿using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace CalNotify.Models.Responses
+namespace CalNotifyApi.Models.Responses
 {
     public class ExampleMetaObject: ISchemaFilter
     {

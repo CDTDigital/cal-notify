@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
-using CalNotify.Events.Exceptions;
-using CalNotify.Events.Simple;
-using CalNotify.Services;
-using CalNotify.Utils;
+using CalNotifyApi.Events.Exceptions;
+using CalNotifyApi.Events.Simple;
+using CalNotifyApi.Services;
+using CalNotifyApi.Utils;
 using Microsoft.AspNetCore.Identity;
 
-namespace CalNotify.Events
+namespace CalNotifyApi.Events
 {
     public class AdminUpdateEvent: AdminRelatedEvent, IValidatableObject
     {

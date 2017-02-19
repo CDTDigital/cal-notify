@@ -2,11 +2,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.Serialization;
-using CalNotify.Events.Interfaces;
-using CalNotify.Models.Admins;
-using CalNotify.Services;
+using CalNotifyApi.Events.Interfaces;
+using CalNotifyApi.Models.Admins;
+using CalNotifyApi.Services;
 
-namespace CalNotify.Events.Simple
+namespace CalNotifyApi.Events.Simple
 {
     [DataContract]
     public class AdminRelatedEvent : IAdminEvent

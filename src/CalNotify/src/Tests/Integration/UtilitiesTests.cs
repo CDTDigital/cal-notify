@@ -1,10 +1,9 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using CalNotifyApi;
+using CalNotifyApi.Events;
+using CalNotifyApi.Models.Auth;
 using Xunit;
-
-using CalNotify;
-using CalNotify.Events;
-using CalNotify.Models.Auth;
 
 namespace Tests.Integration
 {

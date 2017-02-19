@@ -5,14 +5,14 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using CalNotify;
-using CalNotify.Events;
-using CalNotify.Models.Auth;
-using CalNotify.Models.Interfaces;
-using CalNotify.Models.Responses;
-using CalNotify.Models.User;
-using CalNotify.Services;
-using CalNotify.Utils;
+using CalNotifyApi;
+using CalNotifyApi.Events;
+using CalNotifyApi.Models;
+using CalNotifyApi.Models.Auth;
+using CalNotifyApi.Models.Interfaces;
+using CalNotifyApi.Models.Responses;
+using CalNotifyApi.Services;
+using CalNotifyApi.Utils;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.TestHost;
@@ -29,10 +29,10 @@ namespace Tests
     public class StartupFixture<TStartup> : BaseFixture, IDisposable where TStartup : class
     {
 
-        private static  TestServer _server;
+        private static TestServer _server;
         public static bool DidClear = false;
 
-        public  string FakeToken = Constants.Testing.TestValidationToken;
+        public string FakeToken = Constants.Testing.TestValidationToken;
 
         public StartupFixture()
         {
@@ -50,6 +50,7 @@ namespace Tests
                 using (var dbContext = new BusinessDbContext(options.Options))
                 {
                     dbContext.Database.OpenConnection();
+                    dbContext.Database.Migrate();
                     dbContext.AllUsers.Clear();
                     dbContext.SaveChanges();
 
@@ -59,33 +60,33 @@ namespace Tests
             if (_server == null)
             {
                 var solutionRelativeTargetProjectParentDir = Path.Combine("src");
-                var contentRoot = CalNotify.Utils.Extensions.GetProjectPath(solutionRelativeTargetProjectParentDir);
+                var contentRoot = Extensions.GetProjectPath(solutionRelativeTargetProjectParentDir);
                 var builder = new WebHostBuilder()
                     .UseContentRoot(contentRoot)
                     .UseEnvironment("Testing")
                     .UseStartup<TStartup>().ConfigureServices(InitializeServices);
 
-               
+
                 _server = new TestServer(builder);
 
-     
+
             }
-         
+
         }
 
         protected virtual void InitializeServices(IServiceCollection services)
         {
-           var  mockedSmsSender = new Mock<ISmsSender>();
+            var mockedSmsSender = new Mock<ISmsSender>();
             mockedSmsSender.Setup(x =>
-                x.SendValidationToken(It.IsAny<ITokenAble>())).ReturnsAsync(FakeToken);
-            services.Remove(new ServiceDescriptor(typeof(ISmsSender), typeof(TwilioSmsSender)));
+                x.SendValidationToSms(It.IsAny<ITempUser>())).ReturnsAsync(FakeToken);
+            services.Remove(new ServiceDescriptor(typeof(ISmsSender), typeof(ValidationSender)));
             services.AddSingleton(provider => mockedSmsSender.Object);
         }
 
         public new void Dispose()
         {
-         
-           
+
+
         }
 
 
@@ -208,20 +209,13 @@ namespace Tests
         }
 
 
-        public async Task<ResponseShell<T>> Get<T>(string route, FormUrlEncodedContent queryParams, TokenInfo tokenInfo = default(TokenInfo))
+        public async Task<ResponseShell<T>> Get<T>(string route, FormUrlEncodedContent queryParams)
         {
             using (var client = _server.CreateClient())
             {
                 string query = "";
-                if (!Equals(tokenInfo, default(TokenInfo)))
-                {
-
-                    query = "?" + queryParams.ReadAsStringAsync().Result;
-                   
-                }
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenInfo.Token);
                 client.BaseAddress = new Uri("http://localhost");
-
+                query = "?" + queryParams.ReadAsStringAsync().Result;
                 var responseValidate =
                     await (await client.GetAsync(route + query)).Content
                         .ReadAsStringAsync();
@@ -297,11 +291,11 @@ namespace Tests
             }
         }
 
-     
 
-     
 
-      
+
+
+
         #endregion
 
 
@@ -310,7 +304,7 @@ namespace Tests
 
         public async Task<TokenInfo> GetToken(GenericUser user)
         {
-            var refreshToken = new TempUserRefreshTempUserSmsWithSms()
+            var refreshToken = new RefreshTempUser()
             {
                 PhoneNumber = user.PhoneNumber
             };

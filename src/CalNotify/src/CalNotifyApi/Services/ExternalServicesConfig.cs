@@ -1,10 +1,12 @@
-﻿namespace CalNotify.Services
+﻿namespace CalNotifyApi.Services
 {
     public class ExternalServicesConfig
     {
         public GeocodioConfig Geocodio { get; set; }
         public TwilloConfig Twillo { get; set; }
         public GoogleConfig Google { get; set; }
+
+        public EmailConfig Email { get; set; }
     }
 
 
@@ -24,6 +26,23 @@
 
         public string Number { get; set; }
         public string SecretKey { get; set; }
+    }
+
+    public class EmailConfig
+    {
+        public Validation Validation { get; set; }
+
+    }
+
+    public class Validation
+    {
+        public string Address { get; set; }
+        public string Name { get; set; }
+        public string Server { get; set; }
+        public int Port { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Domain { get; set; }
     }
   
 }

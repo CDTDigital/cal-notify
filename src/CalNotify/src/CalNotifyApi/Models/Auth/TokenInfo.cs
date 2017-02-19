@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace CalNotify.Models.Auth
+namespace CalNotifyApi.Models.Auth
 {
     /// <summary>
     ///     A representation holding all required tokens and other authentication related data

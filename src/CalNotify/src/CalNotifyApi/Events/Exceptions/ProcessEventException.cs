@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using CalNotify.Models.Responses;
+using CalNotifyApi.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CalNotify.Events.Exceptions
+namespace CalNotifyApi.Events.Exceptions
 {
     /// <summary>
     /// Exception to be used during event related processing if the event can't continue

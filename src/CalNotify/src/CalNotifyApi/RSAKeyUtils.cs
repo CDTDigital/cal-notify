@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using Newtonsoft.Json;
 
-namespace CalNotify
+namespace CalNotifyApi
 {
     public class RSAKeyUtils
     {

@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CalNotify.Events;
-using CalNotify.Models.Admins;
-using CalNotify.Models.Auth;
-using CalNotify.Models.Responses;
-using CalNotify.Services;
+using CalNotifyApi.Events;
+using CalNotifyApi.Models.Admins;
+using CalNotifyApi.Models.Auth;
+using CalNotifyApi.Models.Responses;
+using CalNotifyApi.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using Microsoft.AspNetCore.Identity;
 
-namespace CalNotify.Controllers
+namespace CalNotifyApi.Controllers
 {
     [Authorize(Constants.AuthPolicy)]
     [Authorize(Constants.AdminRole)]
@@ -91,7 +91,7 @@ namespace CalNotify.Controllers
         {
             // The eventual user
 
-            var validatedUser = _context.Users.OfType<WebAdmin>().FirstOrDefault(x => x.Email == model.Email);
+            var validatedUser = _context.Admins.OfType<WebAdmin>().FirstOrDefault(x => x.Email == model.Email);
             if (validatedUser == null)
             {
                 // Our response is vague to avoid leaking information

@@ -1,16 +1,17 @@
 ﻿using System;
-using CalNotify.Models.Auth;
-using CalNotify.Models.Responses;
-using CalNotify.Models.Services;
+using CalNotifyApi.Models.Auth;
+using CalNotifyApi.Models.Responses;
+using CalNotifyApi.Models.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CalNotify.Events
+namespace CalNotifyApi.Events
 {
     public class CheckValidationTokenEvent
     {
-        public TempUserWithSms  Process(ITokenMemoryCache memoryCache, TokenCheck model)
+        public TempUser  Process(ITokenMemoryCache memoryCache,TokenCheck model)
         {
             var savedUser = memoryCache.GetForChallenge(model);
+
 
             if (savedUser == null)
             {
@@ -21,7 +22,22 @@ namespace CalNotify.Events
             {
                 throw new CheckValidationTokenException("Customer entered in wrong challenge token");
             }
+            return savedUser;
+        }
 
+        public TempUser Process(ITokenMemoryCache memoryCache, string model)
+        {
+            var savedUser = memoryCache.GetForChallenge(model);
+
+            if (savedUser == null)
+            {
+                throw new CheckValidationTokenException("Customer never received a challenge token");
+            }
+
+            if (!memoryCache.IsEqual(savedUser, model))
+            {
+                throw new CheckValidationTokenException("Customer entered in wrong challenge token");
+            }
             return savedUser;
         }
     }

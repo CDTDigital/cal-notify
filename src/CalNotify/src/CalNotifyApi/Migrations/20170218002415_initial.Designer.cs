@@ -1,20 +1,21 @@
 ﻿using System;
+using CalNotifyApi.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using CalNotify.Services;
 using NpgsqlTypes;
 
 namespace CalNotifyApi.Migrations
 {
     [DbContext(typeof(BusinessDbContext))]
-    [Migration("20170216222739_initial")]
+    [Migration("20170218002415_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
+                .HasAnnotation("Npgsql:PostgresExtension:postgis", "'postgis', '', ''")
                 .HasAnnotation("Npgsql:PostgresExtension:uuid-ossp", "'uuid-ossp', '', ''")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "1.1.0-rtm-22752");
@@ -28,7 +29,7 @@ namespace CalNotifyApi.Migrations
 
                     b.Property<string>("FormattedAddress");
 
-                    b.Property<NpgsqlPoint>("GeoLocation");
+                    b.Property<PostgisPoint>("GeoLocation");
 
                     b.Property<string>("Number");
 
@@ -90,6 +91,26 @@ namespace CalNotifyApi.Migrations
                     b.ToTable("AllUsers");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("GenericUser");
+                });
+
+            modelBuilder.Entity("CalNotify.Services.ZipCodeInfo", b =>
+                {
+                    b.Property<string>("Zipcode")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("City");
+
+                    b.Property<string>("County");
+
+                    b.Property<string>("Latitude");
+
+                    b.Property<string>("Longitude");
+
+                    b.Property<string>("Region");
+
+                    b.HasKey("Zipcode");
+
+                    b.ToTable("ZipCodes");
                 });
 
             modelBuilder.Entity("CalNotify.Models.Admins.WebAdmin", b =>

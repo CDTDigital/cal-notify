@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace CalNotify.Models.Admins
+namespace CalNotifyApi.Models.Admins
 {
     /// <summary>
     /// The configurable properties of our system which need to be persisted to the database.

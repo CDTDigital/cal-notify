@@ -2,12 +2,12 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.Serialization;
-using CalNotify.Events.Interfaces;
-using CalNotify.Models.User;
-using CalNotify.Services;
+using CalNotifyApi.Events.Interfaces;
+using CalNotifyApi.Models;
+using CalNotifyApi.Services;
 using Microsoft.EntityFrameworkCore;
 
-namespace CalNotify.Events.Simple
+namespace CalNotifyApi.Events.Simple
 {
     /// <summary>
     ///     Base event class for handling customer related events.

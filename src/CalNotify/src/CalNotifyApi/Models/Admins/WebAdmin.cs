@@ -1,13 +1,12 @@
 using System.Runtime.Serialization;
-using CalNotify.Models.User;
 using Microsoft.AspNetCore.Identity;
 
-namespace CalNotify.Models.Admins
+namespace CalNotifyApi.Models.Admins
 {
     /// <summary>
     /// </summary>
     [DataContract]
-    public class WebAdmin : GenericUser
+    public class WebAdmin : BaseUser
     {
         public WebAdmin() {}
 
@@ -21,7 +20,7 @@ namespace CalNotify.Models.Admins
 
             SetPassword(password);
         }
-
+  
 
         public void Update(string name, string email, string password = null, string passwordCheck = null)
         {

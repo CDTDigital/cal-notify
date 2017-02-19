@@ -1,11 +1,12 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
-using CalNotify.Models.User;
+using CalNotifyApi.Models.Auth;
 using Newtonsoft.Json;
 using NpgsqlTypes;
 
-namespace CalNotify.Models.Addresses
+namespace CalNotifyApi.Models.Addresses
 {
     /// <summary>
     ///     Base class which holds the simple and most used aspects of an address.
@@ -14,20 +15,20 @@ namespace CalNotify.Models.Addresses
     [DataContract]
     public abstract class SimpleAddress
     {
-        [DataMember(Name = "number")]
+        [DataMember(Name = "number"),Required]
         public string Number { get; set; }
 
-        [DataMember(Name = "street")]
+        [DataMember(Name = "street"), Required]
         public string Street { get; set; }
 
-        [DataMember(Name = "state")]
+        [DataMember(Name = "state"), Required]
         public string State { get; set; }
 
 
-        [DataMember(Name = "zip")]
+        [DataMember(Name = "zip"), Required]
         public string Zip { get; set; }
 
-        [DataMember(Name = "city")]
+        [DataMember(Name = "city"), Required]
         public string City { get; set; }
     }
 
@@ -51,7 +52,7 @@ namespace CalNotify.Models.Addresses
     /// is the primary address type which gets sent down the wire to clients
     /// </summary>
     [DataContract]
-    public class AddressWithLatLng : SimpleAddress, IAddress
+    public class AddressWithLatLng : SimpleAddress, IAddress, IGeoLocation
     {
         /// <summary>
         /// Latitude position
@@ -79,7 +80,7 @@ namespace CalNotify.Models.Addresses
     [DataContract]
     public class Address : SimpleAddress
     {
-        [Obsolete(Constants.ObsoleteOnlyForBinding, true)]
+       
         public Address() {}
 
         /// <summary>
@@ -101,7 +102,17 @@ namespace CalNotify.Models.Addresses
             State = addre.State;
             Zip = addre.Zip;
             City = addre.City;
-            GeoLocation = new NpgsqlPoint(addre.Latitude, addre.Longitude);
+            GeoLocation = new PostgisPoint(addre.Latitude, addre.Longitude) { SRID = Constants.SRID };
+        }
+
+        public Address(TempUser user)
+        {
+            Number = user.Number;
+            Street = user.Street;
+            State = user.State;
+            Zip = user.Zip;
+            City = user.City;
+            GeoLocation = new PostgisPoint(user.Latitude, user.Longitude) { SRID = Constants.SRID };
         }
 
         /// <summary>
@@ -123,7 +134,7 @@ namespace CalNotify.Models.Addresses
         ///     Gets or Sets GeoLocation
         /// </summary>
         [DataMember(Name = "location")]
-        public NpgsqlPoint GeoLocation { get; set; }
+        public PostgisPoint GeoLocation { get; set; }
 
         /// <summary>
         /// The User which used this address

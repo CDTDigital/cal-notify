@@ -11,6 +11,7 @@ namespace CalNotifyApi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:PostgresExtension:postgis", "'postgis', '', ''")
                 .Annotation("Npgsql:PostgresExtension:uuid-ossp", "'uuid-ossp', '', ''");
 
             migrationBuilder.CreateTable(
@@ -47,6 +48,22 @@ namespace CalNotifyApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ZipCodes",
+                columns: table => new
+                {
+                    Zipcode = table.Column<string>(nullable: false),
+                    City = table.Column<string>(nullable: true),
+                    County = table.Column<string>(nullable: true),
+                    Latitude = table.Column<string>(nullable: true),
+                    Longitude = table.Column<string>(nullable: true),
+                    Region = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ZipCodes", x => x.Zipcode);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Address",
                 columns: table => new
                 {
@@ -54,7 +71,7 @@ namespace CalNotifyApi.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     City = table.Column<string>(nullable: true),
                     FormattedAddress = table.Column<string>(nullable: true),
-                    GeoLocation = table.Column<NpgsqlPoint>(nullable: false),
+                    GeoLocation = table.Column<PostgisPoint>(nullable: true),
                     Number = table.Column<string>(nullable: true),
                     State = table.Column<string>(nullable: true),
                     Street = table.Column<string>(nullable: true),
@@ -86,6 +103,9 @@ namespace CalNotifyApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Configurations");
+
+            migrationBuilder.DropTable(
+                name: "ZipCodes");
 
             migrationBuilder.DropTable(
                 name: "AllUsers");

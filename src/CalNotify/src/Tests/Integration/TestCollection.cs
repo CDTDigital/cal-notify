@@ -1,4 +1,4 @@
-﻿using CalNotify;
+﻿using CalNotifyApi;
 using Xunit;
 
 namespace Tests.Integration

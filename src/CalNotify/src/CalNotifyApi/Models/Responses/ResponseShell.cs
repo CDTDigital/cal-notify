@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 
-namespace CalNotify.Models.Responses
+namespace CalNotifyApi.Models.Responses
 {
     /// <summary>
     ///     Our common wrapper around all of our API's responses

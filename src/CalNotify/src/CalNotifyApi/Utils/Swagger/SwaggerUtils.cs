@@ -1,6 +1,6 @@
 ﻿using Swashbuckle.AspNetCore.Swagger;
 
-namespace CalNotify.Utils.Swagger
+namespace CalNotifyApi.Utils.Swagger
 {
     public class SwaggerUtils
     {

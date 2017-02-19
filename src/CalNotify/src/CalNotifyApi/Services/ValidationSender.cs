@@ -5,13 +5,16 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using CalNotify.Models.Interfaces;
-using CalNotify.Utils;
+using CalNotifyApi.Models.Interfaces;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using MimeKit;
 
-namespace CalNotify.Services
+namespace CalNotifyApi.Services
 {
-    public class TwilioSmsSender : ISmsSender
+    public class ValidationSender : ISmsSender, IEmailSender
     {
 
         private const string TwilioSmsEndpointFormat
@@ -19,25 +22,51 @@ namespace CalNotify.Services
 
         
         private readonly ExternalServicesConfig _config;
-        private readonly ILogger<TwilioSmsSender> _log;
+        private readonly ILogger<ValidationSender> _log;
+
+        private static readonly PasswordHasher<string> PasswordHasher = new PasswordHasher<string>();
 
         #region publicAPI
-        public TwilioSmsSender(ExternalServicesConfig config, ILogger<TwilioSmsSender> log)
+        public ValidationSender(ExternalServicesConfig config, ILogger<ValidationSender> log)
         {
             _config = config;
             _log = log;
         }
 
-        public virtual async Task<string> SendValidationToken(ITokenAble model)
+        public virtual async Task<string> SendValidationToSms(ITempUser model)
         {
-            var token = Extensions.CreateToken();
-            model.Token = token;
-            var msg = $"Your token is:\n {token}";
+           var token = SetShortToken(model);
+            var msg = string.Format(Constants.Messages.SmsValidationMsg, token, _config.Email.Validation.Domain);
+           
             await SendMessage(model.PhoneNumber, msg);
            
             return token;
         }
 
+   
+
+        private string SetShortToken(ITempUser model)
+        {
+            var r = new Random((int)DateTime.Now.Ticks);
+
+            // Generate four-digit token
+            var token = r.Next(1000, 9999).ToString();
+            // Cant forget to set our token
+            model.Token = token;
+            return token;
+        }
+
+
+        private string SetToken(ITempUser model)
+        {
+          
+            var guid = Guid.NewGuid().ToString();
+            // Cant forget to set our token
+            model.Token = guid;
+            return guid;
+        }
+
+      
 
         /// <summary>
         /// Send an sms message using Twilio REST API
@@ -92,8 +121,6 @@ namespace CalNotify.Services
             _log?.LogWarning(logmessage);
 
             return false;
-
-
         }
 
         #endregion
@@ -110,6 +137,44 @@ namespace CalNotify.Services
             );
         }
 
+      
+
+        public async Task<string> SendValidationToEmail(ITempUser model)
+        {
+            var token = SetToken(model);
+
+            var emailMessage = new MimeMessage();
+
+            emailMessage.From.Add(new MailboxAddress(_config.Email.Validation.Name, _config.Email.Validation.Address));
+            emailMessage.To.Add(new MailboxAddress(model.Email));
+            emailMessage.Subject = "Cal-Notify Validation Link";
+
+            var builder = new BodyBuilder();
+
+            builder.HtmlBody = string.Format(Constants.Messages.EmailValidationMsg, model.Name,
+                                             $"{_config.Email.Validation.Domain}{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/{Constants.ValidationAction}",
+                                             token);
+          
+
+             emailMessage.Body = builder.ToMessageBody();
+            using (var client = new SmtpClient())
+            {
+                await client.ConnectAsync(_config.Email.Validation.Server, _config.Email.Validation.Port, SecureSocketOptions.None).ConfigureAwait(false);
+                // Note: since we don't have an OAuth2 token, disable
+                // the XOAUTH2 authentication mechanism.
+                client.AuthenticationMechanisms.Remove("XOAUTH2");
+
+                // Note: only needed if the SMTP server requires authentication
+                client.Authenticate(_config.Email.Validation.Username, _config.Email.Validation.Password);
+               
+                await client.SendAsync(emailMessage).ConfigureAwait(false);
+                await client.DisconnectAsync(true).ConfigureAwait(false);
+            }
+
+            return token;
+        }
+
         #endregion
     }
 }
+

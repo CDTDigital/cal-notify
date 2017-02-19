@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Serilog;
 using Serilog.Events;
 
-namespace CalNotify.Utils
+namespace CalNotifyApi.Utils
 {
     class SerilogMiddleware
     {

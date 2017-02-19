@@ -1,5 +1,5 @@
-﻿using CalNotify;
-using CalNotify.Services;
+﻿using CalNotifyApi;
+using CalNotifyApi.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Xunit;

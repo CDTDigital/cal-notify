@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using CalNotify.Events.Exceptions;
-using CalNotify.Models.Addresses;
-using CalNotify.Models.Responses;
-using CalNotify.Models.Services;
+using CalNotifyApi.Events.Exceptions;
+using CalNotifyApi.Models.Addresses;
+using CalNotifyApi.Models.Responses;
+using CalNotifyApi.Models.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace CalNotify.Services
+namespace CalNotifyApi.Services
 {
     public class GeocodeIO
     {

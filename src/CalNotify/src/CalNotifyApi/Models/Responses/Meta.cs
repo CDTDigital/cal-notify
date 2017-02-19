@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace CalNotify.Models.Responses
+namespace CalNotifyApi.Models.Responses
 {
     /// <summary>
     /// For each and every request the response will include a <see cref="Meta" /> 

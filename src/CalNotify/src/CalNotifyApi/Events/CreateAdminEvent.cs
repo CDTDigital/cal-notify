@@ -2,12 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.Serialization;
-using CalNotify.Models.Admins;
-using CalNotify.Services;
-using CalNotify.Utils;
+using CalNotifyApi.Models.Admins;
+using CalNotifyApi.Services;
+using CalNotifyApi.Utils;
 using Serilog;
 
-namespace CalNotify.Events
+namespace CalNotifyApi.Events
 {
     [DataContract]
     public class CreateAdminEvent : IValidatableObject
