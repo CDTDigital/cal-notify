@@ -15,7 +15,8 @@ module.exports = function (grunt) {
                 },
                 files: {
                   'css/admin.css': 'less/admin.less',
-                  'css/home.css': 'less/home.less'
+                  'css/home.css': 'less/home.less',
+                  'css/home2.css': 'less/home2.less'
                 }
             },
         },
