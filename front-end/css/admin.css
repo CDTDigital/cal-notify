@@ -252,6 +252,10 @@
 .preview-toggle a:hover {
   color: #23527c;
 }
+.coverage-map {
+  height: 300px;
+  margin-bottom: 10px;
+}
 .panel-heading {
   padding: 0;
 }
