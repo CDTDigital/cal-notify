@@ -1,0 +1,41 @@
+@import "_variables.less";
+@import "spacing.less";
+
+
+.cover-img() {
+    background: url(../images/nasa-earthquakes-global.jpg) no-repeat top center; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+html, body {
+    height: 100%;
+    
+    //background: #43C6AC;
+    //background: -webkit-linear-gradient(to left, #43C6AC , #191654);
+    //background: linear-gradient(to left, #43C6AC , #191654);  
+            
+}
+
+.section {
+    padding: 100px 0;
+    
+    &-default {
+        background: white;
+    }
+    
+    &-banner {
+        padding: 300px 0;
+        color: white;
+        text-shadow: 1px 1px 7px #000;
+        .cover-img();
+    }
+    
+    &-signup {
+        padding: 300px 0;
+    }
+}
+
+

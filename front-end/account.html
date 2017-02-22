@@ -8,7 +8,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="icon" href="favicon.ico">
-<title>My Account | Cal-Alert</title>
+<title>My Account | Cal-Notify</title>
 
 <!-- Bootstrap core CSS -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -32,7 +32,7 @@
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-            <a class="navbar-brand" href="#">Cal-Alerts</a> </div>
+            <a class="navbar-brand" href="#">Cal-Notify</a> </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#">Dashboard</a></li>
@@ -43,19 +43,67 @@
         </div>
     </div>
 </nav>
-<div class="container-fluid">
+<div class="container">
     <div class="row">
         <div class="col-sm-12 main">
-            <h1 class="page-header">My Account</h1>
+            <h1 class="page-header m-t-lg">My Account</h1>
                         
             <div class="row">
-                <div class="col-sm-6">
-                    Notification Options
+                <div class="col-sm-5">
+                    <h2>My Notifications</h2>
+
+                        <div class="form-group">
+                            <label data-toggle="collapse" data-target="#emailAlerts" aria-expanded="true" aria-controls="emailAlerts">
+                                <input type="checkbox" checked/> Email
+                            </label>
+                        </div>
+
+                        <div class="collapse in" id="emailAlerts">
+                            <div class="m-y">
+                                <input type="email" class="form-control" id="exampleInput2" placeholder="Enter Email">
+                            </div>
+                        </div>
+                                                
+                        <div class="form-group">
+                            <label data-toggle="collapse" data-target="#smsAlerts" aria-expanded="true" aria-controls="smsAlerts">
+                                <input type="checkbox" checked/> SMS (Text Message)
+                            </label>
+                        </div>
+
+                        <div class="collapse in" id="smsAlerts">
+                            <div class="m-y">
+                                <input type="phone" class="form-control" id="exampleInput2" placeholder="Phone Number">
+                            </div>
+                            <div class="m-y">
+                                <select class="form-control">
+                                    <option>Carrier</option>
+                                    <option>AT&amp;T</option>
+                                    <option>Verizon</option>
+                                    <option>TMobile</option>
+                                    <option>Sprint</option>
+                                </select>
+                            </div>
+                        </div>
+                            
                 </div>
                
-                <div class="col-sm-6">
+                <div class="col-sm-5 col-sm-offset-2">
                     <h2>Account Settings</h2>
+                    
+                    <label for="exampleInput1">Your home or office location</label>
+                    <input type="text" class="form-control" id="exampleInput1" placeholder="Enter Address" value="4090 Truxel Rd, Sacramento CA, 95834">
+                    <hr>                  
+                    <label for="examplePassword2">Change your password</label>
+                    <input type="password" class="form-control" id="examplePassword2" placeholder="Set a Password">
                 </div>               
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12 main">
+            <div class="text-right">
+                <button class="btn btn-primary">Save Changes</button>
             </div>
         </div>
     </div>
