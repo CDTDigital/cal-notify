@@ -104,6 +104,18 @@ function setCoverageMap(data, radius) {
    	});
 }
 
+function publishHandlers() {
+	$(".publish-btn").on('click', function() {
+    	var currBtn = $(this);
+    	currBtn.button('loading');
+    	setTimeout(function(){ 
+    		currBtn.button('reset'); 
+    		currBtn.removeClass("publish-btn").addClass("republish-btn");
+    		currBtn.text("Republish"); 
+    	}, 5000);
+    });
+}
+
 $(document).ready(function () {
 	$(".alert-modal").on('shown.bs.modal', function () {
 		// Notify that modal is loaded so the map is resized
@@ -124,10 +136,12 @@ $(document).ready(function () {
                         '<td class="text-uppercase">Road closed near Pocket</td>' +
                         '<td><time datetime="2017-02-14">Feb 22, 2017</time></td>' +
                         '<td class="text-uppercase">Flood</td>' +
-                        '<td><button class="btn btn-success btn-test" data-loading-text="Notifying users...">Republish</button></td>' +
+                        '<td><button class="btn btn-success publish-btn" data-loading-text="Notifying users...">Publish</button></td>' +
                     '</tr>';
-        $(".alert-table tbody").append(html);
-        $(".btn-test").button('loading');
-        setTimeout(function(){ $(".btn-test").button('reset'); }, 5000);
+        $(".alert-table tbody").prepend(html);
+        
+        publishHandlers();
 	});
+
+	publishHandlers();
 });
