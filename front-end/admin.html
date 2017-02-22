@@ -145,7 +145,7 @@
                             <td class="text-uppercase">Road closed near Marysville</td>
                             <td><time datetime="2017-02-14">Feb 14, 2017</time></td>
                             <td class="text-uppercase">Flood</td>
-                            <td><button class="btn btn-default" data-toggle="modal" data-target=".bs-example-modal-lg">Publish</button></td>
+                            <td><button class="btn btn-default publish-btn" data-loading-text="Notifying users...">Publish</button></td>
                         </tr>
                         <tr>
                             <td><span class="glyphicon glyphicon-warning-sign text-danger"></span></td>
@@ -153,7 +153,7 @@
                             <td class="text-uppercase">Road closed all points south of Oroville Dam</td>
                             <td><time datetime="2017-02-14">Feb 14, 2017</time></td>
                             <td class="text-uppercase">Flood</td>
-                            <td><button class="btn btn-success">Republish</button></td>
+                            <td><button class="btn btn-success republish-btn" data-loading-text="Notifying users...">Republish</button></td>
                         </tr>
                         <tr>
                             <td><span class="glyphicon glyphicon-warning-sign text-warning"></span></td>
@@ -161,7 +161,7 @@
                             <td class="text-uppercase">Winter weather advisory for Truckee CA</td>
                             <td><time datetime="2017-02-14">Feb 14, 2017</time></td>
                             <td class="text-uppercase">Weather</td>
-                            <td><button class="btn btn-default" data-toggle="modal" data-target=".bs-example-modal-lg">Publish</button></td>
+                            <td><button class="btn btn-default publish-btn" data-loading-text="Notifying users...">Publish</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -176,7 +176,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Publish Alert</h4>
+                <h4 class="modal-title">New Alert</h4>
             </div>
             <div class="modal-body">
                 <form>
@@ -232,7 +232,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary save-alert-btn">Save changes</button>
+                <button type="button" class="btn btn-primary save-alert-btn">Create</button>
             </div>
         </div>
     </div>
