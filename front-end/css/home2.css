@@ -1,4 +1,4 @@
-/* adpq - v0.0.1 - Feb-21-2017 */
+/* adpq - v0.0.1 - Feb-22-2017 */
 /* STYLES COMPILED FROM SOURCE (LESS) DO NOT MODIFY */
 /* -----------------------------------------
    SPACING
@@ -244,6 +244,13 @@ html,
 body {
   height: 100%;
 }
+.navbar-brand {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.site-logo {
+  max-height: 100%;
+}
 .section {
   padding: 100px 0;
 }
@@ -251,15 +258,32 @@ body {
   background: white;
 }
 .section-banner {
-  padding: 300px 0;
-  color: white;
-  text-shadow: 1px 1px 7px #000;
   background: url(../images/nasa-earthquakes-global.jpg) no-repeat top center;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  color: white;
+  text-shadow: 1px 1px 7px #000;
+}
+@media (min-width: 768px) {
+  .section-banner {
+    padding: 300px 0;
+  }
 }
 .section-signup {
   padding: 300px 0;
+}
+.section-overstated {
+  background: #ce652e;
+  color: white;
+}
+.section-standout {
+  background: #464646;
+}
+.section-collapsed {
+  padding: 0;
+}
+.footer {
+  padding: 30px;
 }
