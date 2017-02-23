@@ -48,9 +48,15 @@ namespace CalNotifyApi.Services
         public virtual async Task<string> SendValidationToSms(TempUser model)
         {
             var token = SetShortToken(model, TokenType.SmsToken);
-            var msg = string.Format(Constants.Messages.SmsValidationMsg, token, _config.Email.Validation.HelpUrl);
+            var path = Path.Combine(_hostingEnv.ContentRootPath, "Templates", "smsvalidation.hbs");
+            var template = File.ReadAllText(path);
+            var verificationTemplate = Handlebars.Compile(template);
 
-            await SendMessage(model.PhoneNumber, msg);
+            var data = new
+            {
+                url = GetTokenUrl(model)
+            };
+            await SendMessage(model.PhoneNumber, verificationTemplate(data));
 
             return token;
         }
@@ -69,6 +75,11 @@ namespace CalNotifyApi.Services
             return token;
         }
 
+        private string GetTokenUrl(TempUser model)
+        {
+            return
+                $"{_config.Email.Validation.APIUrl.Trim('/')}{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/{Constants.ValidationAction}?token={model.Token}";
+        }
 
         private string SetToken(TempUser model, TokenType tokenType)
         {
@@ -100,6 +111,8 @@ namespace CalNotifyApi.Services
                 throw new ArgumentException("message was not provided");
             }
 
+
+           
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = CreateBasicAuthenticationHeader(
                 _config.Twillo.Id,
@@ -164,14 +177,13 @@ namespace CalNotifyApi.Services
             emailMessage.Subject = "Cal-Notify Validation Link";
 
 
-            var path = Path.Combine(_hostingEnv.ContentRootPath, "Emails", "validation.hbs");
-            var check = File.Exists(path);
+            var path = Path.Combine(_hostingEnv.ContentRootPath, "Templates", "emailvalidation.hbs");
             var template = File.ReadAllText(path);
             var verificationTemplate = Handlebars.Compile(template);
             var data = new
             {
-                name = model.Name,
-                tokenurl = $"{ _config.Email.Validation.APIUrl.Trim('/')}{ Constants.V1Prefix}/{ Constants.GenericUserEndpoint}/{ Constants.ValidationAction}?token={model.Token}",
+                name = model.Name ?? model.Email,
+                tokenurl = GetTokenUrl(model),
                 helpurl = _config.Email.Validation.HelpUrl
             };
 

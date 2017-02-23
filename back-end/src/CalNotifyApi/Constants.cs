@@ -119,20 +119,9 @@ namespace CalNotifyApi
 
         public static class Messages
         {
-            /// <summary>
-            /// Quick and dirty message to send to users when validating their phone numbers.
-            /// </summary>
-            public static readonly string SmsValidationMsg = "Cal Notify - Here is your verification code:\n {0} \n. If you do not know what this is visit {1} for help";
+          
 
-            /// <summary>
-            /// Simple message with link for users validating their email addresses.
-            /// </summary>
-            public static string EmailValidationMsg(TempUser user, EmailConfig config)
-            {
-                return $@"<p>Hi {user.Name}</p>,
-                            <P><a href=""{config.Validation.APIUrl}{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/{Constants.ValidationAction}?token={user.Token}"">Click to activate your account</a></p>
-                            <p>Cal Notify</p>";
-            }
+          
 
             public const string EmailValidationFailure = "Email validation is unable to function properly. Check the conifguration and make sure the values are properly set";
 

@@ -27,15 +27,11 @@ $(document).ready(function () {
 
             },
             error: function (xhr, status, error) {
-                console.log(xhr);
                 form.find('.alert').remove(); // clear old alerts
                 if (xhr.responseJSON !== undefined) {
-                    console.log(xhr.responseJSON);
-                    var details = xhr.responseJSON.meta.details != null ? xhr.responseJSON.meta.details : [xhr.responseJSON.meta.message];
-                    details.map(function (msg) {
-                        var alert = '<div class="alert alert-danger">' + msg + '</div>'
-                        form.prepend(alert);
-                    })
+                    console.log(xhr.responseJSON.meta);
+                    var alert = '<div class="alert alert-danger">' + xhr.responseJSON.meta.message + '</div>'
+                    form.prepend(alert);
                 } else {
                     var msg = "unknown server error";
                     var alert = '<div class="alert alert-danger">' + msg + '</div>'
