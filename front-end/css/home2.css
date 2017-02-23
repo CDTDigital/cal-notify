@@ -1,4 +1,4 @@
-/* adpq - v0.0.1 - Feb-21-2017 */
+/* adpq - v0.0.1 - Feb-22-2017 */
 /* STYLES COMPILED FROM SOURCE (LESS) DO NOT MODIFY */
 /* -----------------------------------------
    SPACING
@@ -243,6 +243,16 @@
 html,
 body {
   height: 100%;
+}
+.pac-container {
+  z-index: 2000;
+}
+.pac-container .pac-item {
+  font-size: 18px;
+}
+.pac-container .pac-item-query {
+  font-size: 18px;
+  margin-right: 10px;
 }
 .section {
   padding: 100px 0;

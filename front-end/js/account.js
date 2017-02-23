@@ -1,40 +1,66 @@
 $(document).ready(function () {
 
-    var addressDetails = {};
+    var baseApiAddress = "http://localhost:3002";
+    var baseAddress = "http://localhost:3000";
+    var homeRedirect = "/home2.html";
 
-    $(".form-wrapper-signup .js-next").click(function (e) {
-        var button = $(this);
-        var currentSection = button.closest(".panel");
-        var currentSectionIndex = currentSection.index();
-
-        currentSection.removeClass("is-active").next().addClass("is-active");
-
-        e.preventDefault();
-        console.log(button);
-        if (button.hasClass('js-send')) {
-
-            addressDetails["email"] = $("#email-input").val();
-            addressDetails["phone"] = $("#phone-input").val();
-            $.ajax({
-                url: 'http://localhost:3002/v1/users/create',
-                type: "POST",
-                data: JSON.stringify(addressDetails),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function () {
-                   console.log(returnedData);
-                }
-            });
-            ;
-        }
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    };
 
 
+    var userId =  getUrlParameter('user') ||  localStorage.getItem('user_id');
+    var token =  getUrlParameter('token') || localStorage.getItem('auth_token');
 
-        if (currentSectionIndex === 3) {
-            $(document).find(".form-wrapper .section").first().addClass("is-active");
-            $(document).find(".steps li").first().addClass("is-active");
-        }
+    if(userId != '' && userId != null) {
+        localStorage.setItem('user_id', userId);
+    } else {
+        window.location.href = baseAddress + homeRedirect;
+    }
+
+    if(token != '' && token != null) {
+        localStorage.setItem('auth_token', token);
+    } else {
+        window.location.href = baseAddress + homeRedirect;
+    }
+
+
+    var userDetails = {};
+
+    var req = $.get(baseApiAddress + "/v1/users/" + userId,{auth_token: token});
+    req.done(function(data){
+        userDetails = data.result;
+        update();
+    })
+
+
+    function update(){
+        console.log(userDetails);
+        $('.js-toggle_email').collapse({
+            toggle: userDetails.enabled_email
+        });
+
+        $('#email-input').val(userDetails.email);
+
+        $('.js-toggle_sms').collapse({
+            toggle: userDetails.enabled_sms
+        });
+
+        console.log(userDetails.address);
+        $('#autocomplete').val(userDetails.address.formatted_address);
+    }
+
+
+    $('.js-save').on('click', function(ev){
+
+        var update = $.post(baseApiAddress/ 'v1/users/' + userId + "?auth_token=" + token, userDetails);
+
+
     });
+
 
     var placeSearch, autocomplete;
     var componentForm = {
@@ -46,12 +72,13 @@ $(document).ready(function () {
         postal_code: 'short_name'
     };
 
+
     function initAutocomplete() {
         // Create the autocomplete object, restricting the search to geographical
         // location types.
         autocomplete = new google.maps.places.Autocomplete(
             /** @type {!HTMLInputElement} */(document.getElementById('autocomplete')),
-            { types: ['geocode'] });
+            {types: ['geocode']});
         console.log(autocomplete);
         // When the user selects an address from the dropdown, populate the address
         // fields in the form.
@@ -62,6 +89,7 @@ $(document).ready(function () {
         // Get the place details from the autocomplete object.
         var place = autocomplete.getPlace();
 
+        var addressDetails = {};
 
         var googlAddressNames = {};
         // Get each component of the address from the place details
@@ -79,12 +107,14 @@ $(document).ready(function () {
 
         addressDetails['lat'] = place.geometry.location.lat();
         addressDetails['lng'] = place.geometry.location.lng();
+        addressDetails['formatted_address'] = place.formatted_address;
         addressDetails['number'] = googlAddressNames["street_number"];
         addressDetails["street"] = googlAddressNames["route"];
         addressDetails["state"] = googlAddressNames["administrative_area_level_1"]
         addressDetails["zip"] = googlAddressNames["postal_code"];
         addressDetails["city"] = googlAddressNames["locality"];
-        console.log(addressDetails);
+
+        userDetails.address = addressDetails;
     }
 
     window.initAutocomplete = initAutocomplete;
@@ -92,7 +122,6 @@ $(document).ready(function () {
     // Bias the autocomplete object to the user's geographical location,
     // as supplied by the browser's 'navigator.geolocation' object.
     function geolocate() {
-        console.log(autocomplete);
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
                 var geolocation = {
@@ -109,9 +138,5 @@ $(document).ready(function () {
     }
 
     window.geolocate = geolocate;
-
-    $(".form-wrapper").submit(function (e) {
-        e.preventDefault();
-    });
-
+    console.log(window.geolocate);
 });

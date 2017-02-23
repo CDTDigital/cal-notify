@@ -1,4 +1,5 @@
 ﻿using System;
+using CalNotifyApi.Events.Exceptions;
 using CalNotifyApi.Models.Auth;
 using CalNotifyApi.Models.Responses;
 using CalNotifyApi.Models.Services;
@@ -42,7 +43,7 @@ namespace CalNotifyApi.Events
         }
     }
 
-    public class CheckValidationTokenException : Exception
+    public class CheckValidationTokenException : ProcessEventException
     {
         public CheckValidationTokenException(string message) : base(message)
         {

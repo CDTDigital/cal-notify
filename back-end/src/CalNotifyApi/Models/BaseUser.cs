@@ -52,11 +52,18 @@ namespace CalNotifyApi.Models
         [DataMember(Name = "enabled"), JsonIgnore, JsonProperty]
         public bool Enabled { get; set; }
 
-        [DataMember(Name = "validated_email"), JsonIgnore]
+        [DataMember(Name = "validated_email")]
         public bool ValidatedEmail { get; set; }
 
-        [DataMember(Name = "validated_sms"), JsonIgnore]
+        [DataMember(Name = "enabled_email")]
+        public bool EnabledEmail { get; set; }
+
+        [DataMember(Name = "validated_sms")]
         public bool ValidatedSms { get; set; }
+
+        [DataMember(Name = "enabled_sms")]
+        public bool EnabledSms { get; set; }
+
 
         /// <summary>
         ///   A user's avatar, if available

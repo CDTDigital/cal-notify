@@ -25,19 +25,35 @@ namespace CalNotifyApi.Events
                 var check = await context.Users.AnyAsync(u => u.PhoneNumber == tempUser.PhoneNumber || u.Email == tempUser.Email);
                 if (check)
                 {
-                    throw new ProcessEventException("GenericUser already has an account");
+                    throw new ProcessEventException("You have already signed up. Please login instead");
                 }
 
                 // Also need to check if their is any pending validation and in that case we would not take this info
-                var stillNeedValidation =
-                    await context.AllUsers.AnyAsync(
+                var waitingUeser =  context.AllUsers.FirstOrDefault(
                         u =>
                             (u.PhoneNumber == tempUser.PhoneNumber || u.Email == tempUser.Email) &&
                             u.Enabled == false);
 
-                if (stillNeedValidation)
+                if (waitingUeser != null )
                 {
-                    throw new ProcessEventException("User needs to confirm exisiting validation");
+                    if (!string.IsNullOrWhiteSpace(tempUser.Email))
+                    {
+                        Log.Information("Sending Email Validation to {user}", tempUser);
+
+                        await validation.SendValidationToEmail(tempUser);
+                        memoryCache.SetForChallenge(tempUser);
+
+                    }
+                    else if (!string.IsNullOrWhiteSpace(tempUser.PhoneNumber))
+                    {
+                        Log.Information("Sending SMS Validation to {user}", tempUser);
+
+                        await validation.SendValidationToSms(tempUser);
+                        memoryCache.SetForChallenge(tempUser);
+
+
+                    }
+                    throw new ProcessEventException("Your already signed up, you just need to confirm your information. Check your inbox or text messages.");
                 }
 
                 // Create a temporary account now, just keep account disabled untill verified.
@@ -54,10 +70,13 @@ namespace CalNotifyApi.Events
                     Address = addr,
                     UserName = string.IsNullOrEmpty(tempUser.Email) ? tempUser.PhoneNumber : tempUser.Email
                 };
+               
 
                 // Set our join date and last login 
                 user.JoinDate = user.LastLogin = DateTime.Now;
                 context.AllUsers.Add(user);
+                context.SaveChanges();
+                user.SetPassword(tempUser.Password);
                 context.SaveChanges();
                 Log.Information("Created a new user, unvalidated {user}", user);
 

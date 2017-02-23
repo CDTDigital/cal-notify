@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -9,8 +10,10 @@ using CalNotifyApi.Events.Exceptions;
 using CalNotifyApi.Models.Auth;
 using CalNotifyApi.Models.Interfaces;
 using CalNotifyApi.Models.Services;
+using HandlebarsDotNet;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using MimeKit;
@@ -24,32 +27,41 @@ namespace CalNotifyApi.Services
         private const string TwilioSmsEndpointFormat
             = "https://api.twilio.com/2010-04-01/Accounts/{0}/Messages.json";
 
-        
+
         private readonly ExternalServicesConfig _config;
         private readonly ILogger<ValidationSender> _log;
         private readonly ITokenMemoryCache _memoryCache;
 
+        private readonly IHostingEnvironment _hostingEnv;
+
         private static readonly PasswordHasher<string> PasswordHasher = new PasswordHasher<string>();
 
         #region publicAPI
-        public ValidationSender(ExternalServicesConfig config, ILogger<ValidationSender> log, ITokenMemoryCache memoryCache)
+        public ValidationSender(ExternalServicesConfig config, ILogger<ValidationSender> log, ITokenMemoryCache memoryCache, IHostingEnvironment hostingEnv)
         {
             _config = config;
             _log = log;
             _memoryCache = memoryCache;
+            _hostingEnv = hostingEnv;
         }
 
         public virtual async Task<string> SendValidationToSms(TempUser model)
         {
-           var token = SetShortToken(model, TokenType.SmsToken);
-            var msg = string.Format(Constants.Messages.SmsValidationMsg, token, _config.Email.Validation.HelpUrl);
-           
-            await SendMessage(model.PhoneNumber, msg);
-           
+            var token = SetShortToken(model, TokenType.SmsToken);
+            var path = Path.Combine(_hostingEnv.ContentRootPath, "Templates", "smsvalidation.hbs");
+            var template = File.ReadAllText(path);
+            var verificationTemplate = Handlebars.Compile(template);
+
+            var data = new
+            {
+                url = GetTokenUrl(model)
+            };
+            await SendMessage(model.PhoneNumber, verificationTemplate(data));
+
             return token;
         }
 
-   
+
 
         private string SetShortToken(TempUser model, TokenType tokenType)
         {
@@ -63,10 +75,15 @@ namespace CalNotifyApi.Services
             return token;
         }
 
+        private string GetTokenUrl(TempUser model)
+        {
+            return
+                $"{_config.Email.Validation.APIUrl.Trim('/')}{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/{Constants.ValidationAction}?token={model.Token}";
+        }
 
         private string SetToken(TempUser model, TokenType tokenType)
         {
-          
+
             var guid = Guid.NewGuid().ToString();
             // Cant forget to set our token
             model.Token = guid;
@@ -74,7 +91,7 @@ namespace CalNotifyApi.Services
             return guid;
         }
 
-      
+
 
         /// <summary>
         /// Send an sms message using Twilio REST API
@@ -82,7 +99,7 @@ namespace CalNotifyApi.Services
         /// <param name="toPhoneNumber">E.164 formatted phone number, e.g. +16175551212</param>
         /// <param name="message"></param>
         /// <returns></returns>
-        private  async Task<bool> SendMessage(string toPhoneNumber, string message)
+        private async Task<bool> SendMessage(string toPhoneNumber, string message)
         {
             if (string.IsNullOrWhiteSpace(toPhoneNumber))
             {
@@ -94,6 +111,8 @@ namespace CalNotifyApi.Services
                 throw new ArgumentException("message was not provided");
             }
 
+
+           
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = CreateBasicAuthenticationHeader(
                 _config.Twillo.Id,
@@ -145,11 +164,11 @@ namespace CalNotifyApi.Services
             );
         }
 
-      
+
 
         public async Task<string> SendValidationToEmail(TempUser model)
         {
-            var token = SetToken(model,TokenType.EmailToken);
+            var token = SetToken(model, TokenType.EmailToken);
 
             var emailMessage = new MimeMessage();
 
@@ -157,12 +176,23 @@ namespace CalNotifyApi.Services
             emailMessage.To.Add(new MailboxAddress(model.Email));
             emailMessage.Subject = "Cal-Notify Validation Link";
 
+
+            var path = Path.Combine(_hostingEnv.ContentRootPath, "Templates", "emailvalidation.hbs");
+            var template = File.ReadAllText(path);
+            var verificationTemplate = Handlebars.Compile(template);
+            var data = new
+            {
+                name = model.Name ?? model.Email,
+                tokenurl = GetTokenUrl(model),
+                helpurl = _config.Email.Validation.HelpUrl
+            };
+
             var builder = new BodyBuilder();
 
-            builder.HtmlBody = Constants.Messages.EmailValidationMsg(model, _config.Email);
-          
+            builder.HtmlBody = verificationTemplate(data);
 
-             emailMessage.Body = builder.ToMessageBody();
+
+            emailMessage.Body = builder.ToMessageBody();
             try
             {
                 using (var client = new SmtpClient())
@@ -185,9 +215,9 @@ namespace CalNotifyApi.Services
             catch (Exception e)
             {
                 Log.Fatal(e, Constants.Messages.EmailValidationFailure);
-                throw new ProcessEventException(Constants.Messages.EmailValidationFailure, new List<string>() {e.Message ,e.HelpLink,e.Source});
+                throw new ProcessEventException(Constants.Messages.EmailValidationFailure, new List<string>() { e.Message, e.HelpLink, e.Source });
             }
-            
+
         }
 
         #endregion

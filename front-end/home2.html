@@ -111,7 +111,7 @@
 
 <!-- Register modal -->
 <div class="modal fade register-modal" tabindex="-1" role="dialog" aria-labelledby="registerModal">
-    <div class="modal-dialog modal-md" role="document">
+    <form class="modal-dialog modal-md js-form-wrapper-signup" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -120,8 +120,9 @@
             <div class="modal-body">
 
                 <div class="form-group m-y">
-                    <label for="exampleInput1">Where are you located? <span class="text-danger">(required)</span></label>
-                    <input type="text" class="form-control" id="exampleInput1" placeholder="Address">
+                    <label for="autocomplete">Where are you located? <span class="text-danger">(required)</span></label>
+                    <input type="text" class="form-control input-lg"  id="autocomplete" placeholder="Enter Address"  onFocus="geolocate()">
+
                 </div>
 
                 <div class="form-group m-t-lg">
@@ -132,7 +133,7 @@
 
                     <div class="collapse" id="emailAlerts">
                         <div class="m-y">
-                            <input type="email" class="form-control" id="exampleInput2" placeholder="Enter Email">
+                            <input type="email" class="form-control" id="email-input" name="email" placeholder="Enter Email">
                         </div>
                     </div>
                 </div>
@@ -144,7 +145,7 @@
                     
                     <div class="collapse" id="smsAlerts">
                         <div class="m-y">
-                            <input type="phone" class="form-control" id="exampleInput2" placeholder="Phone Number">
+                            <input type="phone" class="form-control" id="phone-input" name="phone" placeholder="Phone Number">
                         </div>
                         <div class="m-y">
                             <select class="form-control">
@@ -159,16 +160,16 @@
                 </div>
                 
                 <div class="form-group m-t-lg">
-                    <label for="examplePassword1">Password <span class="text-danger">(required)</span></label>
-                    <input type="password" class="form-control" id="examplePassword1" placeholder="Password">
+                    <label for="password-input">Password <span class="text-danger">(required)</span></label>
+                    <input type="password" class="form-control"id="password-input" name="password" placeholder="Password">
                 </div>
                 
             </div>
             <div class="modal-footer">
-                <a href="account.html" class="btn btn-primary">Register</a>
+                <button type="submit" class="btn btn-primary  js-next js-send">Register</button>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 
@@ -219,6 +220,8 @@
 <!-- Just to make our placeholder images work. Don't actually copy the next line! --> 
 <script src="js/vendor/holder.min.js"></script> 
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug --> 
-<script src="js/ie10-viewport-bug-workaround.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMpYPdGvyw2Hxvsg3hw_azxR8u95RgrQU&libraries=places"
+        async defer></script>
+<script src="js/registration.js" async defer></script>
 </body>
 </html>
