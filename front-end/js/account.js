@@ -12,8 +12,8 @@ $(document).ready(function () {
     };
 
 
-    var userId = localStorage.getItem('user_id')  || getUrlParameter('user');
-    var token = localStorage.getItem('auth_token') || getUrlParameter('token');
+    var userId =  getUrlParameter('user') ||  localStorage.getItem('user_id');
+    var token =  getUrlParameter('token') || localStorage.getItem('auth_token');
 
     if(userId != '' && userId != null) {
         localStorage.setItem('user_id', userId);

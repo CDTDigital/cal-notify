@@ -31,7 +31,7 @@ namespace CalNotifyApi.Models.Auth
             PhoneNumber = phone;
         }
 
-        [DataMember(Name = "name"), Required]
+        [DataMember(Name = "name")]
         public virtual string Name { get; set; }
 
         [DataMember(Name = "password"), Required]
