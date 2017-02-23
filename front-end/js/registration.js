@@ -22,20 +22,6 @@ $(document).ready(function () {
             addressDetails["phone"] = $("#phone-input").val();
             addressDetails["password"] = $("#password-input").val();
 
-            addressDetails = {
-                "name": "matthew",
-                "email": "matt.d.clemens@gmail.com",
-                "phone": "9167056448",
-                "lat": 38,
-                "lng": 38,
-                "number": "5344",
-                "street": "new britton",
-                "state": "Ca",
-                "zip": "95843",
-                "city": "Antelope",
-                "password": 'test123'
-            }
-
             $.ajax({
                 url: baseApiAddress + '/v1/users/create',
                 type: "POST",
