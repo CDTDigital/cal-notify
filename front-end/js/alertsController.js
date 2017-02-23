@@ -6,14 +6,14 @@ app.controller('alertsCtrl', function($scope, $timeout, $http) {
     $scope.severities = ['Emergency', 'Non-Emergency'];
 
     $scope.alerts = [
-    	{severity:'Emergency', title:'MAJOR FLOODING HWY 99', description:'ROAD CLOSED NEAR MARYSVILLE', created:"Feb 14, 2017", category:"FLOOD", published:false},
-    	{severity:'Emergency', title:'MAJOR FLOODING HWY 70', description:'ROAD CLOSED ALL POINTS SOUTH OF OROVILLE DAM', created:"Feb 14, 2017", category:"FLOOD", published:true},
-    	{severity:'Non-Emergency', title:'SEVERE WEATHER', description:'WINTER WEATHER ADVISORY FOR TRUCKEE CA', created:"Feb 15, 2017", category:"WEATHER", published:false}
+    	{id: 1, severity:'Emergency', title:'MAJOR FLOODING HWY 99', description:'ROAD CLOSED NEAR MARYSVILLE', created:new Date(), category:"FLOOD", sent:null, published:false},
+    	{id: 2, severity:'Emergency', title:'MAJOR FLOODING HWY 70', description:'ROAD CLOSED ALL POINTS SOUTH OF OROVILLE DAM', created:new Date(), category:"FLOOD", sent:new Date(), published:true},
+    	{id: 3, severity:'Non-Emergency', title:'SEVERE WEATHER', description:'WINTER WEATHER ADVISORY FOR TRUCKEE CA', created:new Date(), category:"WEATHER", sent:null, published:false}
     ];
 
-    /*$scope.newAlert = function() {
+    $scope.newAlert = function() {
         return "";
-    };*/
+    };
     /*$timeout(function () {
         $scope.alert = "";
     }, 2000);*/
