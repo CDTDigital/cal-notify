@@ -3,7 +3,8 @@
 
 
 .cover-img() {
-    background: url(../images/nasa-earthquakes-global.jpg) no-repeat top center; 
+    //background: url(../images/nasa-earthquakes-global.jpg) no-repeat top center; 
+    background: url(../images/urban-notify.png) no-repeat bottom center; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -19,6 +20,20 @@ html, body {
             
 }
 
+
+// NAVBAR
+.navbar-brand {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.site-logo {
+    max-height: 100%;
+}
+
+
+
+// SECTIONS
 .pac-container {
     z-index: 2000;
     .pac-item {
@@ -38,15 +53,38 @@ html, body {
     }
     
     &-banner {
-        padding: 300px 0;
+        .cover-img();
         color: white;
         text-shadow: 1px 1px 7px #000;
-        .cover-img();
+        
+        @media (min-width: @screen-sm-min) {
+            padding: 300px 0;
+        }
+        
     }
     
     &-signup {
         padding: 300px 0;
     }
+    
+    &-overstated {
+        //background: rgba(70,70,70,1.00);
+        //background: #bb461b;    // Dark Orange
+        //background: rgba(251,125,38,1.00);     // Map Orange
+        background: #ce652e;
+        color: white;
+    }
+    
+    &-standout {
+        background: rgba(70,70,70,1.00);
+    }
+    
+    &-collapsed {
+        padding: 0;
+    }
 }
 
+.footer {
+    padding: 30px;
+}
 
