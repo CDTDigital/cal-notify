@@ -68,9 +68,9 @@ namespace CalNotifyApi.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPost("login")]
+        [HttpPost("login"), Consumes("application/json")]
         [SwaggerOperation("USER_LOGIN", Tags = new[] { Constants.GenericUserEndpoint })]
-        [ProducesResponseType(typeof(ResponseShell<TokenInfo>), 200)]
+        [ProducesResponseType(typeof(ResponseShell<string>), 200)]
         public virtual async Task<IActionResult> UserLogin([FromBody] UserLoginEvent model)
         {
             // The eventual user
@@ -85,13 +85,13 @@ namespace CalNotifyApi.Controllers
             if (passCheck != PasswordVerificationResult.Success)
             {
                 // Our response is vague to avoid leaking information
-                return ResponseShell.Error("Invalid");
+                return ResponseShell.Error("Password Check Failed");
             }
 
             // Get our token
             var token = await _tokenService.GetToken(validatedUser);
-            // All good, lets give out our token
-            return ResponseShell.Ok(token);
+
+            return ResponseShell.Ok(_config.Email.Validation.AccountUrl + $"?user={token.UserId}&token={token.Token}");
 
         }
 
@@ -124,13 +124,23 @@ namespace CalNotifyApi.Controllers
         /// <param name="token">Token which was sent to verify user owns messaing account.</param>
         /// <param name="password"></param>
         /// <returns></returns>
-        [HttpPost("password"), ProducesResponseType(typeof(ResponseShell<SimpleSuccess>),200)]
+  /*      [HttpPost("password"), ProducesResponseType(typeof(ResponseShell<SimpleSuccess>),200)]
         [SwaggerOperation("Set a user passowrd", Tags = new[] { Constants.GenericUserEndpoint })]
         [GenericUserResources.ValidateGenricExistsAttribute]
-        public async Task<IActionResult> SetPassword([FromQuery] string token, [FromQuery, Required,MinLength(6), RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,15}$")] string password)
+        public async Task<IActionResult> SetPassword([FromBody] SetPasswordEvent model)
         {
             // Get our Saved User from Memory
-            var savedUser = new CheckValidationTokenEvent().Process(_memoryCache, token);
+            TempUser savedUser;
+            try
+            {
+                // Get our Saved User from Memory
+                savedUser = new CheckValidationTokenEvent().Process(_memoryCache, model.Token);
+            }
+            catch (CheckValidationTokenException e)
+            {
+                return Redirect(_config.Email.Validation.ResendUrl);
+            }
+           
             var exisitingUser = _context.AllUsers.FirstOrDefault(x => x.Id == savedUser.Id);
 
           
@@ -141,14 +151,14 @@ namespace CalNotifyApi.Controllers
                 return ResponseShell.Error("User is not enabled yet");
             }
       
-            exisitingUser.SetPassword(password);
+            exisitingUser.SetPassword(model.Password);
             _context.SaveChanges();
            
             var endToken = await _tokenService.GetToken(exisitingUser);
 
             // All good, lets provide our token
             return ResponseShell.Ok(endToken);
-        }
+        }*/
 
 
 
@@ -168,9 +178,17 @@ namespace CalNotifyApi.Controllers
         [SwaggerOperation("ValidateToken", Tags = new[] { Constants.GenericUserEndpoint })]
         public async Task<IActionResult> Validate([FromQuery] string token)
         {
-            
-            // Get our Saved User from Memory
-            var savedUser = new CheckValidationTokenEvent().Process(_memoryCache, token);
+            TempUser savedUser;
+            try
+            {
+                // Get our Saved User from Memory
+                savedUser = new CheckValidationTokenEvent().Process(_memoryCache, token);
+            }
+            catch (CheckValidationTokenException e)
+            {
+                return Redirect(_config.Email.Validation.ResendUrl);
+            }
+          
             var exisitingUser = _context.AllUsers.FirstOrDefault(x => x.Id == savedUser.Id);
 
             // we  have a user at this point, otherwise we would have thrown our processer error earlier
@@ -180,19 +198,16 @@ namespace CalNotifyApi.Controllers
             {
                 // we call in order the Enable and Create events, which handle the prerequiste logic for handling either case
                 exisitingUser = new EnableUserEvent().Process(_context, token, exisitingUser, savedUser);
-                // TODO Redirect to a password prompt
-                return Redirect(_config.Email.Validation.SetPasswordUrl);
             }
             else 
             {
                 // for exisiting users we dont need to create them but just to possibly validate a new communication channel
                 exisitingUser = new ValidateExistingUserCommunication().Process(_context, savedUser);
-            }
-
-            var endToken = await _tokenService.GetToken(exisitingUser);
           
-            // All good, lets provide our token
-            return ResponseShell.Ok(endToken);
+            }
+            var endToken = await _tokenService.GetToken(exisitingUser);
+            return Redirect(_config.Email.Validation.AccountUrl + $"?user={endToken.UserId}&token={endToken.Token}");
+                   
 
         }
 

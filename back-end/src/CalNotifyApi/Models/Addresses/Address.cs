@@ -15,21 +15,29 @@ namespace CalNotifyApi.Models.Addresses
     [DataContract]
     public abstract class SimpleAddress
     {
-        [DataMember(Name = "number"),Required]
+        [DataMember(Name = "number")]
         public string Number { get; set; }
 
-        [DataMember(Name = "street"), Required]
+        [DataMember(Name = "street")]
         public string Street { get; set; }
 
-        [DataMember(Name = "state"), Required]
+        [DataMember(Name = "state")]
         public string State { get; set; }
 
 
-        [DataMember(Name = "zip"), Required]
+        [DataMember(Name = "zip")]
         public string Zip { get; set; }
 
-        [DataMember(Name = "city"), Required]
+        [DataMember(Name = "city")]
         public string City { get; set; }
+
+
+        /// <summary>
+        /// A complete string representation of the address
+        /// <remarks>Not used</remarks>
+        /// </summary>
+        [DataMember(Name = "formatted_address")]
+        public string FormattedAddress { get; set; }
     }
 
     /// <summary>
@@ -59,6 +67,8 @@ namespace CalNotifyApi.Models.Addresses
         /// </summary>
         [DataMember(Name = "lat")]
         public double Latitude { get; set; }
+
+       
 
 
         /// <summary>
@@ -102,6 +112,7 @@ namespace CalNotifyApi.Models.Addresses
             State = addre.State;
             Zip = addre.Zip;
             City = addre.City;
+            FormattedAddress = addre.FormattedAddress;
             GeoLocation = new PostgisPoint(addre.Latitude, addre.Longitude) { SRID = Constants.SRID };
         }
 
@@ -112,6 +123,7 @@ namespace CalNotifyApi.Models.Addresses
             State = user.State;
             Zip = user.Zip;
             City = user.City;
+            FormattedAddress = user.FormattedAddress;
             GeoLocation = new PostgisPoint(user.Latitude, user.Longitude) { SRID = Constants.SRID };
         }
 
@@ -122,13 +134,7 @@ namespace CalNotifyApi.Models.Addresses
         [DataMember(Name = "id")]
         public long? Id { get; set; }
 
-        /// <summary>
-        /// A complete string representation of the address
-        /// <remarks>Not used</remarks>
-        /// TODO: fill this out when we create an address
-        /// </summary>
-        [DataMember(Name = "formatted_address")]
-        public string FormattedAddress { get; set; }
+  
 
         /// <summary>
         ///     Gets or Sets GeoLocation

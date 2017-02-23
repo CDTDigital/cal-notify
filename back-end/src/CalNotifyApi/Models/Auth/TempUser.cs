@@ -31,9 +31,11 @@ namespace CalNotifyApi.Models.Auth
             PhoneNumber = phone;
         }
 
-        [DataMember(Name = "name")]
+        [DataMember(Name = "name"), Required]
         public virtual string Name { get; set; }
 
+        [DataMember(Name = "password"), Required]
+        public virtual string Password { get; set; }
 
         [DataMember(Name = "email")]
         public virtual string Email { get; set; }
@@ -57,7 +59,29 @@ namespace CalNotifyApi.Models.Auth
         {
             if (string.IsNullOrWhiteSpace(Email) && string.IsNullOrWhiteSpace(PhoneNumber))
             {
-                yield return new ValidationResult("Need to prodivde atleast an Email of Phone number.");
+                yield return new ValidationResult("Need to provide at least an Email or Phone number.");
+            }
+
+            if (!HasAddress)
+            {
+                yield return new ValidationResult("Please provide an address.");
+            }
+
+
+        }
+
+        public bool HasAddress
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(City)
+                       && !string.IsNullOrEmpty(State)
+                       && !string.IsNullOrEmpty(Street)
+                       && !string.IsNullOrEmpty(Zip)
+                       // ReSharper disable once CompareOfFloatsByEqualityOperator
+                       && Latitude != 0
+                       // ReSharper disable once CompareOfFloatsByEqualityOperator
+                       && Longitude != 0;
             }
         }
 

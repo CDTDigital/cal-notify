@@ -129,8 +129,9 @@ namespace CalNotifyApi
             /// </summary>
             public static string EmailValidationMsg(TempUser user, EmailConfig config)
             {
-                return $@"<p>Hi {user.Name}</p>,<a href=""{config.Validation.APIUrl}{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/{Constants.ValidationAction}?token={user.Token}"">Click to activate your account</a>
-                            <p>-- Cal Notify</p>";
+                return $@"<p>Hi {user.Name}</p>,
+                            <P><a href=""{config.Validation.APIUrl}{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/{Constants.ValidationAction}?token={user.Token}"">Click to activate your account</a></p>
+                            <p>Cal Notify</p>";
             }
 
             public const string EmailValidationFailure = "Email validation is unable to function properly. Check the conifguration and make sure the values are properly set";

@@ -45,6 +45,8 @@
         public string APIUrl { get; set; }
         public string HelpUrl { get; set; }
         public string SetPasswordUrl { get; set; }
+        public string ResendUrl { get; set; }
+        public string AccountUrl { get; set; }
     }
   
 }

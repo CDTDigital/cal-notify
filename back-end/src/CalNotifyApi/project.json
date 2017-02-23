@@ -38,7 +38,8 @@
     "Swashbuckle.AspNetCore": "1.0.0-rc1",
     "MailKit": "1.10.2",
     "CsvHelper": "3.0.0-beta7",
-    "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0"
+    "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0",
+    "Handlebars.Net": "1.8.0"
   },
 
   "tools": {
