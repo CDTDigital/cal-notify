@@ -1,4 +1,4 @@
-/* adpq - v0.0.1 - Feb-17-2017 */
+/* adpq - v0.0.1 - Feb-22-2017 */
 /* STYLES COMPILED FROM SOURCE (LESS) DO NOT MODIFY */
 /* -----------------------------------------
    SPACING
@@ -239,6 +239,10 @@
 .p-y-lg {
   padding-top: 42px !important;
   padding-bottom: 42px !important;
+}
+.coverage-map {
+  height: 300px;
+  margin-bottom: 10px;
 }
 .preview-toggle {
   margin-bottom: 10px;

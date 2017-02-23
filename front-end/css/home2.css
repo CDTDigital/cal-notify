@@ -244,12 +244,23 @@ html,
 body {
   height: 100%;
 }
+
 .navbar-brand {
   padding-top: 10px;
   padding-bottom: 10px;
 }
 .site-logo {
   max-height: 100%;
+}
+.pac-container {
+  z-index: 2000;
+}
+.pac-container .pac-item {
+  font-size: 18px;
+}
+.pac-container .pac-item-query {
+  font-size: 18px;
+  margin-right: 10px;
 }
 .section {
   padding: 100px 0;

@@ -41,24 +41,24 @@
                     </nav>
                 </div>
             </div>
-            <div class="inner row">
+            <form class="inner row js-form-wrapper-signup">
                 <div class="col-md-5 col-sm-6 col-sm-offset-6"> 
                     <!-- STEP ONE -->
-                    <div class="panel panel-default step-one">
+                    <div class="panel panel-default step-one is-active">
                         <div class="panel-body">
                             <h2>Sign up for alerts</h2>
                             <p>Cal-Notify uses the information you provide for sending you important lifesaving alerts.</p>
                             <h3>Let's Get Started</h3>
                             <p>Please tell us where you live.</p>
-                            <input type="text" class="form-control input-lg" id="exampleInput1" placeholder="Enter Address">
+                            <input type="text" class="form-control input-lg"  id="autocomplete" placeholder="Enter Address"  onFocus="geolocate()">
                         </div>
                         <div class="panel-footer text-right">
-                            <button type="submit" class="btn btn-primary">Next</button>
+                            <button type="button" class="btn btn-primary js-next">Next</button>
                         </div>
                     </div>
                     
                     <!-- STEP TWO -->
-<!--
+
                     <div class="panel panel-default step-two">
                         <div class="panel-body">
                             <h2>Alert Channels</h2>
@@ -71,13 +71,13 @@
                             
                             <div class="collapse" id="emailAlerts">
                                 <div class="m-y">
-                                    <input type="email" class="form-control input-lg" id="exampleInput2" placeholder="Enter Email">
+                                    <input type="email" class="form-control input-lg" id="email-input" name="email"  placeholder="Enter Email"> 
                                 </div>
                             </div>
                             
                             <div class="collapse" id="smsAlerts">
                                 <div class="m-y">
-                                    <input type="phone" class="form-control input-lg" id="exampleInput2" placeholder="Phone Number">
+                                    <input type="phone" class="form-control input-lg" id="phone-input" name="phone" placeholder="Phone Number" >
                                 </div>
                                 <div class="m-y">
                                     <select class="form-control input-lg">
@@ -91,25 +91,24 @@
                             </div>
                         </div>
                         <div class="panel-footer text-right">
-                            <button type="submit" class="btn btn-primary">Next</button>
+                            <button type="submit" class="btn btn-primary  js-next js-send">Next</button>
                         </div>
                     </div>
--->
+
                     
-                    <!-- STEP ONE -->
-<!--
+                    <!-- STEP THREE -->
+
                     <div class="panel panel-default step-three">
                         <div class="panel-body">
                             <h2>Sign Up Complete</h2>
                             <p>You are now signed up to receive important lifesaving alerts!  You will receive an email at <span class="text-muted">xxx@xxx.com</span> with a link to confirm your account. Once confirmed, you will be able to change your notification preferences or delete your account</p>
                         </div>
                         <div class="panel-footer text-right">
-                            <button type="submit" class="btn btn-primary">Resend Confirmation</button>
+                            <button type="submit" class="btn btn-primary js-resend">Resend Confirmation</button>
                         </div>
                     </div>
--->
                 </div>
-            </div>
+            </form>
             
             <div class="mastfoot">
                 <div class="inner">
@@ -125,8 +124,13 @@
 <!-- Placed at the end of the document so the pages load faster --> 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
 <script>window.jQuery || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script> 
-<script src="js/bootstrap.min.js"></script> 
+<script src="js/bootstrap.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMpYPdGvyw2Hxvsg3hw_azxR8u95RgrQU&libraries=places"
+        ></script>
+<script src="js/registration.js" async defer></script>
+
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug --> 
 <script src="js/ie10-viewport-bug-workaround.js"></script>
+
 </body>
 </html>
