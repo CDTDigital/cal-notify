@@ -50,6 +50,11 @@ namespace CalNotifyApi.Services
         public DbSet<ZipCodeInfo> ZipCodes { get; set; }
 
         /// <summary>
+        /// List of notifications in the system
+        /// </summary>
+        public DbSet<Notification> Notifications { get; set; }
+
+        /// <summary>
         /// our configurable properties for our prototype
         /// </summary>
         public AdminConfiguration AdminConfig

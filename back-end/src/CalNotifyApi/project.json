@@ -84,7 +84,8 @@
       "Knowledge/**",
       "web.config",
       "swagger/**",
-      "zipcodes.csv"
+      "zipcodes.csv",
+      "Templates/**"
     ],
     "exclude": [
       "bin",

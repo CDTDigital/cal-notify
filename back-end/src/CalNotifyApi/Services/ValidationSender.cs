@@ -79,7 +79,7 @@ namespace CalNotifyApi.Services
         private string GetTokenUrl(TempUser model)
         {
             return
-                $"{_config.Email.Validation.APIUrl.Trim('/')}{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/{Constants.ValidationAction}?token={model.Token}";
+                $"{_config.Urls.Backend.Trim('/')}{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/{Constants.ValidationAction}?token={model.Token}";
         }
 
         private string SetToken(TempUser model, TokenType tokenType)
@@ -185,7 +185,7 @@ namespace CalNotifyApi.Services
             {
                 name = model.Name ?? "hello",
                 tokenurl = GetTokenUrl(model),
-                helpurl = _config.Email.Validation.HelpUrl
+                helpurl = $"{_config.Urls.Frontend.Trim('/')}/{_config.Pages.HelpPage}"
             };
 
             var builder = new BodyBuilder();

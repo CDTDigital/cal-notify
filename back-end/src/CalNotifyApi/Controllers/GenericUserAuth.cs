@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CalNotifyApi.Events;
 using CalNotifyApi.Models;
+using CalNotifyApi.Models.Admins;
 using CalNotifyApi.Models.Auth;
 using CalNotifyApi.Models.Responses;
 using CalNotifyApi.Models.Services;
@@ -75,7 +76,7 @@ namespace CalNotifyApi.Controllers
         {
             // The eventual user
 
-            var validatedUser = _context.Users.FirstOrDefault(x => x.Email == model.ContactInfo || x.PhoneNumber == model.ContactInfo);
+            var validatedUser = _context.AllUsers.Where(u => u.Enabled).FirstOrDefault(x => x.Email == model.ContactInfo || x.PhoneNumber == model.ContactInfo);
             if (validatedUser == null)
             {
                 // Our response is vague to avoid leaking information
@@ -84,15 +85,19 @@ namespace CalNotifyApi.Controllers
             var passCheck = validatedUser.VerifyPassowrd(model.Password);
             if (passCheck != PasswordVerificationResult.Success)
             {
-                // Our response is vague to avoid leaking information
-                return ResponseShell.Error("Password Check Failed");
+                return ResponseShell.Error("Could not find an account with that information");
             }
 
             // Get our token
             var token = await _tokenService.GetToken(validatedUser);
 
-            return ResponseShell.Ok(_config.Email.Validation.AccountUrl + $"?user={token.UserId}&token={token.Token}");
+            // overloading the login for webadmins too
+            if (validatedUser is WebAdmin)
+            {
+                return ResponseShell.Ok($"{_config.Urls.Frontend}/{_config.Pages.AdminPage}?user={token.UserId}&token={token.Token}");
+            }
 
+            return ResponseShell.Ok($"{_config.Urls.Frontend}/{_config.Pages.AccountPage}?user={token.UserId}&token={token.Token}");
         }
 
 
@@ -138,7 +143,7 @@ namespace CalNotifyApi.Controllers
             }
             catch (CheckValidationTokenException e)
             {
-                return Redirect(_config.Email.Validation.ResendUrl);
+                return Redirect(_config.Email.Validation.ResendPage);
             }
            
             var exisitingUser = _context.AllUsers.FirstOrDefault(x => x.Id == savedUser.Id);
@@ -186,7 +191,7 @@ namespace CalNotifyApi.Controllers
             }
             catch (CheckValidationTokenException e)
             {
-                return Redirect(_config.Email.Validation.ResendUrl);
+                return Redirect($"{_config.Urls.Frontend}/{_config.Pages.ResendPage}");
             }
           
             var exisitingUser = _context.AllUsers.FirstOrDefault(x => x.Id == savedUser.Id);
@@ -206,7 +211,7 @@ namespace CalNotifyApi.Controllers
           
             }
             var endToken = await _tokenService.GetToken(exisitingUser);
-            return Redirect(_config.Email.Validation.AccountUrl + $"?user={endToken.UserId}&token={endToken.Token}");
+            return Redirect($"{_config.Urls.Frontend}/{_config.Pages.AccountPage}?user={endToken.UserId}&token={endToken.Token}");
                    
 
         }

@@ -21,16 +21,17 @@ namespace CalNotifyApi.Controllers
     {
         private readonly BusinessDbContext _context;
         private readonly ILogger<AdminResources> _logger;
-
+        private readonly ExternalServicesConfig _config;
 
         private readonly TokenService _tokenService;
 
-        public AdminResources(BusinessDbContext context, ILogger<AdminResources> logger, TokenService tokenService)
+        public AdminResources(BusinessDbContext context, ILogger<AdminResources> logger, TokenService tokenService, ExternalServicesConfig config)
         {
             _context = context;
             _logger = logger;
 
             _tokenService = tokenService;
+            _config = config;
         }
 
         /// <summary>
@@ -106,8 +107,9 @@ namespace CalNotifyApi.Controllers
 
             // Get our token
             var token = await _tokenService.GetToken(validatedUser);
-            // All good, lets give out our token
-            return ResponseShell.Ok(token);
+       
+            return Redirect($"{_config.Urls.Frontend}/{_config.Pages.AdminPage}?user={token.UserId}&token={token.Token}");
+          
 
         }
 
