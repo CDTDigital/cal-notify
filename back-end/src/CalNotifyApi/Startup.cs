@@ -95,7 +95,7 @@ namespace CalNotifyApi
                 .WriteTo.RollingFile("logs/all-{Date}.txt");
         
 
-          //  Log.Logger = loggerConfig.CreateLogger();
+            Log.Logger = loggerConfig.CreateLogger();
 
             Log.Information("Our Content Root is {ContentRoot}", _hostingEnv.ContentRootPath);
             Log.Information("Running server under a {env} environment", env.EnvironmentName);
