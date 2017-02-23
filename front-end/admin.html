@@ -24,6 +24,9 @@
 <link rel="stylesheet" href="css/leaflet.css" />
 <link rel="stylesheet" href="css/leaflet.draw.css" />
 
+<!-- Angular -->
+<script src="js/vendor/angular.min.js"></script> 
+
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -31,7 +34,7 @@
     <![endif]-->
 </head>
 
-<body>
+<body ng-app="alertsApp" ng-controller="alertsCtrl">
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -75,12 +78,7 @@
                                         <div class="form-group">
                                             <label for="filterCategory">Category</label>
                                             <select class="form-control" id="filterCategory">
-                                                <option>Any</option>
-                                                <option>Fire</option>
-                                                <option>Flood</option>
-                                                <option>Weather</option>
-                                                <option>Tsunami</option>
-                                                <option>Earthquake</option>
+                                                <option ng-repeat="category in categories" value="{{category}}">{{category}}</option>
                                             </select>
                                         </div>
                                     </div>
@@ -88,10 +86,7 @@
                                         <div class="form-group">
                                             <label for="filterSource">Source</label>
                                             <select class="form-control" id="filterSource">
-                                                <option>Any</option>
-                                                <option>NOAA</option>
-                                                <option>GIS</option>
-                                                <option>...</option>
+                                                <option ng-repeat="source in sources" value="{{source}}">{{source}}</option>
                                             </select>
                                         </div>
                                     </div>
@@ -100,15 +95,8 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>Severity</label>
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" value="">
-                                                    Emergency </label>
-                                            </div>
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" value="">
-                                                    Non-Emergency </label>
+                                            <div class="checkbox" ng-repeat="severity in severities">
+                                                <label> <input type="checkbox" value=""> {{severity}} </label> &nbsp;
                                             </div>
                                         </div>
                                     </div>
@@ -139,15 +127,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        <tr ng-repeat="alert in alerts">
                             <td><span class="glyphicon glyphicon-warning-sign text-danger"></span></td>
-                            <td><span class="text-uppercase"><a href="">Major Flooding HWY 99</a></span></td>
-                            <td class="text-uppercase">Road closed near Marysville</td>
-                            <td><time datetime="2017-02-14">Feb 14, 2017</time></td>
-                            <td class="text-uppercase">Flood</td>
+                            <td><span class="text-uppercase"><a href="">{{ alert.title }}</a></span></td>
+                            <td class="text-uppercase">{{ alert.description }}</td>
+                            <td><time datetime="2017-02-14">{{ alert.created }}</time></td>
+                            <td class="text-uppercase">{{ alert.category }}</td>
                             <td><button class="btn btn-default publish-btn" data-loading-text="Notifying users...">Publish</button></td>
                         </tr>
-                        <tr>
+                        <!--<tr>
                             <td><span class="glyphicon glyphicon-warning-sign text-danger"></span></td>
                             <td class="text-uppercase"><a href="">Major Flooding HWY 70</a></td>
                             <td class="text-uppercase">Road closed all points south of Oroville Dam</td>
@@ -162,7 +150,7 @@
                             <td><time datetime="2017-02-14">Feb 14, 2017</time></td>
                             <td class="text-uppercase">Weather</td>
                             <td><button class="btn btn-default publish-btn" data-loading-text="Notifying users...">Publish</button></td>
-                        </tr>
+                        </tr>-->
                     </tbody>
                 </table>
             </div>
@@ -188,12 +176,7 @@
                     <div class="form-group">
                         <label for="filterCategoryModal">Category</label>
                         <select class="form-control" id="filterCategoryModal">
-                            <option>Any</option>
-                            <option>Fire</option>
-                            <option>Flood</option>
-                            <option>Weather</option>
-                            <option>Tsunami</option>
-                            <option>Earthquake</option>
+                            <option ng-repeat="category in categories" value="{{category}}">{{category}}</option>
                         </select>
                     </div>
                     
@@ -201,10 +184,7 @@
                     <div class="form-group">
                         <label for="filterSourceModal">Source</label>
                         <select class="form-control" id="filterSourceModal">
-                            <option>Any</option>
-                            <option>NOAA</option>
-                            <option>GIS</option>
-                            <option>...</option>
+                            <option ng-repeat="source in sources" value="{{source}}">{{source}}</option>
                         </select>
                     </div>
                     
@@ -224,8 +204,7 @@
                     <div class="form-group">
                         <label for="exampleSeverity">Severity</label>
                         <select class="form-control" id="exampleSeverity">
-                            <option>Emergency</option>
-                            <option>Non-Emergency</option>
+                            <option ng-repeat="severity in severities" value="{{severity}}">{{severity}}</option>
                         </select>
                     </div>
                 </form>
@@ -249,8 +228,12 @@
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug --> 
 <!--<script src="js/ie10-viewport-bug-workaround.js"></script>-->
 <!-- Leaflet scripts -->
-<script src="js/leaflet.js"></script>
-<script src="js/leaflet.draw.js"></script>
+<script src="js/vendor/leaflet.js"></script>
+<script src="js/vendor/leaflet.draw.js"></script>
 <script src="js/admin.js"></script>
+<!-- Angular modules & controllers -->
+<script src="js/alertsApp.js"></script>
+<script src="js/alertsController.js"></script>
+
 </body>
 </html>
