@@ -14,6 +14,7 @@ using CalNotifyApi.Utils.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -134,11 +135,27 @@ namespace CalNotifyApi
                 ConfigureMemoryCaches(services); // short lived, memory based persistance
                 ConfigureTokens(services);      // jwt service provider
                 ConfigureSwagger(services);
-               
-               
-             
 
-                services.AddCors(); // Register that we want to allow Cross origin sharing of our api resources          
+
+                // ********************
+                // Setup CORS
+                // ********************
+                var corsBuilder = new CorsPolicyBuilder();
+                corsBuilder.AllowAnyHeader();
+                corsBuilder.AllowAnyMethod();
+                corsBuilder.AllowAnyOrigin(); // For anyone access.
+              //  corsBuilder.WithOrigins("cal-notify.symsoftsolutions.com", "localhost:3000");
+                  //corsBuilder.WithOrigins("http://localhost:56573"); // for a specific url. Don't add a forward slash on the end!
+                //corsBuilder.AllowCredentials();
+
+                services.AddCors(options =>
+                {
+                    options.AddPolicy("SiteCorsPolicy", corsBuilder.Build());
+                });
+
+               
+
+
 
                 var defaultJson = Constants.CreateJsonSerializerSettings();
 
@@ -179,6 +196,10 @@ namespace CalNotifyApi
 
             // utilize serilog structured formatting as defined by Log.Logger
             loggerFactory.AddSerilog();
+            // ********************
+            // USE CORS - might not be required.
+            // ********************
+            app.UseCors("SiteCorsPolicy");
 
             app.UseMiddleware<SerilogMiddleware>();
 
@@ -186,15 +207,7 @@ namespace CalNotifyApi
             AppConfigureJWT(app);
 
             app.UseStaticFiles();
-            // Expose our endpoints to clients across domains
-            // TODO: [SECURITY] check if can be removed
-            app.UseCors(builder =>
-            {
-                // Should only be used during development
-                builder.AllowAnyOrigin();
-                builder.AllowAnyHeader();
-                builder.AllowAnyMethod();
-            });
+        
 
 
             // .net core MVC pipeline for routing and other goodies
@@ -207,7 +220,7 @@ namespace CalNotifyApi
                 ConfigureSagger(app);
             }
 
-           
+          
 
 
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())

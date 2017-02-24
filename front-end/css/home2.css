@@ -1,4 +1,4 @@
-/* adpq - v0.0.1 - Feb-23-2017 */
+/* adpq - v0.0.1  */
 /* STYLES COMPILED FROM SOURCE (LESS) DO NOT MODIFY */
 /* -----------------------------------------
    SPACING
@@ -278,15 +278,15 @@ body {
 }
 @media (min-width: 768px) {
   .section-banner {
-    padding: 300px 0;
+    padding-top: 200px;
+    padding-bottom: 300px;
   }
 }
 .section-signup {
   padding: 300px 0;
 }
 .section-overstated {
-  background: #ce652e;
-  color: white;
+  background: #c1eac3;
 }
 .section-standout {
   background: #464646;

@@ -10,7 +10,7 @@ namespace CalNotifyApi.Controllers
 
  
 
-        [HttpGet("status")]
+        [HttpGet("status"), HttpGet("/")]
         [ProducesResponseType(typeof(string), 200)]
         public virtual IActionResult Status()
         {

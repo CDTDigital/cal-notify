@@ -11,7 +11,7 @@ module.exports = function (grunt) {
                     paths: ["/"],
                     compress:false,
                     ieCompat:true,
-                    banner: '/* <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("mmm-dd-yyyy") %> */\n/* STYLES COMPILED FROM SOURCE (LESS) DO NOT MODIFY */\n'
+                    banner: '/* <%= pkg.name %> - v<%= pkg.version %>  */\n/* STYLES COMPILED FROM SOURCE (LESS) DO NOT MODIFY */\n'
                 },
                 files: {
                   'css/admin.css': 'less/admin.less',

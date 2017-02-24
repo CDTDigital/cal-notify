@@ -49,7 +49,7 @@ namespace CalNotifyApi
         public const string AdminConfigurationEndpoint = "admin";
 
 
-        public const string NotificationEndpoint = "notificaion";
+        public const string NotificationEndpoint = "notification";
 
 
         public const string ValidationAction = "validate";
