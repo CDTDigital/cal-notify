@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CalNotifyApi.Events;
 using CalNotifyApi.Models;
@@ -20,10 +21,12 @@ namespace CalNotifyApi.Controllers
     {
         private readonly BusinessDbContext _context;
         private readonly ILogger<NotificationResources> _logger;
-        public NotificationResources(BusinessDbContext context, ILogger<NotificationResources> logger)
+        private readonly ValidationSender _validation;
+        public NotificationResources(BusinessDbContext context, ILogger<NotificationResources> logger, ValidationSender validation)
         {
             _context = context;
             _logger = logger;
+            _validation = validation;
         }
 
         /// <summary>
@@ -55,7 +58,11 @@ namespace CalNotifyApi.Controllers
             return ResponseShell.Ok(notification);
         }
 
-
+        /// <summary>
+        /// Broadcasts the notification to the affected users
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         [SwaggerOperation("BROADCAST_NOTIFICATION", Tags = new[] {Constants.NotificationEndpoint})]
         [ProducesResponseType(typeof(ResponseShell<SimpleSuccess>), 200)]
@@ -63,8 +70,26 @@ namespace CalNotifyApi.Controllers
         public virtual IActionResult BroadcastNotification([FromRoute] long id)
         {
             var notification = _context.Notifications.FirstOrDefault(n => n.Id == id);
-            new BroadcastNotificationEvent();
-            return ResponseShell.NotImplementated();
+#pragma warning disable 4014
+            new BroadcastNotificationEvent().Process(_context, _validation,notification);
+#pragma warning restore 4014
+            return ResponseShell.Ok();
+        }
+        /// <summary>
+        /// Get the log of sent messages for a notiification
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}/log")]
+        [SwaggerOperation("BROADCAST_NOTIFICATION", Tags = new[] {Constants.NotificationEndpoint})]
+        [ProducesResponseType(typeof(ResponseShell<List<BroadCastLogEntry>>), 200)]
+        [ValidateNotificationExists]
+        public virtual IActionResult NotificationLog([FromRoute] long id)
+        {
+            var notification = _context.Notifications.FirstOrDefault(n => n.Id == id);
+            var list = _context.NotificationLog.Where(x => x.NotificationId == notification.Id.Value);
+            return ResponseShell.Ok(list);
+
         }
     }
 

@@ -10,9 +10,10 @@ using CalNotifyApi.Models;
 namespace CalNotifyApi.Migrations
 {
     [DbContext(typeof(BusinessDbContext))]
-    partial class BusinessDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170224232140_log")]
+    partial class log
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:PostgresExtension:postgis", "'postgis', '', ''")

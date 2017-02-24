@@ -44,6 +44,9 @@ namespace CalNotifyApi.Services
         /// </summary>
         private DbSet<AdminConfiguration> Configurations { get; set; }
 
+
+        public DbSet<BroadCastLogEntry> NotificationLog { get; set; }
+
         /// <summary>
         ///  The list of potential zipcodes which can be affected by alerts
         /// </summary>
@@ -108,6 +111,8 @@ namespace CalNotifyApi.Services
             .Property(e => e.Id)
             .HasDefaultValueSql("uuid_generate_v4()");
 
+
+            builder.Entity<BroadCastLogEntry>().HasKey(x => new {x.UserId, x.NotificationId});
 
         }
     }
