@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
@@ -10,7 +11,7 @@ namespace CalNotifyApi.Models
     /// 
     /// </summary>
     [DataContract]
-    public  class GeoLocation : IEquatable<GeoLocation>
+    public  class GeoLocation : IEquatable<GeoLocation>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="GeoLocation" /> class.
@@ -38,6 +39,14 @@ namespace CalNotifyApi.Models
         public double Longitude { get; set; }
 
         #region Operators
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (Latitude == 0 || Longitude == 0)
+            {
+                yield return new ValidationResult("Latitude and Longitude need to be set");
+            }
+        }
 
         /// <summary>
         /// Returns true if objects are equal

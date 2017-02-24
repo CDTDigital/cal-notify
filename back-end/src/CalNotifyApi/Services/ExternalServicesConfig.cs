@@ -6,6 +6,9 @@
         public TwilloConfig Twillo { get; set; }
         public GoogleConfig Google { get; set; }
 
+        public Urls Urls { get; set; }
+        public Pages Pages { get; set; }
+
         public EmailConfig Email { get; set; }
     }
 
@@ -42,11 +45,24 @@
         public int Port { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-        public string APIUrl { get; set; }
-        public string HelpUrl { get; set; }
-        public string SetPasswordUrl { get; set; }
-        public string ResendUrl { get; set; }
-        public string AccountUrl { get; set; }
+       
+  
+    }
+
+    public class Urls
+    {
+        public string Frontend { get; set; }
+        public string Backend { get; set; }
+    }
+
+    public class Pages
+    {
+        public string HelpPage { get; set; }
+        public string AdminPage { get; set; }
+        public string SetPasswordPage { get; set; }
+        public string ResendPage { get; set; }
+        public string AccountPage { get; set; }
+       
     }
   
 }

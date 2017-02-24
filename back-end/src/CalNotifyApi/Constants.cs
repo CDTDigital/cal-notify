@@ -49,6 +49,9 @@ namespace CalNotifyApi
         public const string AdminConfigurationEndpoint = "admin";
 
 
+        public const string NotificationEndpoint = "notificaion";
+
+
         public const string ValidationAction = "validate";
 
 
@@ -151,7 +154,7 @@ namespace CalNotifyApi
             /// </summary>
             public const string UserNotFound = "No User found with that it";
 
-         
+            public const string NotificationNotFound = "No Notification found with that id";
 
         }
 
