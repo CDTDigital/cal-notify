@@ -44,3 +44,9 @@ src/CalNotify/src/Tests/logs/
 back-end/src/CalNotifyApi/logs/
 
 back-end/src/CalNotifyApi/appsettings\.Local\.json
+
+front-end/css/admin.css
+
+front-end/css/home.css
+
+front-end/css/home2.css
