@@ -81,8 +81,11 @@
     "include": [
       "node_modules/**",
       "**.json",
+      "Knowledge/**",
       "web.config",
-      "swagger/**"
+      "swagger/**",
+      "zipcodes.csv",
+      "Templates/**"
     ],
     "exclude": [
       "bin",

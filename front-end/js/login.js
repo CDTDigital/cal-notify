@@ -8,12 +8,14 @@ $(document).ready(function () {
     });
     $(".js-form-wrapper-login .js-login").click(function (e) {
         e.preventDefault();
+
+        var form = $('.js-form-wrapper-login .js-form-body');
+
         var data=  {
-            contact_info: $("#contact_info").val(),
-            password: $('#password-input').val()
+            contact_info: form.find('[name="contact_info"]').val(),
+            password: form.find('[name="password"]').val()
         };
         console.log(data);
-        var form = $('.js-form-wrapper-login .panel-body');
 
         $.ajax({
             url: baseApiAddress + '/v1/users/login',

@@ -1,5 +1,21 @@
 
-var coverageMap, drawnItems;
+var coverageMap, drawnItems, scope;
+
+function addCircleToDrawnItems(lat, lng, radius) {
+	var coverageCircle = L.circle([lat, lng], radius);
+
+	// Since circle is not part of the GeoJSON standard, create a layer with the circle data
+	var geoJSON = coverageCircle.toGeoJSON();
+    geoJSON.properties.radius = radius;
+
+	L.geoJson(geoJSON, {
+        pointToLayer: function(feature, latlng) {
+            return new L.Circle(latlng, feature.properties.radius);
+        }
+    }).eachLayer(function(layer) {
+        layer.addTo(drawnItems);
+    });
+}
 
 function setCoverageMap(data, radius) {
 	if(typeof radius === 'undefined') radius = 5000;
@@ -12,7 +28,7 @@ function setCoverageMap(data, radius) {
 		fillColor: '#3388ff'
 	}
 
-	var input = $('.coverage-map-coords'), drawOptions, drawControl;
+	var inputPin = $('.coverage-map-coords'), inputArea = $('.coverage-map-area-coords'), drawOptions, drawControl;
 
 	if (typeof coverageMap !== 'undefined') {
 		drawnItems.clearLayers();
@@ -39,9 +55,9 @@ function setCoverageMap(data, radius) {
 		drawOptions = {
 			position: settings.drawToolPosition
 			, draw: {
-				circle: true
-				, marker: false
-				, polygon: false
+				circle: false
+				, marker: true
+				, polygon: true
 				, polyline: false
 				, rectangle: true
 			}
@@ -50,56 +66,87 @@ function setCoverageMap(data, radius) {
 			}
 		};
 
-		// Init drawing toolbar
+		// Define drawing tooltips
+	    L.drawLocal.draw.handlers.marker.tooltip.start = 'Click map to set alert location';
+	    L.drawLocal.draw.handlers.polygon.tooltip.start = 'Click to start drawing affected area';
+	    L.drawLocal.draw.handlers.polygon.tooltip.cont = 'Click to continue drawing affected area';
+	    L.drawLocal.draw.handlers.polygon.tooltip.end = 'Click first point to close the affected area';
+	    L.drawLocal.draw.handlers.rectangle.tooltip.start = 'Click and drag to draw affected area';
+	    L.drawLocal.draw.handlers.circle.tooltip.start = 'Click and drag to draw affected area';
+
 		drawControl = new L.Control.Draw(drawOptions);
 		coverageMap.addControl(drawControl);
 
 		// Draw toolbar handlers
 		coverageMap.on(L.Draw.Event.CREATED, function(e) {
+			var type = e.layerType;
 			if (drawnItems && drawnItems.getLayers().length !== 0) {
-				drawnItems.clearLayers();
+				drawnItems.eachLayer(function (layer) {
+					// Remove all markers while drawing markers
+					if(type === 'marker' && layer instanceof L.Marker) {
+						drawnItems.removeLayer(layer);
+					// Remove all polygons & rectangles while drawing polygons or rectangles
+					} else if(type !== 'marker' && !(layer instanceof L.Marker)) {
+						drawnItems.removeLayer(layer);
+					}
+				});
 			}
 
-			input.val(JSON.stringify(e.layer.toGeoJSON().geometry));
+			var type = e.layerType;
+			// Alert angular about changes on input field (Fix when value is changed through jQuery)
+			scope.$apply(function() { 
+				if (type === 'marker') {
+					inputPin.val(JSON.stringify(e.layer.toGeoJSON().geometry));
+					scope.alertCoords = JSON.stringify(e.layer.toGeoJSON().geometry);
+		        } else {
+		        	inputArea.val(JSON.stringify(e.layer.toGeoJSON().geometry));
+		        	scope.alertAreaCoords = JSON.stringify(e.layer.toGeoJSON().geometry);
+		        }
+	        });
+			
 			drawnItems.addLayer(e.layer);
+			coverageMap.fitBounds(drawnItems.getBounds(), { maxZoom: settings.maxZoom });
 		});
 
 		coverageMap.on(L.Draw.Event.EDITED, function(e) {
-			input.val(JSON.stringify(drawnItems.toGeoJSON().features[0].geometry));
+			var type = e.layerType;
+
+			scope.$apply(function() { 
+				var geometry = JSON.stringify(drawnItems.toGeoJSON().features[0].geometry);
+				if (type === 'marker') {
+					inputPin.val(geometry);
+					scope.alertCoords = geometry;
+		        } else {
+		        	inputArea.val(geometry);
+		        	scope.alertAreaCoords = geometry;
+		        }
+	        });
 		});
 
 		coverageMap.on(L.Draw.Event.DELETED, function(e) {
-			drawnItems.clearLayers();
-			input.val('');
+			var type = e.layerType;
+			if (type === 'marker') {
+				inputPin.val('');
+	        } else {
+	        	inputArea.val('');
+	        }
+			drawnItems.removeLayer(e.layer);
 		});
 	}
 
-	// Add circle with center on sent coords
+	// Add marker with sent coords
 	if (typeof data.coordinates !== 'undefined') {
-		var coverageCircle = L.circle([data.coordinates[1],data.coordinates[0]], radius);
-
-		// Since circle is not part of the GeoJSON standard, create a layer with the circle data
-		var geoJSON = coverageCircle.toGeoJSON();
-	    geoJSON.properties.radius = radius;
-
-		L.geoJson(geoJSON, {
-            pointToLayer: function(feature, latlng) {
-                return new L.Circle(latlng, feature.properties.radius);
-            }
-        }).eachLayer(function(layer) {
-            layer.addTo(drawnItems);
-        });
+		L.marker([data.coordinates[1], data.coordinates[0]]).addTo(drawnItems);
 	}
 
 	$(window).one('alert_modal_shown', function (e) {
        	$(".coverage-map").css("opacity","1");
        	$(".alert-modal").trigger('resize');
        	coverageMap.invalidateSize();
-       	console.log(drawnItems);
        	if (drawnItems && drawnItems.getLayers().length > 0) {
        		coverageMap.fitBounds(drawnItems.getBounds(), { maxZoom: settings.maxZoom });
        	} else {
-       		map.setView([38.663, -98.454], 5);
+       		coverageMap.setView([38.572958, -121.490101], 9);
        	}
    	});
 }
@@ -110,10 +157,12 @@ function publishHandlers() {
     	currBtn.button('loading');
     	setTimeout(function(){ 
     		currBtn.button('reset'); 
-    		currBtn.removeClass("publish-btn").addClass("republish-btn");
-    		currBtn.text("Republish"); 
-    	}, 5000);
+    		//currBtn.removeClass("publish-btn").addClass("republish-btn");
+    		//currBtn.text("Republish"); 
+    	}, 3000);
     });
+
+	//setCoverageMap({ "type": "Point", "coordinates": [-121.50772690773012,38.644356698715285]}, 8000);
 }
 
 $(document).ready(function () {
@@ -125,23 +174,25 @@ $(document).ready(function () {
 
 	$(".alert-modal").on('show.bs.modal', function () {
 		$(".coverage-map").css("opacity","0");
-		setCoverageMap({ "type": "Point", "coordinates": [-121.50772690773012,38.644356698715285]}, 8000);
 	});
 
 	$(".save-alert-btn").on('click', function () {
 		$(".alert-modal").modal('hide');
-		var html = '<tr>' +
-                        '<td><span class="glyphicon glyphicon-warning-sign text-danger"></span></td>' +
-                        '<td><span class="text-uppercase"><a href="">Major Flooding HWY 99</a></span></td>' +
-                        '<td class="text-uppercase">Road closed near Pocket</td>' +
-                        '<td><time datetime="2017-02-14">Feb 22, 2017</time></td>' +
-                        '<td class="text-uppercase">Flood</td>' +
-                        '<td><button class="btn btn-success publish-btn" data-loading-text="Notifying users...">Publish</button></td>' +
-                    '</tr>';
-        $(".alert-table tbody").prepend(html);
         
         publishHandlers();
 	});
 
+	$(".new-alert-btn").on('click', function () {
+		setCoverageMap({});
+		
+	    scope.$apply(function(){ 
+	    	scope.resetAlert();
+	    	scope.newAlert = true; 
+	    });
+		$(".alert-modal").modal('show');
+	});
+
 	publishHandlers();
+
+	scope = angular.element($("body")).scope();
 });

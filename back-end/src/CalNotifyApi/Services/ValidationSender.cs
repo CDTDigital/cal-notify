@@ -48,13 +48,14 @@ namespace CalNotifyApi.Services
         public virtual async Task<string> SendValidationToSms(TempUser model)
         {
             var token = SetShortToken(model, TokenType.SmsToken);
-            var path = Path.Combine(_hostingEnv.ContentRootPath, "Templates", "smsvalidation.hbs");
+            var path = Path.Combine(_hostingEnv.ContentRootPath, "Templates", "sms_validation.hbs");
             var template = File.ReadAllText(path);
             var verificationTemplate = Handlebars.Compile(template);
 
             var data = new
             {
-                url = GetTokenUrl(model)
+                url = GetTokenUrl(model),
+                name = model.Name ?? "hello"
             };
             await SendMessage(model.PhoneNumber, verificationTemplate(data));
 
@@ -78,7 +79,7 @@ namespace CalNotifyApi.Services
         private string GetTokenUrl(TempUser model)
         {
             return
-                $"{_config.Email.Validation.APIUrl.Trim('/')}{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/{Constants.ValidationAction}?token={model.Token}";
+                $"{_config.Urls.Backend.Trim('/')}{Constants.V1Prefix}/{Constants.GenericUserEndpoint}/{Constants.ValidationAction}?token={model.Token}";
         }
 
         private string SetToken(TempUser model, TokenType tokenType)
@@ -177,14 +178,14 @@ namespace CalNotifyApi.Services
             emailMessage.Subject = "Cal-Notify Validation Link";
 
 
-            var path = Path.Combine(_hostingEnv.ContentRootPath, "Templates", "emailvalidation.hbs");
+            var path = Path.Combine(_hostingEnv.ContentRootPath, "Templates", "email_validation.hbs");
             var template = File.ReadAllText(path);
             var verificationTemplate = Handlebars.Compile(template);
             var data = new
             {
-                name = model.Name ?? model.Email,
+                name = model.Name ?? "hello",
                 tokenurl = GetTokenUrl(model),
-                helpurl = _config.Email.Validation.HelpUrl
+                helpurl = $"{_config.Urls.Frontend.Trim('/')}/{_config.Pages.HelpPage}"
             };
 
             var builder = new BodyBuilder();
