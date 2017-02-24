@@ -22,7 +22,7 @@ namespace CalNotifyApi.Events
             using (var transaction = context.Database.BeginTransaction())
             {
                 // Check out our users, if we already someone, then no need to validate, its just an error
-                var check = await context.Users.AnyAsync(u => (u.PhoneNumber!= null && u.PhoneNumber == tempUser.PhoneNumber) ||( u.Email != null &&  u.Email == tempUser.Email));
+                var check = await context.Users.AnyAsync(u => (!string.IsNullOrEmpty(u.PhoneNumber) && (u.PhoneNumber == tempUser.PhoneNumber)) || (!string.IsNullOrEmpty(u.Email) &&  (u.Email == tempUser.Email)));
                 if (check)
                 {
                     throw new ProcessEventException("You have already signed up. Please login instead");
@@ -31,7 +31,7 @@ namespace CalNotifyApi.Events
                 // Also need to check if their is any pending validation and in that case we would not take this info
                 var waitingUeser =  context.AllUsers.FirstOrDefault(
                         u =>
-                           ((u.PhoneNumber != null && u.PhoneNumber == tempUser.PhoneNumber) || (u.Email != null && u.Email == tempUser.Email)) &&
+                           ((!string.IsNullOrEmpty(u.PhoneNumber) && u.PhoneNumber == tempUser.PhoneNumber) || (!string.IsNullOrEmpty(u.Email) && u.Email == tempUser.Email)) &&
                             u.Enabled == false);
 
                 if (waitingUeser != null )

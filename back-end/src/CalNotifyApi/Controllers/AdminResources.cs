@@ -107,9 +107,10 @@ namespace CalNotifyApi.Controllers
 
             // Get our token
             var token = await _tokenService.GetToken(validatedUser);
-       
-            return Redirect($"{_config.Urls.Frontend}/{_config.Pages.AdminPage}?user={token.UserId}&token={token.Token}");
-          
+
+            return ResponseShell.Ok(token);
+            // return Redirect($"{_config.Urls.Frontend}/{_config.Pages.AdminPage}?user={token.UserId}&token={token.Token}");
+
 
         }
 

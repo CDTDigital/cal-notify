@@ -1,7 +1,5 @@
 $(document).ready(function () {
 
-    var baseApiAddress = "http://localhost:3002";
-    var baseAddress = "http://localhost:3000";
 
     $(".js-form-wrapper-login").submit(function (e) {
         e.preventDefault();

@@ -113,7 +113,7 @@ namespace CalNotifyApi.Models.Addresses
             Zip = addre.Zip;
             City = addre.City;
             FormattedAddress = addre.FormattedAddress;
-            GeoLocation = new PostgisPoint(addre.Latitude, addre.Longitude) { SRID = Constants.SRID };
+            GeoLocation = new PostgisPoint(addre.Longitude, addre.Latitude) { SRID = Constants.SRID };
         }
 
         public Address(TempUser user)
@@ -124,7 +124,7 @@ namespace CalNotifyApi.Models.Addresses
             Zip = user.Zip;
             City = user.City;
             FormattedAddress = user.FormattedAddress;
-            GeoLocation = new PostgisPoint(user.Latitude, user.Longitude) { SRID = Constants.SRID };
+            GeoLocation = new PostgisPoint(user.Longitude, user.Latitude) { SRID = Constants.SRID };
         }
 
         /// <summary>

@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using CalNotifyApi.Events.Exceptions;
+using CalNotifyApi.Models;
 using CalNotifyApi.Models.Auth;
 using CalNotifyApi.Models.Interfaces;
 using CalNotifyApi.Models.Services;
@@ -61,6 +62,22 @@ namespace CalNotifyApi.Services
 
             return token;
         }
+
+
+        public virtual async Task<bool> SendMSMessage(string phone, Notification notification)
+        {
+            /*var  data = new 
+            {
+                title = notification.Title,
+                message = notification.Details,
+               
+            }*/
+            return await SendMessage(phone, notification.Title + "\n" + notification.Details);
+        }
+
+
+
+      
 
 
 
@@ -165,7 +182,20 @@ namespace CalNotifyApi.Services
             );
         }
 
+        public virtual async Task<bool> SendEmailMessage(string email, Notification notification)
+        {
+            var emailMessage = new MimeMessage();
+            emailMessage.From.Add(new MailboxAddress(_config.Email.Validation.Name, _config.Email.Validation.Address));
+            emailMessage.To.Add(new MailboxAddress(email));
+            emailMessage.Subject = "Cal-Notify Notification";
 
+            var builder = new BodyBuilder();
+            builder.TextBody = notification.Title + "\n" + notification.Details;
+            emailMessage.Body = builder.ToMessageBody();
+
+           return await SendEmail(emailMessage);
+         
+        }
 
         public async Task<string> SendValidationToEmail(TempUser model)
         {
@@ -194,6 +224,15 @@ namespace CalNotifyApi.Services
 
 
             emailMessage.Body = builder.ToMessageBody();
+
+            await SendEmail(emailMessage);
+            return token;
+
+        }
+
+
+        private async Task<bool> SendEmail(MimeMessage emailMessage)
+        {
             try
             {
                 using (var client = new SmtpClient())
@@ -210,7 +249,7 @@ namespace CalNotifyApi.Services
                     await client.DisconnectAsync(true).ConfigureAwait(false);
                 }
 
-                return token;
+                return true;
 
             }
             catch (Exception e)
@@ -218,7 +257,6 @@ namespace CalNotifyApi.Services
                 Log.Fatal(e, Constants.Messages.EmailValidationFailure);
                 throw new ProcessEventException(Constants.Messages.EmailValidationFailure, new List<string>() { e.Message, e.HelpLink, e.Source });
             }
-
         }
 
         #endregion
