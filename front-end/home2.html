@@ -198,39 +198,38 @@
             <div class="modal-body">
 
                 <div class="form-group m-y">
-                    <label for="autocomplete">Where are you located? <span class="text-danger">(required)</span></label>
-                    <input type="text" class="form-control input-lg"  id="autocomplete" placeholder="Enter Address"  onFocus="geolocate()">
-
+                    <label for="autocomplete" class="sr-only">Your Location</label>
+                    <p>Please tell us where you live</p>
+                    <div class="input-group m-b-md">
+                        <span class="input-group-addon" id="basic-addon1"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
+                        <input type="text" class="form-control input-lg" id="autocomplete" placeholder="Enter Address" aria-describedby="basic-addon1" onFocus="geolocate()">
+                    </div>
                 </div>
 
                 <div class="form-group m-t-lg">
-                    <p><strong>How would you like to be notified? <span class="text-danger">(required)</span></strong> </p>
-                        <label data-toggle="collapse" data-target="#emailAlerts" aria-expanded="false" aria-controls="emailAlerts">
-                        <input type="checkbox"/> Email
-                    </label>
-
-                    <div class="collapse" id="emailAlerts">
-                        <div class="m-y">
-                            <input type="email" class="form-control" id="email-input" name="email" placeholder="Enter Email">
-                        </div>
+                    <p>In case on emergency, how would you like to be notified? </p>
+                    <label for="email-input" class="sr-only">Email</label>
+                    <div class="input-group m-b-md">
+                        <span class="input-group-addon" id="basic-addon2"><i class="fa fa-envelope" aria-hidden="true"></i></span>
+                        <input type="email" class="form-control input-lg" id="email-input" name="email" placeholder="Email" aria-describedby="basic-addon2">
                     </div>
                 </div>
 
                 <div class="form-group m-y">
-                    <label data-toggle="collapse" data-target="#smsAlerts" aria-expanded="false" aria-controls="smsAlerts">
-                        <input type="checkbox"/> SMS (Text Message)
-                    </label>
-                    
-                    <div class="collapse" id="smsAlerts">
-                        <div class="m-y">
-                            <input type="phone" class="form-control" id="phone-input" name="phone" placeholder="Phone Number">
-                        </div>
+                    <label for="phone-input" class="sr-only">SMS</label>
+                    <div class="input-group m-b-md m-t-md">
+                        <span class="input-group-addon" id="basic-addon3"><i class="fa fa-mobile" aria-hidden="true"></i></span>
+                        <input type="phone" class="form-control input-lg" id="phone-input" name="phone" placeholder="SMS Text (Mobile Phone)" aria-describedby="basic-addon3">
                     </div>
                 </div>
                 
                 <div class="form-group m-t-lg">
-                    <label for="password-input">Password <span class="text-danger">(required)</span></label>
-                    <input type="password" class="form-control"id="password-input" name="password" placeholder="Password">
+                    <label for="password-input" class="sr-only">Password</label>
+                    <p>Please provide a password so you can manage your account and notification preferences</p>
+                    <div class="input-group m-b-md">
+                        <span class="input-group-addon" id="basic-addon4"><i class="fa fa-unlock-alt" aria-hidden="true"></i></span>
+                        <input type="password" class="form-control input-lg"id="password-input" name="password" placeholder="Password" aria-describedby="basic-addon4">
+                    </div>
                 </div>
                 
             </div>
