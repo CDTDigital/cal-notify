@@ -244,6 +244,7 @@ html,
 body {
   height: 100%;
 }
+
 .navbar-brand {
   padding-top: 10px;
   padding-bottom: 10px;
@@ -268,7 +269,7 @@ body {
   background: white;
 }
 .section-banner {
-  background: url(../images/urban-notify.png) no-repeat bottom center;
+  background: url(../images/nasa-earthquakes-global.jpg) no-repeat top center;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
