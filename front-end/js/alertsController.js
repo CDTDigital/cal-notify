@@ -67,12 +67,30 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
         $scope.alertArea = "";
     };
 
-    /*$timeout(function () {
-        $scope.alert = "";
-    }, 2000);*/
+    $scope.login = function() {
 
-	/*$http.get("customers.php").then(function(response) {
-        $scope.myData = response.data.records;
-    });*/
+    	$http.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+		$http({
+			method: 'POST',
+		 	url: 'http://api-cal-notify.symsoftsolutions.com/v1/admin/login',
+		 	headers: {
+		   		'Content-Type': 'application/json'
+		 	},
+		 	data: {
+			 	email: "testAdmin1@test.com",
+			 	password: "123testadmin"
+			}
+		}).then(function successCallback(response) {
+			console.log(response);
+		    // this callback will be called asynchronously
+		    // when the response is available
+		}, function errorCallback(response) {
+			console.log(response);
+		    // called asynchronously if an error occurs
+		    // or server returns response with an error status.
+	 	});
+
+    }
+
 
 });
