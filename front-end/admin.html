@@ -134,14 +134,14 @@
                                 <span ng-if="alert.severity == 'Emergency'" class="glyphicon glyphicon-warning-sign text-danger"></span>
                                 <span ng-if="alert.severity == 'Non-Emergency'" class="glyphicon glyphicon-warning-sign text-warning"></span>
                             </td>
-                            <td><span class="text-uppercase"><a href="">{{ alert.title }}</a></span></td>
+                            <td><span class="text-uppercase"><a href="" ng-click="editAlert(alert.id)">{{ alert.title }}</a></span></td>
                             <td class="text-uppercase">{{ alert.description }}</td>
                             <td><time datetime="{{alert.created}}">{{ alert.created | date: 'mediumDate' }}</time></td>
                             <td class="text-uppercase">{{ alert.category }}</td>
                             <td><time datetime="{{alert.sent}}">{{ alert.sent | date: 'mediumDate' }}</time></td>
                             <td>
-                                <button ng-if="!alert.published" class="btn btn-default publish-btn" data-loading-text="Notifying users...">Publish</button>
-                                <button ng-if="alert.published" class="btn btn-success republish-btn" data-loading-text="Updating...">Republish</button>
+                                <button ng-if="!alert.published" class="btn btn-default publish-btn" data-loading-text="Notifying users..." ng-click="publishAlert(alert.id)">Publish</button>
+                                <button ng-if="alert.published" class="btn btn-success republish-btn" data-loading-text="Updating..." ng-click="editAlert(alert.id)">Republish</button>
                             </td>
                         </tr>
                     </tbody>
@@ -157,7 +157,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">New Alert</h4>
+                <h4 class="modal-title"><span ng-if="newAlert">New</span><span ng-if="!newAlert">Update</span> Alert</h4>
             </div>
             <div class="modal-body">
                 <form>
@@ -200,16 +200,18 @@
                     <!-- MAP -->
                     <div class="form-group">
                         <label>Affected area</label>
-                        <p class="affected-area-text">Use the drawing tools to define the area that should receive the alert:</p>
+                        <p ng-if="!newAlert" class="affected-area-text">Use the drawing tools to define the area that should receive the alert:</p>
+                        <p ng-if="newAlert" class="affected-area-text">Drop a pin on the alert's location & use the drawing tools to define the affected area:</p>
                         <div class="coverage-map"></div>
-                        <input type="hidden" class="coverage-map-coords" value="">
-                        <input type="hidden" class="coverage-map-area-coords" value="">
+                        <input type="hidden" class=" coverage-map-coords" ng-model="alertCoords">
+                        <input type="hidden" class=" coverage-map-area-coords" ng-model="alertAreaCoords">
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary save-alert-btn">Create</button>
+                <button ng-if="!newAlert" type="button" class="btn btn-primary save-alert-btn" ng-click="updateAlert()" data-dismiss="modal">Save Changes</button>
+                <button ng-if="newAlert" type="button" class="btn btn-primary save-alert-btn" ng-click="createAlert()" data-dismiss="modal">Create Alert</button>
             </div>
         </div>
     </div>

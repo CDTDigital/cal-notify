@@ -1,5 +1,5 @@
 
-var coverageMap, drawnItems;
+var coverageMap, drawnItems, scope;
 
 function addCircleToDrawnItems(lat, lng, radius) {
 	var coverageCircle = L.circle([lat, lng], radius);
@@ -56,7 +56,7 @@ function setCoverageMap(data, radius) {
 			position: settings.drawToolPosition
 			, draw: {
 				circle: false
-				, marker: (typeof data.coordinates === 'undefined')
+				, marker: true
 				, polygon: true
 				, polyline: false
 				, rectangle: true
@@ -90,36 +90,53 @@ function setCoverageMap(data, radius) {
 						drawnItems.removeLayer(layer);
 					}
 				});
-				//drawnItems.clearLayers();
 			}
 
 			var type = e.layerType;
-			if (type === 'marker') {
-				inputPin.val(JSON.stringify(e.layer.toGeoJSON().geometry));
-				//var coords = e.layer.toGeoJSON().geometry.coordinates;
-	            //addCircleToDrawnItems(coords[1], coords[0], radius);
-	        } else {
-	        	inputArea.val(JSON.stringify(e.layer.toGeoJSON().geometry));
-	        }
+			// Alert angular about changes on input field (Fix when value is changed through jQuery)
+			scope.$apply(function() { 
+				if (type === 'marker') {
+					inputPin.val(JSON.stringify(e.layer.toGeoJSON().geometry));
+					scope.alertCoords = JSON.stringify(e.layer.toGeoJSON().geometry);
+		        } else {
+		        	inputArea.val(JSON.stringify(e.layer.toGeoJSON().geometry));
+		        	scope.alertAreaCoords = JSON.stringify(e.layer.toGeoJSON().geometry);
+		        }
+	        });
 			
 			drawnItems.addLayer(e.layer);
 			coverageMap.fitBounds(drawnItems.getBounds(), { maxZoom: settings.maxZoom });
 		});
 
 		coverageMap.on(L.Draw.Event.EDITED, function(e) {
-			input.val(JSON.stringify(drawnItems.toGeoJSON().features[0].geometry));
+			var type = e.layerType;
+
+			scope.$apply(function() { 
+				var geometry = JSON.stringify(drawnItems.toGeoJSON().features[0].geometry);
+				if (type === 'marker') {
+					inputPin.val(geometry);
+					scope.alertCoords = geometry;
+		        } else {
+		        	inputArea.val(geometry);
+		        	scope.alertAreaCoords = geometry;
+		        }
+	        });
 		});
 
 		coverageMap.on(L.Draw.Event.DELETED, function(e) {
-			drawnItems.clearLayers();
-			input.val('');
+			var type = e.layerType;
+			if (type === 'marker') {
+				inputPin.val('');
+	        } else {
+	        	inputArea.val('');
+	        }
+			drawnItems.removeLayer(e.layer);
 		});
 	}
 
-	// Add circle with center on sent coords
+	// Add marker with sent coords
 	if (typeof data.coordinates !== 'undefined') {
 		L.marker([data.coordinates[1], data.coordinates[0]]).addTo(drawnItems);
-		//addCircleToDrawnItems(data.coordinates[1], data.coordinates[0], radius);
 	}
 
 	$(window).one('alert_modal_shown', function (e) {
@@ -129,7 +146,7 @@ function setCoverageMap(data, radius) {
        	if (drawnItems && drawnItems.getLayers().length > 0) {
        		coverageMap.fitBounds(drawnItems.getBounds(), { maxZoom: settings.maxZoom });
        	} else {
-       		map.setView([38.663, -98.454], 5);
+       		coverageMap.setView([38.572958, -121.490101], 9);
        	}
    	});
 }
@@ -140,22 +157,12 @@ function publishHandlers() {
     	currBtn.button('loading');
     	setTimeout(function(){ 
     		currBtn.button('reset'); 
-    		currBtn.removeClass("publish-btn").addClass("republish-btn");
-    		currBtn.text("Republish"); 
-    	}, 5000);
+    		//currBtn.removeClass("publish-btn").addClass("republish-btn");
+    		//currBtn.text("Republish"); 
+    	}, 3000);
     });
 
-    $(".republish-btn").on('click', function() {
-    	setCoverageMap({ "type": "Point", "coordinates": [-121.50772690773012,38.644356698715285]}, 8000);
-
-    	var currBtn = $(this);
-    	currBtn.button('loading');
-
-    	$(".alert-modal .modal-title").text("Update Alert");
-    	$(".alert-modal .save-alert-btn").text("Save Changes");
-    	$(".alert-modal .affected-area-text").text("Use the drawing tools to define the area that should receive the alert:");
-		$(".alert-modal").modal('show');	
-    });
+	//setCoverageMap({ "type": "Point", "coordinates": [-121.50772690773012,38.644356698715285]}, 8000);
 }
 
 $(document).ready(function () {
@@ -169,31 +176,7 @@ $(document).ready(function () {
 		$(".coverage-map").css("opacity","0");
 	});
 
-	$(".alert-modal").on('hidden.bs.modal', function () {
-		$(".republish-btn").button('reset'); 
-	});
-
 	$(".save-alert-btn").on('click', function () {
-		if($(this).text() == "Save Changes") {
-			console.log("Enter save changes");
-			// Update republish btn
-			$(".republish-btn").button('reset'); 
-			$(".republish-btn").removeClass("republish-btn").addClass("publish-btn");
-    		$(".republish-btn").text("Publish"); 
-		} else {
-			// Create alert
-			var html = '<tr>' +
-                    '<td><span class="glyphicon glyphicon-warning-sign text-danger"></span></td>' +
-                    '<td><span class="text-uppercase"><a href="">Major Flooding HWY 99</a></span></td>' +
-                    '<td class="text-uppercase">Road closed near Pocket</td>' +
-                    '<td><time datetime="2017-02-14">Feb 22, 2017</time></td>' +
-                    '<td class="text-uppercase">Flood</td>' +
-                    '<td><time datetime="2017-02-14">Feb 22, 2017</time></td>' +
-                    '<td><button class="btn btn-success publish-btn" data-loading-text="Notifying users...">Publish</button></td>' +
-                '</tr>';
-        	$(".alert-table tbody").prepend(html);
-		}
-
 		$(".alert-modal").modal('hide');
         
         publishHandlers();
@@ -201,11 +184,15 @@ $(document).ready(function () {
 
 	$(".new-alert-btn").on('click', function () {
 		setCoverageMap({});
-		$(".alert-modal .modal-title").text("New Alert");
-		$(".alert-modal .save-alert-btn").text("Create Alert");
-		$(".alert-modal .affected-area-text").text("Drop a pin on the alert's location & use the drawing tools to define the affected area:");
+		
+	    scope.$apply(function(){ 
+	    	scope.resetAlert();
+	    	scope.newAlert = true; 
+	    });
 		$(".alert-modal").modal('show');
 	});
 
 	publishHandlers();
+
+	scope = angular.element($("body")).scope();
 });
