@@ -1,8 +1,8 @@
 //angular.module('alertsApp', [])
 app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
-    
-    $scope.newAlert = true;
-    $scope.alertId = 0;
+        
+    $scope.newAlert = true; // Used to change UI depending if we're creating or updating an alert
+    $scope.alertId = 0;     // Used to keep track of the Id of the alert that's currently being edited
 
     $scope.categories = ['Any', 'Fire', 'Flood', 'Weather', 'Tsunami', 'Earthquake'];
     $scope.sources = ['Any', 'NOAA', 'GIS', '...'];
@@ -67,12 +67,29 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
         $scope.alertArea = "";
     };
 
-    /*$timeout(function () {
-        $scope.alert = "";
-    }, 2000);*/
+    $scope.login = function() {
 
-	/*$http.get("customers.php").then(function(response) {
-        $scope.myData = response.data.records;
-    });*/
+		$http({
+			method: 'POST',
+		 	url: baseApiAddress + '/v1/admin/login',
+		 	headers: {
+		   		'Content-Type': 'application/json'
+		 	},
+		 	data: {
+			 	email: "testAdmin1@test.com",
+			 	password: "123testadmin"
+			}
+		}).then(function successCallback(response) {
+			console.log(response);
+		    // this callback will be called asynchronously
+		    // when the response is available
+		}, function errorCallback(response) {
+			console.log(response);
+		    // called asynchronously if an error occurs
+		    // or server returns response with an error status.
+	 	});
+
+    }
+
 
 });
