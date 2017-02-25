@@ -114,10 +114,13 @@ $(document).ready(function () {
 
     window.initAutocomplete = initAutocomplete;
     initAutocomplete();
+
+    var located = false;
     // Bias the autocomplete object to the user's geographical location,
     // as supplied by the browser's 'navigator.geolocation' object.
     function geolocate() {
-        if (navigator.geolocation) {
+        if (navigator.geolocation &&!located) {
+            located = true;
             navigator.geolocation.getCurrentPosition(function (position) {
                 var geolocation = {
                     lat: position.coords.latitude,
