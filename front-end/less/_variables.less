@@ -37,11 +37,23 @@
 @gray-light:             lighten(@gray-base, 46.7%); // #777
 @gray-lighter:           lighten(@gray-base, 93.5%); // #eee
 
-@brand-primary:         darken(#428bca, 6.5%); // #337ab7
+
+@theme-red:             #f48071;
+@theme-orange:          #faa85e;
+@theme-yellow:          #ffecbd;
+@theme-ltgreen:         #72c278;
+@theme-green:           #40b549;
+@theme-blue:            #0c4e77;
+@theme-ltblue:          #7cb3c1;
+
+
+@brand-primary:         #0c4e77;
 @brand-success:         #5cb85c;
 @brand-info:            #5bc0de;
 @brand-warning:         #f0ad4e;
 @brand-danger:          #d9534f;
+
+
 
 
 //== Scaffolding
@@ -74,6 +86,7 @@
 @font-size-base:          14px;
 @font-size-large:         ceil((@font-size-base * 1.25)); // ~18px
 @font-size-small:         ceil((@font-size-base * 0.85)); // ~12px
+@font-size-mini:          11px; //ceil(@font-size-base * 0.75); 
 
 @font-size-h1:            floor((@font-size-base * 2.6)); // ~36px
 @font-size-h2:            floor((@font-size-base * 2.15)); // ~30px

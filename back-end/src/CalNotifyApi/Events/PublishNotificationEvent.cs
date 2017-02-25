@@ -4,19 +4,21 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using CalNotifyApi.Models;
+using CalNotifyApi.Models.Admins;
 using CalNotifyApi.Services;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace CalNotifyApi.Events
 {
     [DataContract]
-    public class BroadcastNotificationEvent
+    public class PublishNotificationEvent
     {
         /*  [DataMember(Name = "id")]
           public long Id { get; set; }*/
 
 
-        public async Task Process(BusinessDbContext context, ValidationSender sender, Notification notification)
+        public async Task Process(BusinessDbContext context, string adminId, ValidationSender sender, Notification notification)
         {
 
             var queryString = $@"
@@ -53,9 +55,14 @@ namespace CalNotifyApi.Events
                 }
 
 
+                context.Notifications.Update(notification);
+                notification.Published = DateTime.Now;
+                notification.PublishedById = new Guid(adminId);
+                context.SaveChanges();
+
                 // Use the notification bounds and find the users which fall into those bounds
 #pragma warning disable 4014
-                 Broadcast(sender, foundUsers, notification);
+                 Broadcast(context, sender, foundUsers, notification);
 #pragma warning restore 4014
 
                 // Use their communication information which has been validated to fire off the messages
@@ -65,18 +72,33 @@ namespace CalNotifyApi.Events
         }
 
 
-        internal async Task Broadcast(ValidationSender sender, List<Rows> users, Notification notification)
+        private async Task Broadcast(BusinessDbContext context, ValidationSender sender, List<Rows> users, Notification notification)
         {
             foreach (var user in users)
             {
-                if (user.ValidatedSms && !string.IsNullOrWhiteSpace(user.PhoneNumber))
+                try
                 {
-                    await sender.SendMSMessage(user.PhoneNumber, notification);
+                    if (user.ValidatedSms && !string.IsNullOrWhiteSpace(user.PhoneNumber))
+                    {
+                        await sender.SendMSMessage(user.PhoneNumber, notification);
+                    }
+                    if (user.ValidatedEmail && !string.IsNullOrEmpty(user.Email))
+                    {
+                        await sender.SendEmailMessage(user.Email, notification);
+                    }
+                    context.NotificationLog.Add(new BroadCastLogEntry()
+                    {
+                        NotificationId = notification.Id.Value,
+                        UserId = user.Id
+                    });
+                    context.SaveChanges();
+
                 }
-                if (user.ValidatedEmail && !string.IsNullOrEmpty(user.Email))
+                catch (Exception e)
                 {
-                    await sender.SendEmailMessage(user.Email, notification);
+                    Log.Error(e, "Error when broadcasting to user {user}", user);
                 }
+               
             }
             return;
         }

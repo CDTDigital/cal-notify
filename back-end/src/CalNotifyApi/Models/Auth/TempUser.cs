@@ -49,6 +49,12 @@ namespace CalNotifyApi.Models.Auth
         public virtual string PhoneNumber { get; set; }
 
 
+        [DataMember(Name = "enabled_email")]
+        public bool EnabledEmail { get; set; }
+
+
+        [DataMember(Name = "enabled_sms")]
+        public bool EnabledSms { get; set; }
 
         public string Token { get; set; }
 

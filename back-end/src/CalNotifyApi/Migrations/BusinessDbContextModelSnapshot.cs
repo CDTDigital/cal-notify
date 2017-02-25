@@ -101,6 +101,17 @@ namespace CalNotifyApi.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("BaseUser");
                 });
 
+            modelBuilder.Entity("CalNotifyApi.Models.BroadCastLogEntry", b =>
+                {
+                    b.Property<Guid>("UserId");
+
+                    b.Property<long>("NotificationId");
+
+                    b.HasKey("UserId", "NotificationId");
+
+                    b.ToTable("NotificationLog");
+                });
+
             modelBuilder.Entity("CalNotifyApi.Models.Notification", b =>
                 {
                     b.Property<long?>("Id")

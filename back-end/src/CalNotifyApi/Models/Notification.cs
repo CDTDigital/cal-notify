@@ -12,6 +12,7 @@ namespace CalNotifyApi.Models
     public class Notification
     {
 
+        [Key]
         [DataMember(Name = "id")]
         public long? Id { get; set; }
 
@@ -53,8 +54,11 @@ namespace CalNotifyApi.Models
         [DataMember(Name = "author"), JsonIgnore]
         public WebAdmin Author { get; set; }
 
-        [DataMember(Name = "published_by")]
+        [DataMember(Name = "published_by"), JsonIgnore]
         public WebAdmin PublishedBy { get; set; }
+
+        [DataMember(Name = "published_by_id")]
+        public Guid? PublishedById { get; set; }
 
     }
 

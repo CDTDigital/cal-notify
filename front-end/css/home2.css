@@ -244,6 +244,9 @@ html,
 body {
   height: 100%;
 }
+body.modal-open {
+  padding-right: 0 !important;
+}
 .navbar-brand {
   padding-top: 10px;
   padding-bottom: 10px;
@@ -273,8 +276,7 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  color: white;
-  text-shadow: 1px 1px 7px #000;
+  color: #0a3f60;
 }
 @media (min-width: 768px) {
   .section-banner {

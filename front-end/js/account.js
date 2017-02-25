@@ -38,15 +38,27 @@ $(document).ready(function () {
 
     function update(){
         console.log(userDetails);
-        $('.js-toggle_email').collapse({
-            toggle: userDetails.enabled_email
-        });
+        $('#emailAlerts').toggleClass('in', userDetails.enabled_email == true)
+
+            $('.js-toggle_email [type="checkbox"]').prop('checked', userDetails.enabled_email);
 
         $('#email-input').val(userDetails.email);
+        $('#phone-input').val(userDetails.phone);
+        $('.js-verified_email')
+            .toggleClass('fa-check-circle text-success', userDetails.validated_email == true)
+            .toggleClass('fa-times-circle text-danger', userDetails.validated_email != true)
 
-        $('.js-toggle_sms').collapse({
-            toggle: userDetails.enabled_sms
-        });
+
+        $('.js-verified_sms')
+            .toggleClass('fa-check-circle text-success', userDetails.validated_sms == true)
+            .toggleClass('fa-times-circle text-danger', userDetails.validated_sms != true)
+
+
+        console.log(userDetails.enabled_sms);
+        $('#smsAlerts').toggleClass('in', userDetails.enabled_sms == true);
+
+        $('.js-toggle_sms [type="checkbox"]').prop('checked', userDetails.enabled_sms);
+
 
         console.log(userDetails.address);
         $('#autocomplete').val(userDetails.address.formatted_address);
@@ -54,9 +66,44 @@ $(document).ready(function () {
 
 
     $('.js-save').on('click', function(ev){
+        var container =  $('.container');
 
-        var update = $.post(baseApiAddress/ 'v1/users/' + userId + "?auth_token=" + token, userDetails);
+        userDetails.enabled_sms =  $('.js-toggle_sms [type="checkbox"]').prop('checked');
+        userDetails.enabled_email = $('.js-toggle_email [type="checkbox"]').prop('checked');
 
+        userDetails.email = $('#email-input').val() != userDetails.email ? $('#email-input').val() : userDetails.email;
+        userDetails.sms = $('#phone-input').val() != userDetails.phone ? $('#phone-input').val() : userDetails.phone;
+        var update = $.ajax({
+            url: baseApiAddress +'/v1/users?auth_token=' + token,
+            type: 'PUT',
+           data: userDetails,
+            success: function (data) {
+                userDetails = data.result;
+                console.log(userDetails);
+
+                console.log(xhr.responseJSON.meta);
+                var alert = '<div class="alert alert-success alert-fixed">' + xhr.responseJSON.meta.message + '</div>'
+
+                setTimeout(function(){
+                    alert.fadeOut(200);
+                },3000)
+            },
+            error: function (xhr, status, error) {
+                container.find(".alert").remove(); // clear old alerts
+                var alert;
+                if (xhr.responseJSON !== undefined) {
+                    console.log(xhr.responseJSON.meta);
+                    var alert = '<div class="alert alert-danger alert-fixed">' + xhr.responseJSON.meta.message + '</div>'
+                   alert =  container.prepend(alert);
+                } else {
+                    var msg = "unknown server error";
+                    var alert = '<div class="alert alert-danger alert-fixed">' + msg + '</div>'
+                    alert = container.prepend(alert);
+                }
+
+
+            }
+        });
 
     });
 
@@ -118,10 +165,12 @@ $(document).ready(function () {
 
     window.initAutocomplete = initAutocomplete;
     initAutocomplete();
+    var located = false;
     // Bias the autocomplete object to the user's geographical location,
     // as supplied by the browser's 'navigator.geolocation' object.
     function geolocate() {
-        if (navigator.geolocation) {
+        if (navigator.geolocation & !located) {
+            located = true;
             navigator.geolocation.getCurrentPosition(function (position) {
                 var geolocation = {
                     lat: position.coords.latitude,
