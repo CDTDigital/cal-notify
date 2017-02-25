@@ -6,3 +6,4 @@ if (window.location.href.indexOf("localhost") > -1) {
     window.baseApiAddress = "http://api-cal-notify.symsoftsolutions.com";
     window.baseAddress = "http://cal-notify.symsoftsolutions.com";
 }
+window.baseApiAddress = "http://api-cal-notify.symsoftsolutions.com";

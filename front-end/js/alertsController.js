@@ -1,8 +1,8 @@
 //angular.module('alertsApp', [])
 app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
-    
-    $scope.newAlert = true;
-    $scope.alertId = 0;
+        
+    $scope.newAlert = true; // Used to change UI depending if we're creating or updating an alert
+    $scope.alertId = 0;     // Used to keep track of the Id of the alert that's currently being edited
 
     $scope.categories = ['Any', 'Fire', 'Flood', 'Weather', 'Tsunami', 'Earthquake'];
     $scope.sources = ['Any', 'NOAA', 'GIS', '...'];
@@ -69,10 +69,9 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
 
     $scope.login = function() {
 
-    	$http.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 		$http({
 			method: 'POST',
-		 	url: 'http://api-cal-notify.symsoftsolutions.com/v1/admin/login',
+		 	url: baseApiAddress + '/v1/admin/login',
 		 	headers: {
 		   		'Content-Type': 'application/json'
 		 	},
