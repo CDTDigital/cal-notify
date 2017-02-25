@@ -135,13 +135,13 @@
                                 <span ng-if="alert.severity == 'Non-Emergency'" class="glyphicon glyphicon-warning-sign text-warning"></span>
                             </td>
                             <td><span class="text-uppercase"><a href="" ng-click="editAlert(alert.id)">{{ alert.title }}</a></span></td>
-                            <td class="text-uppercase">{{ alert.description }}</td>
+                            <td class="text-uppercase">{{ alert.details }}</td>
                             <td><time datetime="{{alert.created}}">{{ alert.created | date: 'mediumDate' }}</time></td>
                             <td class="text-uppercase">{{ alert.category }}</td>
-                            <td><time datetime="{{alert.sent}}">{{ alert.sent | date: 'mediumDate' }}</time></td>
+                            <td><time datetime="{{alert.published}}">{{ alert.published | date: 'mediumDate' }}</time></td>
                             <td>
-                                <button ng-if="!alert.published" class="btn btn-default publish-btn" data-loading-text="Notifying users..." ng-click="publishAlert(alert.id)">Publish</button>
-                                <button ng-if="alert.published" class="btn btn-success republish-btn" data-loading-text="Updating..." ng-click="editAlert(alert.id)">Republish</button>
+                                <button ng-if="alert.status != 'Published'" class="btn btn-default publish-btn" data-loading-text="Notifying users..." ng-click="publishAlert(alert.id)">Publish</button>
+                                <button ng-if="alert.status == 'Published'" class="btn btn-success republish-btn" data-loading-text="Updating..." ng-click="editAlert(alert.id)">Republish</button>
                             </td>
                         </tr>
                     </tbody>
@@ -164,13 +164,13 @@
                     <!-- TITLE -->
                     <div class="form-group">
                         <label for="exampleTitle">Title</label>
-                        <input type="text" class="form-control" id="exampleTitle" ng-model="alertTitle" placeholder="Message Title or Subject">
+                        <input type="text" class="form-control" id="exampleTitle" ng-model="currAlert.title" placeholder="Message Title or Subject">
                     </div>
 
                     <!-- SEVERITY -->
                     <div class="form-group">
                         <label for="exampleSeverity">Severity</label>
-                        <select class="form-control" id="exampleSeverity" ng-model="alertSeverity">
+                        <select class="form-control" id="exampleSeverity" ng-model="currAlert.severity">
                             <option ng-repeat="severity in severities" value="{{severity}}">{{severity}}</option>
                         </select>
                     </div>
@@ -178,7 +178,7 @@
                     <!-- CATEGORY -->
                     <div class="form-group">
                         <label for="filterCategoryModal">Category</label>
-                        <select class="form-control" id="filterCategoryModal" ng-model="alertCategory">
+                        <select class="form-control" id="filterCategoryModal" ng-model="currAlert.category">
                             <option ng-repeat="category in categories" value="{{category}}">{{category}}</option>
                         </select>
                     </div>
@@ -186,7 +186,7 @@
                     <!-- SOURCE -->
                     <div class="form-group">
                         <label for="filterSourceModal">Source</label>
-                        <select class="form-control" id="filterSourceModal" ng-model="alertSource">
+                        <select class="form-control" id="filterSourceModal" ng-model="currAlert.source">
                             <option ng-repeat="source in sources" value="{{source}}">{{source}}</option>
                         </select>
                     </div>                
@@ -194,7 +194,7 @@
                     <!-- SHORT DESCRIPTION -->
                     <div class="form-group">
                         <label for="filterDescriptionModal">Short Description</label>
-                        <input type="text" class="form-control" id="filterDescriptionModal" ng-model="alertDescription" placeholder="Short description less than 90 characters">
+                        <input type="text" class="form-control" id="filterDescriptionModal" ng-model="currAlert.details" placeholder="Short description less than 90 characters">
                     </div>
 
                     <!-- MAP -->
@@ -203,8 +203,8 @@
                         <p ng-if="!newAlert" class="affected-area-text">Use the drawing tools to define the area that should receive the alert:</p>
                         <p ng-if="newAlert" class="affected-area-text">Drop a pin on the alert's location & use the drawing tools to define the affected area:</p>
                         <div class="coverage-map"></div>
-                        <input type="hidden" class=" coverage-map-coords" ng-model="alertCoords">
-                        <input type="hidden" class=" coverage-map-area-coords" ng-model="alertAreaCoords">
+                        <input type="hidden" class="coverage-map-coords" ng-model="currAlert.location">
+                        <input type="hidden" class=" coverage-map-area-coords" ng-model="currAlert.affected_area">
                     </div>
                 </form>
             </div>

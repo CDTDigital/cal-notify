@@ -165,6 +165,13 @@ function publishHandlers() {
 	//setCoverageMap({ "type": "Point", "coordinates": [-121.50772690773012,38.644356698715285]}, 8000);
 }
 
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+};
+
 $(document).ready(function () {
 	$(".alert-modal").on('shown.bs.modal', function () {
 		// Notify that modal is loaded so the map is resized
@@ -195,4 +202,9 @@ $(document).ready(function () {
 	publishHandlers();
 
 	scope = angular.element($("body")).scope();
+
+	// Save token to use on API calls
+	scope.$apply(function(){ 
+		scope.setApiToken(getUrlParameter('token'));
+	});
 });
