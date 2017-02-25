@@ -10,8 +10,8 @@ using CalNotifyApi.Models;
 namespace CalNotifyApi.Migrations
 {
     [DbContext(typeof(BusinessDbContext))]
-    [Migration("20170224232140_log")]
-    partial class log
+    [Migration("20170225014005_inital")]
+    partial class inital
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

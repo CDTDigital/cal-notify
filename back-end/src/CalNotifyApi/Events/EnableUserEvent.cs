@@ -20,11 +20,13 @@ namespace CalNotifyApi.Events
             if (!string.IsNullOrEmpty(exisitingUser.Email) && tempUser.TokenType == TokenType.EmailToken)
             {
                 exisitingUser.ValidatedEmail = true;
+                exisitingUser.EnabledEmail = true;
 
             }
             if (!string.IsNullOrEmpty(exisitingUser.PhoneNumber) && tempUser.TokenType == TokenType.SmsToken)
             {
                 exisitingUser.ValidatedSms = true;
+                exisitingUser.EnabledSms = true;
 
             }
             exisitingUser.Enabled = true;

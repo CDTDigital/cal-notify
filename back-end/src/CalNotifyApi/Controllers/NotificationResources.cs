@@ -46,6 +46,20 @@ namespace CalNotifyApi.Controllers
 
 
         /// <summary>
+        /// Lists out notifications
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpGet("")]
+        [SwaggerOperation("LIST_NOTIFICATION", Tags = new[] { Constants.NotificationEndpoint })]
+        [ProducesResponseType(typeof(ResponseShell<List<Notification>>), 200)]
+        public virtual IActionResult ListNotifications()
+        {
+            var list = _context.Notifications.ToList();
+            return ResponseShell.Ok(list);
+        }
+
+        /// <summary>
         /// Gets a notifications
         /// </summary>
         [HttpGet("{id}")]
@@ -58,20 +72,35 @@ namespace CalNotifyApi.Controllers
             return ResponseShell.Ok(notification);
         }
 
+
+        /// <summary>
+        /// Update a notifications
+        /// </summary>
+        [HttpPatch("{id}")]
+        [SwaggerOperation("UPDATE_NOTIFICATION", Tags = new[] { Constants.NotificationEndpoint })]
+        [ProducesResponseType(typeof(ResponseShell<Notification>), 200)]
+        [ValidateNotificationExists]
+        public virtual IActionResult UpdateNotification([FromRoute] long id, [FromBody] CreateNotificationEvent model)
+        {
+            var notification =  model.UpdateProcess(_context, id);
+            return ResponseShell.Ok(notification);
+        }
+
         /// <summary>
         /// Broadcasts the notification to the affected users
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        [SwaggerOperation("BROADCAST_NOTIFICATION", Tags = new[] {Constants.NotificationEndpoint})]
+        [SwaggerOperation("PUBLISH_NOTIFICATION", Tags = new[] {Constants.NotificationEndpoint})]
         [ProducesResponseType(typeof(ResponseShell<SimpleSuccess>), 200)]
         [ValidateNotificationExists]
-        public virtual IActionResult BroadcastNotification([FromRoute] long id)
+        public virtual IActionResult PublishNotification([FromRoute] long id)
         {
             var notification = _context.Notifications.FirstOrDefault(n => n.Id == id);
+            var adminId = HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == Constants.UserIdClaimKey);
 #pragma warning disable 4014
-            new BroadcastNotificationEvent().Process(_context, _validation,notification);
+            new PublishNotificationEvent().Process(_context, adminId.Value, _validation, notification);
 #pragma warning restore 4014
             return ResponseShell.Ok();
         }

@@ -100,8 +100,8 @@ namespace CalNotifyApi.Services
             builder.HasPostgresExtension("postgis");
             builder.HasPostgresExtension("uuid-ossp");
             base.OnModelCreating(builder);
-            
-      
+
+            builder.Entity<Notification>();
             builder.Entity<BaseUser>();
             builder.Entity<WebAdmin>();
             builder.Entity<GenericUser>();

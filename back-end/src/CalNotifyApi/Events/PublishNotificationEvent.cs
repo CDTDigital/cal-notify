@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using CalNotifyApi.Models;
+using CalNotifyApi.Models.Admins;
 using CalNotifyApi.Services;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -11,13 +12,13 @@ using Serilog;
 namespace CalNotifyApi.Events
 {
     [DataContract]
-    public class BroadcastNotificationEvent
+    public class PublishNotificationEvent
     {
         /*  [DataMember(Name = "id")]
           public long Id { get; set; }*/
 
 
-        public async Task Process(BusinessDbContext context, ValidationSender sender, Notification notification)
+        public async Task Process(BusinessDbContext context, string adminId, ValidationSender sender, Notification notification)
         {
 
             var queryString = $@"
@@ -53,6 +54,11 @@ namespace CalNotifyApi.Events
                     }
                 }
 
+
+                context.Notifications.Update(notification);
+                notification.Published = DateTime.Now;
+                notification.PublishedById = new Guid(adminId);
+                context.SaveChanges();
 
                 // Use the notification bounds and find the users which fall into those bounds
 #pragma warning disable 4014
