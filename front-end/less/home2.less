@@ -20,6 +20,10 @@ html, body {
             
 }
 
+body.modal-open {
+    padding-right: 0 !important;    // Modal caused unsighly shift in page elements due to right padding
+}
+
 
 // NAVBAR
 .navbar-brand {
@@ -54,8 +58,10 @@ html, body {
     
     &-banner {
         .cover-img();
-        color: white;
-        text-shadow: 1px 1px 7px #000;
+        color: darken(#0c4e77, 5%);
+        //text-shadow: 1px 1px 1px #fff;
+        
+        
         
         @media (min-width: @screen-sm-min) {
             
