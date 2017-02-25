@@ -40,7 +40,12 @@ namespace CalNotifyApi.Events
         [DataMember(Name = "severity"), Required]
         public Severity Severity { get; set; }
 
+        [DataMember(Name = "status")]
+        public NotiStatus Status { get; set; }
 
+
+        [DataMember(Name = "published")]
+        public DateTime Published { get; set; }
 
         public Notification Process(BusinessDbContext context, string id)
         {
@@ -70,6 +75,34 @@ namespace CalNotifyApi.Events
 
 
             context.Notifications.Add(notification);
+            context.SaveChanges();
+            return notification;
+        }
+
+        public Notification UpdateProcess(BusinessDbContext context, long notificationId)
+        {
+          
+
+            var notification = context.Notifications.FirstOrDefault(x => x.Id == notificationId);
+            notification.Title = Title;
+            notification.Details = Details;
+            notification.Location = new PostgisPoint(Location.Coordinates[0], Location.Coordinates[1])
+            {
+                SRID = Constants.SRID
+            };
+            var affectedCoordinates = AffectedArea.Coordinates.Select(coor => new Coordinate2D(coor[0], coor[1])).ToArray();
+            notification.AffectedArea = new PostgisPolygon(new[]
+            {
+                affectedCoordinates
+            });
+
+            notification.Category = Category;
+            notification.Status = Status;
+            notification.Published = Published;
+            notification.Source = Source;
+            notification.Severity = Severity;
+
+           
             context.SaveChanges();
             return notification;
         }

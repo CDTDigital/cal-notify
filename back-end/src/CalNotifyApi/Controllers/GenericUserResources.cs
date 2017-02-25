@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CalNotifyApi.Events;
+using CalNotifyApi.Events.Exceptions;
 using CalNotifyApi.Models;
+using CalNotifyApi.Models.Auth;
 using CalNotifyApi.Models.Responses;
 using CalNotifyApi.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace CalNotifyApi.Controllers
@@ -23,15 +27,16 @@ namespace CalNotifyApi.Controllers
     {
         private readonly BusinessDbContext _context;
         private readonly ILogger<GenericUserResources> _logger;
-      
-  
+
+        private readonly ValidationSender _validation;
 
         /// <summary>
         /// </summary>
-        public GenericUserResources(BusinessDbContext context, ILogger<GenericUserResources> logger)
+        public GenericUserResources(BusinessDbContext context, ILogger<GenericUserResources> logger, ValidationSender validation)
         {
             _context = context;
             _logger = logger;
+            _validation = validation;
         }
 
 
@@ -49,11 +54,12 @@ namespace CalNotifyApi.Controllers
         [SwaggerOperation("GET_GENERICUSER_BY_ID", Tags = new[] { Constants.GenericUserEndpoint })]
         [Produces("application/json", Type = typeof(ResponseShell<GenericUser>))]
         public virtual IActionResult GetById([FromRoute] string id)
-        {       
-            var user = _context.Users.FirstOrDefault(u => u.Id == new Guid(id)); 
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Id == new Guid(id));
             return ResponseShell.Ok(user);
         }
 
+       
 
         /// <summary>
         /// Retrieves a list of all Users in the system
@@ -73,6 +79,66 @@ namespace CalNotifyApi.Controllers
         }
 
 
+        /// <summary>
+        /// Updates a GenericUser's properties such as Email or Sms via their unique id.
+        /// </summary>
+        /// 
+        [HttpPut("")]
+        [SwaggerOperation("UPDATE_GENERICUSER_BY_ID", Tags = new[] { Constants.GenericUserEndpoint })]
+        public virtual async Task<IActionResult> UpdateById([FromBody] TempUser tempUser)
+        {
+            try
+            {
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+
+                    var user = _context.Users.FirstOrDefault(u => u.Id == tempUser.Id);
+                    if (user == null)
+                    {
+                        // Our response is vague to avoid leaking information
+                        return ResponseShell.Error("Could not find an account with that information");
+                    }
+
+
+                    user.Email = tempUser.Email;
+                    user.PhoneNumber = tempUser.PhoneNumber;
+                    user.EnabledEmail = tempUser.EnabledEmail;
+                    user.EnabledSms = tempUser.EnabledSms;
+
+
+
+                    if (!string.IsNullOrWhiteSpace(tempUser.Email) && tempUser.Email != user.Email)
+                    {
+
+                        await _validation.SendValidationToEmail(new TempUser(user));
+
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(tempUser.PhoneNumber) && tempUser.PhoneNumber != user.PhoneNumber)
+                    {
+                        await _validation.SendValidationToSms(new TempUser(user));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(tempUser.Password))
+                    {
+
+                        user.SetPassword(tempUser.Password);
+                    }
+                    transaction.Commit();
+                    _context.SaveChanges();
+                    return ResponseShell.Ok(user);
+                }
+
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Could not update user details");
+                throw;
+            }
+
+        }
+
+
         [HttpDelete("{id}")]
         [ValidateGenricExists]
         [Authorize(Constants.AdminRole)] // Lock down deleting a GenericUser
@@ -86,33 +152,13 @@ namespace CalNotifyApi.Controllers
             _context.AllUsers.Remove(user);
             return ResponseShell.Ok(new MaybeSuccess() { Success = true });
         }
-        #endregion
 
-     
-
-        // ENDPOINTS FOR UPDATING GenericUserS
-        #region updates
-
-        /// <summary>
-        /// Updates a GenericUser's properties such as Name via their unique id.
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// For the time being this only can update a users name
-        /// </remarks>
-        /// <param name="modelUpdates"></param>
-        /// <param name="validationSender"></param>
-        /// <returns></returns>
-        [HttpPut("")]
-        [SwaggerOperation("UPDATE_GENERICUSER_BY_ID", Tags = new[] { Constants.GenericUserEndpoint })]
-        public virtual async Task<IActionResult> UpdateById([FromBody] UpdateUserEvent modelUpdates, [FromServices] ValidationSender validationSender)
-        {
-            var user = await modelUpdates.Process(_context, validationSender);
-            _context.SaveChanges();
-            return ResponseShell.Ok(user);  
-        }
 
         #endregion
+
+
+
+
 
         // ATTRIBUTES AND OTHER HELPERS FOR SERVING UP GenericUser RESOURCES
         #region Helpers

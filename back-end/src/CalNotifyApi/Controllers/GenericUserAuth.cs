@@ -64,6 +64,9 @@ namespace CalNotifyApi.Controllers
             _config = config;
         }
 
+
+      
+
         /// <summary>
         /// Allows an user to login
         /// </summary>
@@ -116,8 +119,8 @@ namespace CalNotifyApi.Controllers
         [SwaggerOperation(operationId: "CreateUser", Tags = new[] { Constants.GenericUserEndpoint })]
 
         public async Task<IActionResult> CreateWithChallenge([FromBody] TempUser tempUser)
-        {         
-           await new CreateDisabledUserAccount().Process(_hostingEnvironment, _memoryCache, _context, _validation, tempUser);
+        {
+            await new CreateDisabledUserAccount().Process(_hostingEnvironment, _memoryCache, _context, _validation, tempUser);
             return ResponseShell.Ok();
         }
 
@@ -193,30 +196,30 @@ namespace CalNotifyApi.Controllers
             {
                 return Redirect($"{_config.Urls.Frontend}/{_config.Pages.ResendPage}");
             }
-          
+
             var exisitingUser = _context.AllUsers.FirstOrDefault(x => x.Id == savedUser.Id);
 
             // we  have a user at this point, otherwise we would have thrown our processer error earlier
-            
+
             // A new user, validate the first avaible sms
             if (!exisitingUser.Enabled)
             {
                 // we call in order the Enable and Create events, which handle the prerequiste logic for handling either case
                 exisitingUser = new EnableUserEvent().Process(_context, token, exisitingUser, savedUser);
             }
-            else 
+            else
             {
                 // for exisiting users we dont need to create them but just to possibly validate a new communication channel
                 exisitingUser = new ValidateExistingUserCommunication().Process(_context, savedUser);
-          
+
             }
             var endToken = await _tokenService.GetToken(exisitingUser);
             return Redirect($"{_config.Urls.Frontend}/{_config.Pages.AccountPage}?user={endToken.UserId}&token={endToken.Token}");
-                   
+
 
         }
 
-       
+
 
 
 

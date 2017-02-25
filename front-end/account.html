@@ -19,7 +19,7 @@
 <!-- Custom styles for this template -->
 <link href="css/dashboard.css" rel="stylesheet">
 <link href="css/admin.css" rel="stylesheet">
-
+    <script src="https://use.fontawesome.com/36377358ff.js"></script>
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -54,12 +54,25 @@
                         
             <div class="row">
                 <div class="col-sm-5">
-                    <h2>My Notifications</h2>
 
                         <div class="form-group">
-                            <label data-toggle="collapse"  class="js-toggle_email" data-target="#emailAlerts" aria-expanded="true" aria-controls="emailAlerts">
-                                <input type="checkbox" checked /> Email
-                            </label>
+                            <h2>Email Notifications</h2>
+                            <ul class="list-unstyled">
+                                <li>
+                                    <b>
+                                        Verified?  <i class=" js-verified_email fa " aria-hidden="true"></i>
+                                    </b>
+
+                                </li>
+                                <li>
+                                    <label data-toggle="collapse"  class="js-toggle_email" data-target="#emailAlerts" aria-expanded="true" aria-controls="emailAlerts">
+                                        Enabled? <input type="checkbox"  />
+
+                                    </label>
+                                </li>
+                            </ul>
+
+
                         </div>
 
                         <div class="collapse in" id="emailAlerts">
@@ -67,11 +80,23 @@
                                 <input type="email" class="form-control" id="email-input" name="email" placeholder="Enter Email">
                             </div>
                         </div>
-                                                
+                    <hr>
                         <div class="form-group">
-                            <label  class="js-toggle_sms" data-toggle="collapse" data-target="#smsAlerts" aria-expanded="true" aria-controls="smsAlerts">
-                                <input type="checkbox" checked/> SMS (Text Message)
-                            </label>
+                            <h2>SMS (Text Message) Notifications</h2>
+                            <ul class="list-unstyled">
+                                <li>
+                                    <b>
+                                        Verified? <i class=" js-verified_sms fa " aria-hidden="true"></i>
+                                    </b>
+                                </li>
+                                <li>
+                                    <label  class="js-toggle_sms" data-toggle="collapse" data-target="#smsAlerts" aria-expanded="true" aria-controls="smsAlerts">
+                                        Enabled <input type="checkbox" />
+
+                                    </label>
+                                </li>
+                            </ul>
+
                         </div>
 
                         <div class="collapse in" id="smsAlerts">

@@ -5,12 +5,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using CalNotifyApi.Services;
 using NpgsqlTypes;
+using CalNotifyApi.Models;
 
 namespace CalNotifyApi.Migrations
 {
     [DbContext(typeof(BusinessDbContext))]
-    [Migration("20170222230032_enables")]
-    partial class enables
+    [Migration("20170225014005_inital")]
+    partial class inital
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -101,6 +102,58 @@ namespace CalNotifyApi.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("BaseUser");
                 });
 
+            modelBuilder.Entity("CalNotifyApi.Models.BroadCastLogEntry", b =>
+                {
+                    b.Property<Guid>("UserId");
+
+                    b.Property<long>("NotificationId");
+
+                    b.HasKey("UserId", "NotificationId");
+
+                    b.ToTable("NotificationLog");
+                });
+
+            modelBuilder.Entity("CalNotifyApi.Models.Notification", b =>
+                {
+                    b.Property<long?>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<PostgisPolygon>("AffectedArea");
+
+                    b.Property<Guid>("AuthorId");
+
+                    b.Property<int>("Category");
+
+                    b.Property<DateTime>("Created");
+
+                    b.Property<string>("Details")
+                        .IsRequired();
+
+                    b.Property<PostgisPoint>("Location");
+
+                    b.Property<DateTime>("Published");
+
+                    b.Property<Guid?>("PublishedById");
+
+                    b.Property<int>("Severity");
+
+                    b.Property<string>("Source")
+                        .IsRequired();
+
+                    b.Property<int>("Status");
+
+                    b.Property<string>("Title")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("PublishedById");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("CalNotifyApi.Services.ZipCodeInfo", b =>
                 {
                     b.Property<string>("Zipcode")
@@ -145,6 +198,18 @@ namespace CalNotifyApi.Migrations
                         .WithOne("Address")
                         .HasForeignKey("CalNotifyApi.Models.Addresses.Address", "UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("CalNotifyApi.Models.Notification", b =>
+                {
+                    b.HasOne("CalNotifyApi.Models.Admins.WebAdmin", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("CalNotifyApi.Models.Admins.WebAdmin", "PublishedBy")
+                        .WithMany()
+                        .HasForeignKey("PublishedById");
                 });
         }
     }
