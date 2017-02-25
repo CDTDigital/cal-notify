@@ -1,5 +1,20 @@
 @import "_variables.less";
+@import "mixins.less";
 @import "spacing.less";
+@import "tiles.less";
+
+
+.clearfix() {
+  &:before,
+  &:after {
+    content: " "; // 1
+    display: table; // 2
+  }
+  &:after {
+    clear: both;
+  }
+}
+
 
 .coverage-map {
     height: 300px;
