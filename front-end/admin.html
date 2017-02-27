@@ -23,6 +23,7 @@
 <!-- Leaflet map & drawing styles -->
 <link rel="stylesheet" href="css/leaflet.css" />
 <link rel="stylesheet" href="css/leaflet.draw.css" />
+<link rel="stylesheet" href="http://labs.easyblog.it/maps/leaflet-search/src/leaflet-search.css" />
 
 <!-- Angular -->
 <script src="js/vendor/angular.min.js"></script> 
@@ -63,8 +64,8 @@
                 </div>
                 <div class="col-xs-6">
                     <div class="text-right preview-toggle"> 
-                        <a href="#alerts_list_tab" class="glyphicon glyphicon-th-list active" role="tab" data-toggle="tab"></a> 
-                        <a href="#alerts_map_tab" class="glyphicon glyphicon-map-marker" role="tab" data-toggle="tab"></a>
+                        <a href="#alerts_list_tab" class="glyphicon glyphicon-th-list active" role="tab" data-toggle="tab" title="List View"></a> 
+                        <a href="#alerts_map_tab" class="glyphicon glyphicon-map-marker" role="tab" data-toggle="tab" title="Map View"></a>
                     </div>
                 </div>
             </div>
@@ -140,7 +141,7 @@
                                 <tr ng-repeat="alert in alerts">
                                     <td style="text-align:center">
                                         <span ng-if="alert.severity == 'Emergency'" class="glyphicon glyphicon-warning-sign text-danger"></span>
-                                        <span ng-if="alert.severity == 'Non-Emergency'" class="glyphicon glyphicon-warning-sign text-warning"></span>
+                                        <span ng-if="alert.severity == 'NonEmergency'" class="glyphicon glyphicon-warning-sign text-warning"></span>
                                     </td>
                                     <td><span class="text-uppercase"><a href="" ng-click="editAlert(alert.id)">{{ alert.title }}</a></span></td>
                                     <td class="text-uppercase">{{ alert.details }}</td>
@@ -247,9 +248,10 @@
 <!-- Leaflet scripts -->
 <script src="js/vendor/leaflet.js"></script>
 <script src="js/vendor/leaflet.draw.js"></script>
+<script src="js/vendor/leaflet-search.min.js"></script>
+<!-- Admin script -->
 <script src="js/admin.js"></script>
 <!-- Angular modules & controllers -->
-<script src="js/alertsApp.js"></script>
 <script src="js/alertsController.js"></script>
 
 </body>
