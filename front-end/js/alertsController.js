@@ -209,32 +209,36 @@ angular.module('alertsApp', []).controller('alertsCtrl', function($scope, $filte
     // Bind infowindows to features
     function onEachFeature(feature, layer) {
         if (feature.properties) {
-            layer.bindPopup(feature.properties.title + "<br/><b>" + feature.properties.category + "</b>");
+            layer.bindPopup("<b>" + feature.properties.category + "</b><br/>" +feature.properties.title);
         }
     }
 
     // Style map features, add category icons
-    /*function style(feature) {
-        return {
-            fillColor: getColor(feature.properties.density),
-            weight: 2,
-            opacity: 1,
-            color: 'white',
-            dashArray: '3',
-            fillOpacity: 0.7
-        };
-    }*/
-
-    /*function getCategoryIcons(feature, latlng) {
-        var smallIcon = L.icon({
-            iconSize: [27, 27],
-            iconAnchor: [13, 27],
-            popupAnchor:  [1, -24],
-            iconUrl: 'leaflet/icons/' + feature.properties.pcp + '.png'
+    function getCategoryIcons(feature, latlng) {
+        // Marker colors: 'red', 'darkred', 'orange', 'green', 'darkgreen', 'blue', 'purple', 'darkpuple', 'cadetblue'
+        // Categories ['Any', 'Fire', 'Flood', 'Weather', 'Tsunami', 'Earthquake'];
+        var categoryIcon = "";
+        switch(feature.properties.category) {
+            case "Fire":
+                categoryIcon = "fire"; break;
+            case "Flood":
+                categoryIcon = "tint"; break;
+            case "Weather":
+                categoryIcon = "cloud"; break;
+            case "Tsunami":
+                categoryIcon = "life-ring"; break;
+            case "Earthquake": 
+                categoryIcon = "globe"; break;
+            default:
+                categoryIcon = "medkit";
+        }
+        var categoryMarker = L.AwesomeMarkers.icon({
+            icon: categoryIcon,
+            markerColor: (feature.properties.severity == "Emergency" ? 'red' : 'blue')
         });
 
-       return L.marker(latlng, {icon: smallIcon});
-    }*/
+        return L.marker(latlng, {icon: categoryMarker});
+    }
 
     function updateMap() {
         // Clear geoJSON layer
@@ -244,15 +248,15 @@ angular.module('alertsApp', []).controller('alertsCtrl', function($scope, $filte
         // Collect geometries from alerts and create geoJSON
         var geoJSON = { type: "FeatureCollection", features: [] }
         $.each($scope.alerts, function( index, alert ) {
-            var newFeature = { type: "Feature", geometry: alert.location, properties: { title: alert.title, category: alert.category } }; 
+            var newFeature = { type: "Feature", geometry: alert.location, properties: { title: alert.title, category: alert.category, severity: alert.severity } }; 
             geoJSON.features.push(newFeature);
         });
 
         // Add geoJSON layer to the map
         geoJSONLayer = L.geoJSON(geoJSON, {
             //style: style,
-            onEachFeature: onEachFeature//,
-            //pointToLayer: getCategoryIcons
+            onEachFeature: onEachFeature,
+            pointToLayer: getCategoryIcons
         }).addTo(alertsMap);
         alertsMap.fitBounds(geoJSONLayer.getBounds());
     }

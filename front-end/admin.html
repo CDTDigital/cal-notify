@@ -23,8 +23,9 @@
 <!-- Leaflet map & drawing styles -->
 <link rel="stylesheet" href="css/leaflet.css" />
 <link rel="stylesheet" href="css/leaflet.draw.css" />
-<link rel="stylesheet" href="http://labs.easyblog.it/maps/leaflet-search/src/leaflet-search.css" />
+<link rel="stylesheet" href="css/leaflet.awesome-markers.css" />
 
+<script src="https://use.fontawesome.com/36377358ff.js"></script>
 <!-- Angular -->
 <script src="js/vendor/angular.min.js"></script> 
 
@@ -74,7 +75,7 @@
 
                 <!-- ALERTS LIST TAB -->
                 <div role="tabpanel" class="tab-pane fade in active" id="alerts_list_tab">
-                    <div class="panel-group" id="panel-filter" role="tablist" aria-multiselectable="true">
+                    <div class="panel-group" id="panel-filter" role="tablist" aria-multiselectable="true" ng-show="alerts.length > 0">
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="collapsePanelOne">
                                 <h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">Filters</a></h4>
@@ -124,7 +125,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="table-responsive">
+                    <div class="table-responsive" ng-show="alerts.length > 0">
                         <table class="table table-striped alert-table">
                             <thead>
                                 <tr>
@@ -155,6 +156,9 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="text-center" ng-show="alerts.length == 0">
+                        <i class="fa fa-cog fa-spin fa-2x fa-fw"></i><br/>Loading...
                     </div>
                 </div>
 
@@ -249,6 +253,7 @@
 <script src="js/vendor/leaflet.js"></script>
 <script src="js/vendor/leaflet.draw.js"></script>
 <script src="js/vendor/leaflet-search.min.js"></script>
+<script src="js/vendor/leaflet.awesome-markers.min.js"></script>
 <!-- Admin script -->
 <script src="js/admin.js"></script>
 <!-- Angular modules & controllers -->

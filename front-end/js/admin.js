@@ -288,14 +288,15 @@ $(document).ready(function () {
 		position: 'topright'
 	}));
 
-    // Use Leaflets resize event to set new map height and zoom level
-	alertsMap.on('resize', function(e) {
-	  	if (e.newSize.x <= mapBreakWidth) {
+    // Use resize event to set new map height and zoom level
+	window.onresize = function() {
+	    var mapWidth = $("#alerts_map").width();
+	    if (mapWidth <= mapBreakWidth) {
 			$("#alerts_map").css('height', smallMapHeight);
-		} else if (e.newSize.x > mapBreakWidth) {
+		} else if (mapWidth > mapBreakWidth) {
 			$("#alerts_map").css('height', largeMapHeight);
 		}
-	});
+	};
 
 	// Event triggered after a tab is displayed
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -305,6 +306,7 @@ $(document).ready(function () {
 
 		// If map tab is selected & map size isn't set, init & center map to geoJSON layer
   		if($(e.target).attr("href") == "#alerts_map_tab" && mapFirstLoad) {
+  			$(window).trigger('resize');
   			alertsMap.invalidateSize();
 	    	alertsMap.fitBounds(geoJSONLayer.getBounds());
 	    	mapFirstLoad = false;
