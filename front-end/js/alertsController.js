@@ -1,5 +1,5 @@
-//angular.module('alertsApp', [])
-app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
+
+angular.module('alertsApp', []).controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
         
     //---------------------------------------------------------------------------------------------------
     //------------------------------------- C O N S T A N T S -------------------------------------------
@@ -7,7 +7,7 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
 
     $scope.categories = ['Any', 'Fire', 'Flood', 'Weather', 'Tsunami', 'Earthquake'];
     $scope.sources = ['Any', 'NOAA', 'GIS', '...'];
-    $scope.severities = ['Emergency', 'Non-Emergency'];
+    $scope.severities = ['Emergency', 'NonEmergency'];
 
     // API Token used as authorization on each API call
     $scope.apiToken = "";
