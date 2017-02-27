@@ -62,90 +62,105 @@
                     <button class="btn btn-default text-left new-alert-btn">Create Alert</button>
                 </div>
                 <div class="col-xs-6">
-                    <div class="text-right preview-toggle"> <a href="" class="glyphicon glyphicon-th-list"></a> <a href="" class="glyphicon glyphicon-map-marker"></a></div>
+                    <div class="text-right preview-toggle"> 
+                        <a href="#alerts_list_tab" class="glyphicon glyphicon-th-list active" role="tab" data-toggle="tab"></a> 
+                        <a href="#alerts_map_tab" class="glyphicon glyphicon-map-marker" role="tab" data-toggle="tab"></a>
+                    </div>
                 </div>
             </div>
-            <div class="panel-group" id="panel-filter" role="tablist" aria-multiselectable="true">
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="collapsePanelOne">
-                        <h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">Filters</a></h4>
-                    </div>
-                    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapsePanelOne">
-                        <div class="panel-body">
-                            <form class="form-inline">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label for="filterCategory">Category</label>
-                                            <!--<select class="form-control" ng-model="filterCategory" ng-options="x for x in categories"></select>-->
-                                            <select class="form-control" ng-model="filterCategory">
-                                                <option ng-repeat="category in categories" value="{{category}}">{{category}}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label for="filterSource">Source</label>
-                                            <select class="form-control" ng-model="filterSource">
-                                                <option ng-repeat="source in sources" value="{{source}}">{{source}}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label>Severity</label>
-                                            <div class="checkbox" ng-repeat="severity in severities">
-                                                <label> <input type="checkbox" value=""> {{severity}}</label> &nbsp;
+
+            <div class="tab-content">
+
+                <!-- ALERTS LIST TAB -->
+                <div role="tabpanel" class="tab-pane fade in active" id="alerts_list_tab">
+                    <div class="panel-group" id="panel-filter" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="collapsePanelOne">
+                                <h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">Filters</a></h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapsePanelOne">
+                                <div class="panel-body">
+                                    <form class="form-inline">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="filterCategory">Category</label>
+                                                    <!--<select class="form-control" ng-model="filterCategory" ng-options="x for x in categories"></select>-->
+                                                    <select class="form-control" ng-model="filterCategory">
+                                                        <option ng-repeat="category in categories" value="{{category}}">{{category}}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="filterSource">Source</label>
+                                                    <select class="form-control" ng-model="filterSource">
+                                                        <option ng-repeat="source in sources" value="{{source}}">{{source}}</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label>Date Range</label>
-                                            <input type="date" class="form-control" id="FilterStartDate" placeholder="Start">
-                                            to
-                                            <input type="date" class="form-control" id="FilterEndDate" placeholder="End">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Severity</label>
+                                                    <div class="checkbox" ng-repeat="severity in severities">
+                                                        <label> <input type="checkbox" value=""> {{severity}}</label> &nbsp;
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Date Range</label>
+                                                    <input type="date" class="form-control" id="FilterStartDate" placeholder="Start">
+                                                    to
+                                                    <input type="date" class="form-control" id="FilterEndDate" placeholder="End">
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped alert-table">
+                            <thead>
+                                <tr>
+                                    <th>Severity</th>
+                                    <th>Title</th>
+                                    <th>Description</th>
+                                    <th>Created</th>
+                                    <th>Category</th>
+                                    <th>Date Sent</th>
+                                    <th>Publish</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="alert in alerts">
+                                    <td style="text-align:center">
+                                        <span ng-if="alert.severity == 'Emergency'" class="glyphicon glyphicon-warning-sign text-danger"></span>
+                                        <span ng-if="alert.severity == 'Non-Emergency'" class="glyphicon glyphicon-warning-sign text-warning"></span>
+                                    </td>
+                                    <td><span class="text-uppercase"><a href="" ng-click="editAlert(alert.id)">{{ alert.title }}</a></span></td>
+                                    <td class="text-uppercase">{{ alert.details }}</td>
+                                    <td><time datetime="{{alert.created}}">{{ alert.created | date: 'mediumDate' }}</time></td>
+                                    <td class="text-uppercase">{{ alert.category }}</td>
+                                    <td><time datetime="{{alert.published}}">{{ alert.published | date: 'mediumDate' }}</time></td>
+                                    <td>
+                                        <button ng-if="alert.status != 'Published'" class="btn btn-default publish-btn" data-loading-text="Notifying users..." ng-click="publishAlert(alert.id)">Publish</button>
+                                        <button ng-if="alert.status == 'Published'" class="btn btn-success republish-btn" data-loading-text="Updating..." ng-click="editAlert(alert.id)">Republish</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-striped alert-table">
-                    <thead>
-                        <tr>
-                            <th>Severity</th>
-                            <th>Title</th>
-                            <th>Description</th>
-                            <th>Created</th>
-                            <th>Category</th>
-                            <th>Date Sent</th>
-                            <th>Publish</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="alert in alerts">
-                            <td>
-                                <span ng-if="alert.severity == 'Emergency'" class="glyphicon glyphicon-warning-sign text-danger"></span>
-                                <span ng-if="alert.severity == 'Non-Emergency'" class="glyphicon glyphicon-warning-sign text-warning"></span>
-                            </td>
-                            <td><span class="text-uppercase"><a href="" ng-click="editAlert(alert.id)">{{ alert.title }}</a></span></td>
-                            <td class="text-uppercase">{{ alert.details }}</td>
-                            <td><time datetime="{{alert.created}}">{{ alert.created | date: 'mediumDate' }}</time></td>
-                            <td class="text-uppercase">{{ alert.category }}</td>
-                            <td><time datetime="{{alert.published}}">{{ alert.published | date: 'mediumDate' }}</time></td>
-                            <td>
-                                <button ng-if="alert.status != 'Published'" class="btn btn-default publish-btn" data-loading-text="Notifying users..." ng-click="publishAlert(alert.id)">Publish</button>
-                                <button ng-if="alert.status == 'Published'" class="btn btn-success republish-btn" data-loading-text="Updating..." ng-click="editAlert(alert.id)">Republish</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+
+                <!-- ALERTS MAP TAB -->
+                <div role="tabpanel" class="tab-pane fade" id="alerts_map_tab">
+                    <div id="alerts_map"></div>
+                </div>
             </div>
         </div>
     </div>

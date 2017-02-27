@@ -98,15 +98,6 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
     $scope.newAlert = true; // Used to change UI depending if we're creating or updating an alert
     $scope.alertId = 0;     // Used to keep track of the Id of the alert that's currently being edited
 
-    // Test alerts
-    /*var alert1 = { id: 1, title:'MAJOR FLOODING HWY 99', details:'ROAD CLOSED NEAR MARYSVILLE', location: {}, affected_area: {}, category:"Flood", 
-                source: "Any", severity:'Emergency', status: "New", created:new Date(), published:"", author_id:null, published_by:null };
-    var alert2 = { id: 2, title:'MAJOR FLOODING HWY 70', details:'ROAD CLOSED ALL POINTS SOUTH OF OROVILLE DAM', location: {}, affected_area: {}, category:"Flood", 
-                source: "Any", severity:'Emergency', status: "Published", created:new Date(), published:new Date(), author_id:null, published_by:null };
-    var alert3 = { id: 3, title:'SEVERE WEATHER', details:'WINTER WEATHER ADVISORY FOR TRUCKEE CA', location: {}, affected_area: {}, category:"Weather", 
-                source: "Any", severity:'Non-Emergency', status: "New", created:new Date(), published:"", author_id:null, published_by:null };
-    $scope.alerts = [ new Alert(alert1), new Alert(alert2), new Alert(alert3) ];*/
-
     // Retrieve Alerts
 
     $scope.getAlerts = function() {
@@ -120,6 +111,7 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
             for(var i = 0, size = alerts.length; i < size; i++) {
                 $scope.alerts.push(new Alert(alerts[i], true));
             }
+            updateMap();
         }, function errorCallback(response) {
             // Called asynchronously if an error occurs or server returns response with an error status.
             console.log(response);
@@ -140,6 +132,7 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
         }).then(function successCallback(response) {
             // Create alert based on returned object
             $scope.alerts.splice(0, 0, new Alert(response.data.result, true));
+            updateMap();
             closeModal();
         }, function errorCallback(response) {
             showErrorInModal(response.data.meta.message);
@@ -151,6 +144,7 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
     	updateLocationFields();
         // Retrieve alert by id 
     	var alert = $filter("filter")($scope.alerts, { id: $scope.alertId }, true)[0];
+        var alertIndex = $scope.alerts.indexOf(alert);
         alert = $scope.currAlert;
 
         $http({
@@ -161,6 +155,8 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
         }).then(function successCallback(response) {
             // Update alert based on returned object
             alert = new Alert(response.data.result, true);
+            $scope.alerts[alertIndex] = alert;
+            updateMap();
             closeModal();
         }, function errorCallback(response) {
             showErrorInModal(response.data.meta.message);
@@ -203,6 +199,63 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
     $scope.resetAlert = function() {
         $scope.currAlert = new Alert();
     };
+
+    //---------------------------------------------------------------------------------------------------
+    //------------------------------ P R I V A T E  M E T H O D S ---------------------------------------
+    //---------------------------------------------------------------------------------------------------
+
+    // Map customization
+
+    // Bind infowindows to features
+    function onEachFeature(feature, layer) {
+        if (feature.properties) {
+            layer.bindPopup(feature.properties.title + "<br/><b>" + feature.properties.category + "</b>");
+        }
+    }
+
+    // Style map features, add category icons
+    /*function style(feature) {
+        return {
+            fillColor: getColor(feature.properties.density),
+            weight: 2,
+            opacity: 1,
+            color: 'white',
+            dashArray: '3',
+            fillOpacity: 0.7
+        };
+    }*/
+
+    /*function getCategoryIcons(feature, latlng) {
+        var smallIcon = L.icon({
+            iconSize: [27, 27],
+            iconAnchor: [13, 27],
+            popupAnchor:  [1, -24],
+            iconUrl: 'leaflet/icons/' + feature.properties.pcp + '.png'
+        });
+
+       return L.marker(latlng, {icon: smallIcon});
+    }*/
+
+    function updateMap() {
+        // Clear geoJSON layer
+        if(geoJSONLayer)
+            alertsMap.removeLayer(geoJSONLayer);
+
+        // Collect geometries from alerts and create geoJSON
+        var geoJSON = { type: "FeatureCollection", features: [] }
+        $.each($scope.alerts, function( index, alert ) {
+            var newFeature = { type: "Feature", geometry: alert.location, properties: { title: alert.title, category: alert.category } }; 
+            geoJSON.features.push(newFeature);
+        });
+
+        // Add geoJSON layer to the map
+        geoJSONLayer = L.geoJSON(geoJSON, {
+            //style: style,
+            onEachFeature: onEachFeature//,
+            //pointToLayer: getCategoryIcons
+        }).addTo(alertsMap);
+        alertsMap.fitBounds(geoJSONLayer.getBounds());
+    }
 
     function updateLocationFields() {
         $scope.currAlert.location = $(".coverage-map-coords").val();

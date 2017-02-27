@@ -593,6 +593,9 @@ a.shortcut-tiles {
 .info-tiles.tiles-default:hover .tiles-footer {
   background: #515151;
 }
+#alerts_map {
+  width: 100%;
+}
 .coverage-map {
   height: 300px;
   margin-bottom: 10px;
@@ -611,6 +614,9 @@ a.shortcut-tiles {
   font-size: 1.5em;
   padding: 10px;
   text-decoration: none;
+}
+.preview-toggle a.active {
+  color: #052032;
 }
 .preview-toggle a:hover {
   color: #052032;
