@@ -34,7 +34,7 @@ namespace CalNotifyApi.Models.Auth
         [DataMember(Name = "name")]
         public virtual string Name { get; set; }
 
-        [DataMember(Name = "password"), Required]
+        [DataMember(Name = "password"),Required]
         public virtual string Password { get; set; }
 
         [DataMember(Name = "email")]
@@ -61,7 +61,7 @@ namespace CalNotifyApi.Models.Auth
         public TokenType TokenType { get; set; } = TokenType.EmailToken;
 
        
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (string.IsNullOrWhiteSpace(Email) && string.IsNullOrWhiteSpace(PhoneNumber))
             {
@@ -73,6 +73,7 @@ namespace CalNotifyApi.Models.Auth
                 yield return new ValidationResult("Please provide an address.");
             }
 
+        
 
         }
 
@@ -94,6 +95,74 @@ namespace CalNotifyApi.Models.Auth
         public TempUser ShallowCopy()
         {
             return (TempUser)this.MemberwiseClone();
+        }
+    }
+
+
+    [DataContract]
+    public class UpdateableUser : IValidatableObject
+    {
+       
+
+        [DataMember(Name = "password")]
+        public virtual string Password { get; set; }
+
+        [DataMember(Name = "email"), EmailAddress]
+        public virtual string Email { get; set; }
+
+
+        [DataMember(Name = "id")]
+        public virtual Guid Id { get; set; }
+
+
+        [DataMember(Name = "phone"), Phone]
+        public virtual string PhoneNumber { get; set; }
+
+
+        [DataMember(Name = "enabled_email")]
+        public bool EnabledEmail { get; set; }
+
+
+        [DataMember(Name = "enabled_sms")]
+        public bool EnabledSms { get; set; }
+
+        public string Token { get; set; }
+
+        /// <summary>
+        ///     The addresss of the user
+        /// </summary>
+        [DataMember(Name = "address")]
+        public Address Address { get; set; }
+
+
+        public bool HasAddress
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(Address.City)
+                       && !string.IsNullOrEmpty(Address.State)
+                       && !string.IsNullOrEmpty(Address.Street)
+                       && !string.IsNullOrEmpty(Address.Zip)
+                       // ReSharper disable once CompareOfFloatsByEqualityOperator
+                       && Address.GeoLocation.X != 0
+                       // ReSharper disable once CompareOfFloatsByEqualityOperator
+                       && Address.GeoLocation.Y != 0;
+            }
+        }
+
+        public  IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (string.IsNullOrWhiteSpace(Email) && string.IsNullOrWhiteSpace(PhoneNumber))
+            {
+                yield return new ValidationResult("Need to provide at least an Email or Phone number.");
+            }
+
+            if (!HasAddress)
+            {
+                yield return new ValidationResult("Please provide an address.");
+            }
+
+
         }
     }
 

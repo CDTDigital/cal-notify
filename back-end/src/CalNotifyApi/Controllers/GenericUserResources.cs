@@ -7,6 +7,7 @@ using CalNotifyApi.Events.Exceptions;
 using CalNotifyApi.Models;
 using CalNotifyApi.Models.Auth;
 using CalNotifyApi.Models.Responses;
+using CalNotifyApi.Models.Services;
 using CalNotifyApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using NpgsqlTypes;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -30,13 +32,16 @@ namespace CalNotifyApi.Controllers
 
         private readonly ValidationSender _validation;
 
+        private readonly ITokenMemoryCache _memoryCache;
+
         /// <summary>
         /// </summary>
-        public GenericUserResources(BusinessDbContext context, ILogger<GenericUserResources> logger, ValidationSender validation)
+        public GenericUserResources(BusinessDbContext context, ILogger<GenericUserResources> logger, ValidationSender validation, ITokenMemoryCache memoryCache)
         {
             _context = context;
             _logger = logger;
             _validation = validation;
+            _memoryCache = memoryCache;
         }
 
 
@@ -85,7 +90,7 @@ namespace CalNotifyApi.Controllers
         /// 
         [HttpPut("")]
         [SwaggerOperation("UPDATE_GENERICUSER_BY_ID", Tags = new[] { Constants.GenericUserEndpoint })]
-        public virtual async Task<IActionResult> UpdateById([FromBody] TempUser tempUser)
+        public virtual async Task<IActionResult> UpdateById([FromBody] UpdateableUser tempUser)
         {
             try
             {
@@ -100,23 +105,39 @@ namespace CalNotifyApi.Controllers
                     }
 
 
-                    user.Email = tempUser.Email;
-                    user.PhoneNumber = tempUser.PhoneNumber;
+                   
+                  
                     user.EnabledEmail = tempUser.EnabledEmail;
                     user.EnabledSms = tempUser.EnabledSms;
 
+                    _context.Address.Update(user.Address);
+
+                    user.Address.Zip = tempUser.Address.Zip;
+                    user.Address.City = tempUser.Address.City;
+                    user.Address.FormattedAddress = tempUser.Address.FormattedAddress;
+                    user.Address.Number = tempUser.Address.Number;
+                    user.Address.State = tempUser.Address.State;
+                    tempUser.Address.GeoLocation.SRID = Constants.SRID;
+                    user.Address.GeoLocation = tempUser.Address.GeoLocation;
 
 
                     if (!string.IsNullOrWhiteSpace(tempUser.Email) && tempUser.Email != user.Email)
                     {
-
-                        await _validation.SendValidationToEmail(new TempUser(user));
+                        user.Email = tempUser.Email;
+                        Log.Information("Sending Email Validation to {user}", tempUser);
+                        var temp = new TempUser(user);
+                        await _validation.SendValidationToEmail(temp);
+                        _memoryCache.SetForChallenge(temp);
 
                     }
 
                     if (!string.IsNullOrWhiteSpace(tempUser.PhoneNumber) && tempUser.PhoneNumber != user.PhoneNumber)
                     {
-                        await _validation.SendValidationToSms(new TempUser(user));
+                        user.PhoneNumber = tempUser.PhoneNumber;
+                        Log.Information("Sending SMS Validation to {user}", tempUser);
+                        var temp = new TempUser(user);
+                        await _validation.SendValidationToSms(temp);
+                        _memoryCache.SetForChallenge(temp);
                     }
 
                     if (!string.IsNullOrWhiteSpace(tempUser.Password))

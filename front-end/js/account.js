@@ -64,37 +64,45 @@ $(document).ready(function () {
         $('#autocomplete').val(userDetails.address.formatted_address);
     }
 
+    window.update  = update;
 
     $('.js-save').on('click', function(ev){
-        var container =  $('.container');
-
+        var container =  $('.js-msg-area');
+        userDetails['id'] = userId;
         userDetails.enabled_sms =  $('.js-toggle_sms [type="checkbox"]').prop('checked');
         userDetails.enabled_email = $('.js-toggle_email [type="checkbox"]').prop('checked');
 
-        userDetails.email = $('#email-input').val() != userDetails.email ? $('#email-input').val() : userDetails.email;
-        userDetails.sms = $('#phone-input').val() != userDetails.phone ? $('#phone-input').val() : userDetails.phone;
+        userDetails.email = $('#email-input').val();
+        userDetails.phone = $('#phone-input').val();
         var update = $.ajax({
             url: baseApiAddress +'/v1/users?auth_token=' + token,
             type: 'PUT',
-           data: userDetails,
-            success: function (data) {
+            contentType: "application/json",
+           data: JSON.stringify(userDetails),
+            success: function (data, status, xhr) {
                 userDetails = data.result;
-                console.log(userDetails);
 
-                console.log(xhr.responseJSON.meta);
-                var alert = '<div class="alert alert-success alert-fixed">' + xhr.responseJSON.meta.message + '</div>'
-
+                console.log("updating")
+                window.update();
+                var alert = '<div class="alert alert-success alert-fixed">Successfully updated your account</div>'
+                alert = container.prepend(alert);
                 setTimeout(function(){
-                    alert.fadeOut(200);
+                   container.find('.alert').fadeOut(200, function(){
+                       $(this).remove()
+                   });
                 },3000)
             },
             error: function (xhr, status, error) {
                 container.find(".alert").remove(); // clear old alerts
                 var alert;
+                console.log(xhr, status);
                 if (xhr.responseJSON !== undefined) {
                     console.log(xhr.responseJSON.meta);
-                    var alert = '<div class="alert alert-danger alert-fixed">' + xhr.responseJSON.meta.message + '</div>'
-                   alert =  container.prepend(alert);
+                    if(xhr.responseJSON.meta.details.length > 0){
+                        var alert = '<div class="alert alert-danger alert-fixed">' + xhr.responseJSON.meta.details[0] + '</div>'
+                        alert =  container.prepend(alert);
+                    }
+
                 } else {
                     var msg = "unknown server error";
                     var alert = '<div class="alert alert-danger alert-fixed">' + msg + '</div>'
@@ -150,9 +158,9 @@ $(document).ready(function () {
             }
         }
 
-
-        addressDetails['lat'] = place.geometry.location.lat();
-        addressDetails['lng'] = place.geometry.location.lng();
+        addressDetails["location"] = {
+           x: place.geometry.location.lng(), y: place.geometry.location.lat()
+        }
         addressDetails['formatted_address'] = place.formatted_address;
         addressDetails['number'] = googlAddressNames["street_number"];
         addressDetails["street"] = googlAddressNames["route"];
@@ -186,5 +194,5 @@ $(document).ready(function () {
     }
 
     window.geolocate = geolocate;
-    console.log(window.geolocate);
+
 });
