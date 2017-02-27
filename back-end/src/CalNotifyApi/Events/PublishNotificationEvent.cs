@@ -22,53 +22,66 @@ namespace CalNotifyApi.Events
         {
 
             var queryString = $@"
-              SELECT users.""Id"", users.""ValidatedEmail"", users.""ValidatedSms"",  users.""Enabled"", users.""Email"", users.""PhoneNumber"",
+              SELECT users.""Id"", users.""ValidatedEmail"", users.""ValidatedSms"",  users.""Enabled"", users.""Email"", users.""PhoneNumber"",  users.""EnabledEmail"", users.""EnabledSms"",
                 addr.""GeoLocation"", addr.""UserId"",
                 noti.""AffectedArea"" FROM public.""Address""  addr, public.""AllUsers"" users, public.""Notifications"" noti
                 where ST_Intersects(ST_SetSRID(noti.""AffectedArea"",4326),addr.""GeoLocation"")
                 ";
 
             var foundUsers = new List<Rows>();
-            using (var connection = context.Database.GetDbConnection())
+            try
             {
-                connection.Open();
-
-                using (var command = connection.CreateCommand())
+                using (var connection = context.Database.GetDbConnection())
                 {
-                    command.CommandText = queryString;
-                    using (var reader = command.ExecuteReader())
+                    connection.Open();
+
+                    using (var command = connection.CreateCommand())
                     {
-                        while (reader.Read())
+                        command.CommandText = queryString;
+                        using (var reader = command.ExecuteReader())
                         {
-                           foundUsers.Add(new Rows()
-                           {
-                              Id = (Guid)reader[0],
-                              ValidatedEmail = (bool) reader[1],
-                              ValidatedSms = (bool)reader[2],
-                              Enabled = (bool) reader[3],
-                              Email = (string)reader[4],
-                              PhoneNumber = (string)reader[5]
-                           });
+                            while (reader.Read())
+                            {
+                                foundUsers.Add(new Rows()
+                                {
+                                    Id = (Guid)reader[0],
+                                    ValidatedEmail = (bool)reader[1],
+                                    ValidatedSms = (bool)reader[2],
+                                    Enabled = (bool)reader[3],
+                                    Email = (reader[4] ?? "").ToString(),
+                                    PhoneNumber = (reader[5] ?? "").ToString(),
+                                    EnabledEmail = (bool)reader[6],
+                                    EnabledSms = (bool)reader[7]
+
+                                });
+                            }
+
                         }
-
                     }
-                }
 
 
-                context.Notifications.Update(notification);
-                notification.Published = DateTime.Now;
-                notification.PublishedById = new Guid(adminId);
-                context.SaveChanges();
+                    context.Notifications.Update(notification);
+                    notification.Status = NotiStatus.Published;
+                    notification.Published = DateTime.Now;
+                    notification.PublishedById = new Guid(adminId);
+                    context.SaveChanges();
 
-                // Use the notification bounds and find the users which fall into those bounds
+                    // Use the notification bounds and find the users which fall into those bounds
 #pragma warning disable 4014
-                 Broadcast(context, sender, foundUsers, notification);
+                    Broadcast(context, sender, foundUsers, notification);
 #pragma warning restore 4014
 
-                // Use their communication information which has been validated to fire off the messages
+                    // Use their communication information which has been validated to fire off the messages
 
-                // Collect stats with the broadcasting
+                    // Collect stats with the broadcasting
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+    
         }
 
 
@@ -78,11 +91,11 @@ namespace CalNotifyApi.Events
             {
                 try
                 {
-                    if (user.ValidatedSms && !string.IsNullOrWhiteSpace(user.PhoneNumber))
+                    if (user.ValidatedSms && user.EnabledSms && !string.IsNullOrWhiteSpace(user.PhoneNumber))
                     {
                         await sender.SendMSMessage(user.PhoneNumber, notification);
                     }
-                    if (user.ValidatedEmail && !string.IsNullOrEmpty(user.Email))
+                    if (user.ValidatedEmail && user.EnabledEmail && !string.IsNullOrEmpty(user.Email))
                     {
                         await sender.SendEmailMessage(user.Email, notification);
                     }
