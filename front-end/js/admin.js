@@ -17,7 +17,20 @@ function addCircleToDrawnItems(lat, lng, radius) {
     });
 }
 
-function setCoverageMap(data, radius) {
+function bindDrawnItemsToInputs() {
+	var features = drawnItems.toGeoJSON().features;
+	for(var i = 0; i < features.length; i++) {
+		var geometry = JSON.stringify(features[i].geometry).replace('[[[','[[').replace(']]]',']]');
+		// Since edits can be done randomly, always check for the type of geometry changed and update accordingly
+		if (features[i].geometry.type === "Point") {
+			$('.coverage-map-coords').val(geometry);
+        } else {
+        	$('.coverage-map-area-coords').val(geometry);
+        }
+	}
+}
+
+function setCoverageMap(location, area, radius) {
 	if(typeof radius === 'undefined') radius = 5000;
 
 	var settings = {
@@ -95,12 +108,11 @@ function setCoverageMap(data, radius) {
 			var type = e.layerType;
 			// Alert angular about changes on input field (Fix when value is changed through jQuery)
 			scope.$apply(function() { 
+				var geometry = JSON.stringify(e.layer.toGeoJSON().geometry).replace('[[[','[[').replace(']]]',']]');
 				if (type === 'marker') {
-					inputPin.val(JSON.stringify(e.layer.toGeoJSON().geometry));
-					scope.alertCoords = JSON.stringify(e.layer.toGeoJSON().geometry);
+					inputPin.val(geometry);
 		        } else {
-		        	inputArea.val(JSON.stringify(e.layer.toGeoJSON().geometry));
-		        	scope.alertAreaCoords = JSON.stringify(e.layer.toGeoJSON().geometry);
+		        	inputArea.val(geometry);
 		        }
 	        });
 			
@@ -109,18 +121,7 @@ function setCoverageMap(data, radius) {
 		});
 
 		coverageMap.on(L.Draw.Event.EDITED, function(e) {
-			var type = e.layerType;
-
-			scope.$apply(function() { 
-				var geometry = JSON.stringify(drawnItems.toGeoJSON().features[0].geometry);
-				if (type === 'marker') {
-					inputPin.val(geometry);
-					scope.alertCoords = geometry;
-		        } else {
-		        	inputArea.val(geometry);
-		        	scope.alertAreaCoords = geometry;
-		        }
-	        });
+			bindDrawnItemsToInputs();
 		});
 
 		coverageMap.on(L.Draw.Event.DELETED, function(e) {
@@ -135,9 +136,17 @@ function setCoverageMap(data, radius) {
 	}
 
 	// Add marker with sent coords
-	if (typeof data.coordinates !== 'undefined') {
-		L.marker([data.coordinates[1], data.coordinates[0]]).addTo(drawnItems);
+	if (typeof location.coordinates !== 'undefined') {
+		L.marker([location.coordinates[1], location.coordinates[0]]).addTo(drawnItems);
 	}
+	if(typeof area.coordinates !== 'undefined') {
+		// Reverse coordinates to match Leaflet standard
+		$.map(area.coordinates, function reverse(item) { 
+			return $.isArray(item) && $.isArray(item[0]) ? $.map(item, reverse) : item.reverse();
+        });
+		L.polygon(area.coordinates).addTo(drawnItems);
+	}
+	bindDrawnItemsToInputs();
 
 	$(window).one('alert_modal_shown', function (e) {
        	$(".coverage-map").css("opacity","1");
@@ -161,8 +170,6 @@ function publishHandlers() {
     		//currBtn.text("Republish"); 
     	}, 3000);
     });
-
-	//setCoverageMap({ "type": "Point", "coordinates": [-121.50772690773012,38.644356698715285]}, 8000);
 }
 
 function getUrlParameter(name) {
@@ -173,6 +180,8 @@ function getUrlParameter(name) {
 };
 
 $(document).ready(function () {
+	scope = angular.element($("body")).scope();
+
 	$(".alert-modal").on('shown.bs.modal', function () {
 		// Notify that modal is loaded so the map is resized
 		var evt = $.Event('alert_modal_shown');
@@ -181,6 +190,7 @@ $(document).ready(function () {
 
 	$(".alert-modal").on('show.bs.modal', function () {
 		$(".coverage-map").css("opacity","0");
+		$(".modal-error-msg").text("");
 	});
 
 	$(".save-alert-btn").on('click', function () {
@@ -190,7 +200,7 @@ $(document).ready(function () {
 	});
 
 	$(".new-alert-btn").on('click', function () {
-		setCoverageMap({});
+		setCoverageMap({}, {});
 		
 	    scope.$apply(function(){ 
 	    	scope.resetAlert();
@@ -201,10 +211,11 @@ $(document).ready(function () {
 
 	publishHandlers();
 
-	scope = angular.element($("body")).scope();
-
 	// Save token to use on API calls
 	scope.$apply(function(){ 
 		scope.setApiToken(getUrlParameter('token'));
+		// Retrieve alerts from API
+		scope.getAlerts();
 	});
+
 });

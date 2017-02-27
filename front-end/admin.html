@@ -209,9 +209,10 @@
                 </form>
             </div>
             <div class="modal-footer">
+                <span class="modal-error-msg">An error occurred</span>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button ng-if="!newAlert" type="button" class="btn btn-primary save-alert-btn" ng-click="updateAlert()" data-dismiss="modal">Save Changes</button>
-                <button ng-if="newAlert" type="button" class="btn btn-primary save-alert-btn" ng-click="createAlert()" data-dismiss="modal">Create Alert</button>
+                <button ng-if="!newAlert" type="button" class="btn btn-primary save-alert-btn" ng-click="updateAlert()" data-loading-text="Updating alert...">Save Changes</button>
+                <button ng-if="newAlert" type="button" class="btn btn-primary save-alert-btn" ng-click="createAlert()" data-loading-text="Creating alert...">Create Alert</button>
             </div>
         </div>
     </div>
