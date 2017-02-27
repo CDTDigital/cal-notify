@@ -23,7 +23,7 @@ namespace CalNotifyApi.Events
                 TempUser tempUser)
         {
 
-            var exisitingUser = context.Users.FirstOrDefault(x => x.PhoneNumber == tempUser.PhoneNumber);
+            var exisitingUser = context.Users.FirstOrDefault(x => x.Id == tempUser.Id);
             // we already have an existing user,
             // instead of throwing out an error we will do the right thing and just retoken them
             Debug.Assert(exisitingUser != null, "Shouldn't ever be trying to update a null'ed user");
