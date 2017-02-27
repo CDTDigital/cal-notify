@@ -56,6 +56,24 @@ function setCoverageMap(location, area, radius) {
 				attribution: settings.mapAttribution
 		}).addTo(coverageMap);
 
+		// Add search box
+		coverageMap.addControl(new L.Control.Search({
+			url: 'http://nominatim.openstreetmap.org/search?format=json&q={s}',
+			jsonpParam: 'json_callback',
+			propertyName: 'display_name',
+			propertyLoc: ['lat', 'lon'],
+			circleLocation: false,
+			markerLocation: false,
+			autoType: false,
+			autoCollapse: true,
+			autoCollapseTime: 100,
+			textPlaceholder: 'Search...',
+			animateLocation: false,
+			minLength: 2,
+			zoom: 10,
+			position: 'topright'
+		}));
+
 		// Set styling of drawn items
 		drawnItems = new L.geoJson([], {
 			style: function(feature) {
@@ -251,6 +269,24 @@ $(document).ready(function () {
 		maxZoom: 18,
 		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 	}).addTo(alertsMap);
+
+	// Add search box
+	alertsMap.addControl(new L.Control.Search({
+		url: 'http://nominatim.openstreetmap.org/search?format=json&q={s}',
+		jsonpParam: 'json_callback',
+		propertyName: 'display_name',
+		propertyLoc: ['lat', 'lon'],
+		circleLocation: false,
+		markerLocation: false,
+		autoType: false,
+		autoCollapse: true,
+		autoCollapseTime: 100,
+		textPlaceholder: 'Search...',
+		animateLocation: false,
+		minLength: 2,
+		zoom: 10,
+		position: 'topright'
+	}));
 
     // Use Leaflets resize event to set new map height and zoom level
 	alertsMap.on('resize', function(e) {
