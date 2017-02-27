@@ -178,21 +178,23 @@ angular.module('alertsApp', []).controller('alertsCtrl', function($scope, $filte
     }
 
     $scope.publishAlert = function(id) {
+        $("#publish_btn_" + id).button('loading');
         // Retrieve alert by id 
     	var alert = $filter("filter")($scope.alerts, { id: id }, true)[0];
-    	alert.status = "Published";
-        alert.published = new Date();
 
+        // Broadcast the notification to the affected users
         $http({
-            method: 'PATCH',
+            method: 'PUT',
             url: baseApiAddress + '/v1/notification/' + alert.id,
-            headers: { 'Content-Type': 'application/json' },
-            data: JSON.stringify(alert.prepareDataForAPI())
+            headers: { 'Content-Type': 'application/json' }
         }).then(function successCallback(response) {
-            // Update alert based on returned object
-            alert = new Alert(response.data.result, true);
+            // Update alert status
+            alert.status = "Published";
+            alert.published = new Date();
+            setTimeout(function() { $("#publish_btn_" + id).button('reset'); }, 2000);
         }, function errorCallback(response) {
             console.log(response.data.meta.message);
+            $("#publish_btn_" + id).button('reset');
         });
     };
 
