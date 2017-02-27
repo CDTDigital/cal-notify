@@ -150,7 +150,7 @@
                                     <td class="text-uppercase">{{ alert.category }}</td>
                                     <td><time datetime="{{alert.published}}">{{ alert.published | date: 'mediumDate' }}</time></td>
                                     <td>
-                                        <button ng-if="alert.status != 'Published'" class="btn btn-default publish-btn" data-loading-text="Notifying users..." ng-click="publishAlert(alert.id)">Publish</button>
+                                        <button ng-if="alert.status != 'Published'" id="publish_btn_{{alert.id}}" class="btn btn-default publish-btn" data-loading-text="Notifying users..." ng-click="publishAlert(alert.id)">Publish</button>
                                         <button ng-if="alert.status == 'Published'" class="btn btn-success republish-btn" data-loading-text="Updating..." ng-click="editAlert(alert.id)">Republish</button>
                                     </td>
                                 </tr>

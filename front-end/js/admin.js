@@ -180,18 +180,6 @@ function setCoverageMap(location, area, radius) {
    	});
 }
 
-function publishHandlers() {
-	$(".publish-btn").on('click', function() {
-    	var currBtn = $(this);
-    	currBtn.button('loading');
-    	setTimeout(function(){ 
-    		currBtn.button('reset'); 
-    		//currBtn.removeClass("publish-btn").addClass("republish-btn");
-    		//currBtn.text("Republish"); 
-    	}, 3000);
-    });
-}
-
 function getUrlParameter(name) {
     name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
     var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
@@ -225,8 +213,6 @@ $(document).ready(function () {
 
 	$(".save-alert-btn").on('click', function () {
 		$(".alert-modal").modal('hide');
-        
-        publishHandlers();
 	});
 
 	$(".new-alert-btn").on('click', function () {
@@ -238,8 +224,6 @@ $(document).ready(function () {
 	    });
 		$(".alert-modal").modal('show');
 	});
-
-	publishHandlers();
 
 	// -------- Init Alerts Map (tab) --------
 
