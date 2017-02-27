@@ -15,11 +15,15 @@
   }
 }
 
-
+// MAPS
+#alerts_map {
+    width: 100%;
+}
 .coverage-map {
     height: 300px;
     margin-bottom: 10px;
 }
+
 .modal-error-msg {
     padding-top: 5px;
     padding-right: 20px;
@@ -37,6 +41,10 @@
         padding: 10px;
         text-decoration: none;
         
+        &.active {
+            color: @link-hover-color;
+        }
+
         &:hover {
             color: @link-hover-color;
         }

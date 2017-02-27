@@ -1,5 +1,5 @@
 
-var coverageMap, drawnItems, scope;
+var coverageMap, drawnItems, scope, alertsMap, geoJSONLayer;
 
 function addCircleToDrawnItems(lat, lng, radius) {
 	var coverageCircle = L.circle([lat, lng], radius);
@@ -29,6 +29,8 @@ function bindDrawnItemsToInputs() {
         }
 	}
 }
+
+// ----------- Map builder for alert CRUD operations -----------
 
 function setCoverageMap(location, area, radius) {
 	if(typeof radius === 'undefined') radius = 5000;
@@ -180,7 +182,17 @@ function getUrlParameter(name) {
 };
 
 $(document).ready(function () {
+	// Reference to AngularJS scope
 	scope = angular.element($("body")).scope();
+
+	// Save token to use on API calls
+	scope.$apply(function(){ 
+		scope.setApiToken(getUrlParameter('token'));
+		// Retrieve alerts from API
+		scope.getAlerts();
+	});
+
+	// Alert modal handlers
 
 	$(".alert-modal").on('shown.bs.modal', function () {
 		// Notify that modal is loaded so the map is resized
@@ -211,11 +223,56 @@ $(document).ready(function () {
 
 	publishHandlers();
 
-	// Save token to use on API calls
-	scope.$apply(function(){ 
-		scope.setApiToken(getUrlParameter('token'));
-		// Retrieve alerts from API
-		scope.getAlerts();
+	// -------- Init Alerts Map (tab) --------
+
+	var largeMapHeight = 650;
+  	var smallMapHeight = 300;
+  	var mapBreakWidth = 720;
+  	var highZoom = 8;
+  	var lowZoom = 7;
+  	var initZoom;
+  	var mapFirstLoad = true;
+	
+	// Set initial map height, based on the calculated width of the map container
+	if ($("#alerts_map").width() > mapBreakWidth) {
+		initZoom = highZoom;
+		$("#alerts_map").height(largeMapHeight);
+	} else {
+		initZoom = lowZoom;
+		$("#alerts_map").height(smallMapHeight);
+	};
+	  
+    alertsMap = new L.Map('alerts_map', {
+     	center: [38.571849, -121.497790],
+    	zoom: initZoom
+    });
+
+	L.tileLayer('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
+		maxZoom: 18,
+		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+	}).addTo(alertsMap);
+
+    // Use Leaflets resize event to set new map height and zoom level
+	alertsMap.on('resize', function(e) {
+	  	if (e.newSize.x <= mapBreakWidth) {
+			$("#alerts_map").css('height', smallMapHeight);
+		} else if (e.newSize.x > mapBreakWidth) {
+			$("#alerts_map").css('height', largeMapHeight);
+		}
+	});
+
+	// Event triggered after a tab is displayed
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		// Toggle active tab
+		$(".preview-toggle a").removeClass("active");
+		$(e.target).addClass("active");
+
+		// If map tab is selected & map size isn't set, init & center map to geoJSON layer
+  		if($(e.target).attr("href") == "#alerts_map_tab" && mapFirstLoad) {
+  			alertsMap.invalidateSize();
+	    	alertsMap.fitBounds(geoJSONLayer.getBounds());
+	    	mapFirstLoad = false;
+		}
 	});
 
 });
