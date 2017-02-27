@@ -45,7 +45,7 @@ namespace CalNotifyApi.Models
         public DateTime  Created { get; set; }
 
         [DataMember(Name = "published")]
-        public DateTime Published { get; set; }
+        public DateTime? Published { get; set; }
 
 
         [DataMember(Name = "author_id")]
