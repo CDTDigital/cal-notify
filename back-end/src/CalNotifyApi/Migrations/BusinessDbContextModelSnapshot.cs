@@ -103,11 +103,16 @@ namespace CalNotifyApi.Migrations
 
             modelBuilder.Entity("CalNotifyApi.Models.BroadCastLogEntry", b =>
                 {
-                    b.Property<Guid>("UserId");
+                    b.Property<long?>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<long>("NotificationId");
 
-                    b.HasKey("UserId", "NotificationId");
+                    b.Property<int>("Type");
+
+                    b.Property<Guid>("UserId");
+
+                    b.HasKey("Id");
 
                     b.ToTable("NotificationLog");
                 });
@@ -138,6 +143,8 @@ namespace CalNotifyApi.Migrations
 
                     b.Property<string>("Source")
                         .IsRequired();
+
+                    b.Property<string>("SourceId");
 
                     b.Property<int>("Status");
 

@@ -18,7 +18,7 @@ namespace CalNotifyApi.Events
           public long Id { get; set; }*/
 
 
-        public async Task Process(BusinessDbContext context, string adminId, ValidationSender sender, Notification notification)
+        public Notification Process(BusinessDbContext context, string adminId, ValidationSender sender, string connectionString, Notification notification)
         {
 
             var queryString = $@"
@@ -66,14 +66,18 @@ namespace CalNotifyApi.Events
                     notification.PublishedById = new Guid(adminId);
                     context.SaveChanges();
 
+                    Log.Information("Sending out notification to {count} users", foundUsers.Count);
+
                     // Use the notification bounds and find the users which fall into those bounds
 #pragma warning disable 4014
-                    Broadcast(context, sender, foundUsers, notification);
+                    Broadcast(connectionString, sender, foundUsers, notification);
 #pragma warning restore 4014
 
                     // Use their communication information which has been validated to fire off the messages
 
                     // Collect stats with the broadcasting
+
+                    return notification;
                 }
             }
             catch (Exception e)
@@ -81,39 +85,56 @@ namespace CalNotifyApi.Events
                 Console.WriteLine(e);
                 throw;
             }
-    
+
         }
 
 
-        private async Task Broadcast(BusinessDbContext context, ValidationSender sender, List<Rows> users, Notification notification)
+        private async Task Broadcast(string connectionString, ValidationSender sender, List<Rows> users, Notification notification)
         {
-            foreach (var user in users)
+            var options = new DbContextOptionsBuilder<BusinessDbContext>();
+            options.UseNpgsql(connectionString);
+         
+            using (var context = new BusinessDbContext(options.Options))
             {
-                try
+                foreach (var user in users)
                 {
-                    if (user.ValidatedSms && user.EnabledSms && !string.IsNullOrWhiteSpace(user.PhoneNumber))
+                    try
                     {
-                        await sender.SendMSMessage(user.PhoneNumber, notification);
+                        if (user.ValidatedSms && user.EnabledSms && !string.IsNullOrWhiteSpace(user.PhoneNumber))
+                        {
+                            Log.Information("Sending out notification to {phone}", user.PhoneNumber);
+                            await sender.SendMSMessage(user.PhoneNumber, notification);
+                            context.NotificationLog.Add(new BroadCastLogEntry()
+                            {
+                                NotificationId = notification.Id.Value,
+                                UserId = user.Id,
+                                Type = LogType.Email
+                            });
+                        }
+                        if (user.ValidatedEmail && user.EnabledEmail && !string.IsNullOrEmpty(user.Email))
+                        {
+                            Log.Information("Sending out notification to {email}", user.Email);
+                            await sender.SendEmailMessage(user.Email, notification);
+                            context.NotificationLog.Add(new BroadCastLogEntry()
+                            {
+                                NotificationId = notification.Id.Value,
+                                UserId = user.Id,
+                                Type = LogType.Sms
+                            });
+                        }
+                       
+                        context.SaveChanges();
+
                     }
-                    if (user.ValidatedEmail && user.EnabledEmail && !string.IsNullOrEmpty(user.Email))
+                    catch (Exception e)
                     {
-                        await sender.SendEmailMessage(user.Email, notification);
+                        Log.Error(e, "Error when broadcasting to user {user}", user);
                     }
-                    context.NotificationLog.Add(new BroadCastLogEntry()
-                    {
-                        NotificationId = notification.Id.Value,
-                        UserId = user.Id
-                    });
-                    context.SaveChanges();
 
                 }
-                catch (Exception e)
-                {
-                    Log.Error(e, "Error when broadcasting to user {user}", user);
-                }
-               
+                return;
             }
-            return;
+               
         }
 
         internal class Rows

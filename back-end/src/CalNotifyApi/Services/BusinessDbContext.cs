@@ -112,7 +112,7 @@ namespace CalNotifyApi.Services
             .HasDefaultValueSql("uuid_generate_v4()");
 
 
-            builder.Entity<BroadCastLogEntry>().HasKey(x => new {x.UserId, x.NotificationId});
+           // builder.Entity<BroadCastLogEntry>().HasKey(x => new {x.Id});
 
         }
     }
@@ -133,7 +133,7 @@ namespace CalNotifyApi.Services
         /// <returns></returns>
         public static async Task<bool> SeedDatabase(this BusinessDbContext context, string contentRoot, bool isDevel, IServiceProvider services)
         {
-            var path = Path.Combine(contentRoot, "zipcodes.csv");
+          /*  var path = Path.Combine(contentRoot, "zipcodes.csv");
             var file = File.OpenRead(path);
             var csv = new CsvReader(new StreamReader(file));
             csv.Configuration.RegisterClassMap<ZipCodeInfoMap>();
@@ -145,7 +145,7 @@ namespace CalNotifyApi.Services
                     context.ZipCodes.Add(record);
                 }
              
-            }
+            }*/
             foreach (var adminEvent in Constants.Testing.TestAdmins)
             {
 

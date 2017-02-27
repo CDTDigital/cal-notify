@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace CalNotifyApi.Migrations
 {
-    public partial class inital : Migration
+    public partial class @default : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -55,12 +55,15 @@ namespace CalNotifyApi.Migrations
                 name: "NotificationLog",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(nullable: false),
-                    NotificationId = table.Column<long>(nullable: false)
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    NotificationId = table.Column<long>(nullable: false),
+                    Type = table.Column<int>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_NotificationLog", x => new { x.UserId, x.NotificationId });
+                    table.PrimaryKey("PK_NotificationLog", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -116,10 +119,11 @@ namespace CalNotifyApi.Migrations
                     Created = table.Column<DateTime>(nullable: false),
                     Details = table.Column<string>(nullable: false),
                     Location = table.Column<PostgisPoint>(nullable: true),
-                    Published = table.Column<DateTime>(nullable: false),
+                    Published = table.Column<DateTime>(nullable: true),
                     PublishedById = table.Column<Guid>(nullable: true),
                     Severity = table.Column<int>(nullable: false),
                     Source = table.Column<string>(nullable: false),
+                    SourceId = table.Column<string>(nullable: true),
                     Status = table.Column<int>(nullable: false),
                     Title = table.Column<string>(nullable: false)
                 },

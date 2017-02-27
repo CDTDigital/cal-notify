@@ -10,8 +10,8 @@ using CalNotifyApi.Models;
 namespace CalNotifyApi.Migrations
 {
     [DbContext(typeof(BusinessDbContext))]
-    [Migration("20170225014005_inital")]
-    partial class inital
+    [Migration("20170227234154_default")]
+    partial class @default
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -104,11 +104,16 @@ namespace CalNotifyApi.Migrations
 
             modelBuilder.Entity("CalNotifyApi.Models.BroadCastLogEntry", b =>
                 {
-                    b.Property<Guid>("UserId");
+                    b.Property<long?>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<long>("NotificationId");
 
-                    b.HasKey("UserId", "NotificationId");
+                    b.Property<int>("Type");
+
+                    b.Property<Guid>("UserId");
+
+                    b.HasKey("Id");
 
                     b.ToTable("NotificationLog");
                 });
@@ -131,7 +136,7 @@ namespace CalNotifyApi.Migrations
 
                     b.Property<PostgisPoint>("Location");
 
-                    b.Property<DateTime>("Published");
+                    b.Property<DateTime?>("Published");
 
                     b.Property<Guid?>("PublishedById");
 
@@ -139,6 +144,8 @@ namespace CalNotifyApi.Migrations
 
                     b.Property<string>("Source")
                         .IsRequired();
+
+                    b.Property<string>("SourceId");
 
                     b.Property<int>("Status");
 
