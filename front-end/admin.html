@@ -43,10 +43,10 @@
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-            <a class="navbar-brand" href="#">Cal-Notify</a> </div>
+            <a class="navbar-brand" href="index.html">Cal-Notify</a> </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Logout</a></li>
+                <li><a href="index.html">Logout</a></li>
             </ul>
         </div>
     </div>
@@ -54,15 +54,15 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12 main">
-            <h1 class="page-header">Dashboard</h1>
+            <h1 class="page-header">Alerts Dashboard</h1>
             <div class="row">
                 <div class="col-xs-6">
                     <button class="btn btn-default text-left new-alert-btn">Create Alert</button>
                 </div>
                 <div class="col-xs-6">
                     <div class="text-right preview-toggle"> 
-                        <a href="#alerts_list_tab" class="glyphicon glyphicon-th-list active" role="tab" data-toggle="tab" title="List View"></a> 
-                        <a href="#alerts_map_tab" class="glyphicon glyphicon-map-marker" role="tab" data-toggle="tab" title="Map View"></a>
+                        <a href="#alerts_list_tab" class="glyphicon glyphicon-th-list active" role="tab" data-toggle="tab" title="List View"><span class="sr-only">List View</span></a> 
+                        <a href="#alerts_map_tab" class="glyphicon glyphicon-map-marker" role="tab" data-toggle="tab" title="Map View"><span class="sr-only">Map View</span></a>
                     </div>
                 </div>
             </div>
@@ -84,16 +84,16 @@
                                                 <div class="form-group">
                                                     <label for="filterCategory">Category</label>
                                                     <!--<select class="form-control" ng-model="filterCategory" ng-options="x for x in categories"></select>-->
-                                                    <select class="form-control" ng-model="filterCategory">
-                                                        <option ng-repeat="category in categories" value="{{category}}" id="filterCategory">{{category}}</option>
+                                                    <select class="form-control" ng-model="filterCategory" id="filterCategory">
+                                                        <option ng-repeat="category in categories" value="{{category}}">{{category}}</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="form-group">
                                                     <label for="filterSource">Source</label>
-                                                    <select class="form-control" ng-model="filterSource">
-                                                        <option ng-repeat="source in sources" value="{{source}}" id="filterSource">{{source}}</option>
+                                                    <select class="form-control" ng-model="filterSource" id="filterSource">
+                                                        <option ng-repeat="source in sources" value="{{source}}">{{source}}</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -101,7 +101,7 @@
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <div class="form-group">
-                                                    <label>Severity</label>
+                                                    <strong>Severity</strong>
                                                     <div class="checkbox" ng-repeat="severity in severities">
                                                         <label> <input type="checkbox" value=""> {{severity}}</label> &nbsp;
                                                     </div>
@@ -109,7 +109,7 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="form-group">
-                                                    <label>Date Range</label>
+                                                    <strong>Date Range</strong>
                                                     <label for="FilterStartDate" class="sr-only">Start Date</label>
                                                     <input type="date" class="form-control" id="FilterStartDate" placeholder="Start">
                                                     to
