@@ -22,7 +22,7 @@ namespace CalNotifyApi.Events
         {
 
             var queryString = $@"
-              SELECT users.""Id"", users.""ValidatedEmail"", users.""ValidatedSms"",  users.""Enabled"", users.""Email"", users.""PhoneNumber"",  users.""EnabledEmail"", users.""EnabledSms"",
+              SELECT DISTINCT users.""Id"", users.""ValidatedEmail"", users.""ValidatedSms"",  users.""Enabled"", users.""Email"", users.""PhoneNumber"",  users.""EnabledEmail"", users.""EnabledSms"",
                 addr.""GeoLocation"", addr.""UserId"",
                 noti.""AffectedArea"" FROM public.""Address""  addr, public.""AllUsers"" users, public.""Notifications"" noti
                 where ST_Intersects(ST_SetSRID(noti.""AffectedArea"",4326),addr.""GeoLocation"")
