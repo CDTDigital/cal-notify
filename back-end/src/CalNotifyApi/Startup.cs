@@ -282,6 +282,7 @@ namespace CalNotifyApi
 
         public virtual void ConfigureConfigRoot(IServiceCollection services)
         {
+            services.AddSingleton<IConfigurationRoot>(provider => this.Configuration);
             // Adds services required for using options.
             services.AddSingleton<ExternalServicesConfig>(ExternalServicesConfig);
         }

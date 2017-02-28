@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
 
-    var homeRedirect = "/home2.html";
+    var homeRedirect = "/index.html";
 
     function getUrlParameter(name) {
         name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
@@ -74,6 +74,8 @@ $(document).ready(function () {
 
         userDetails.email = $('#email-input').val();
         userDetails.phone = $('#phone-input').val();
+
+        userDetails.password = $("#password-input").val();
         var update = $.ajax({
             url: baseApiAddress +'/v1/users?auth_token=' + token,
             type: 'PUT',

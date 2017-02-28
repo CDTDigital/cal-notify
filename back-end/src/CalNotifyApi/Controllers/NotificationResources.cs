@@ -6,9 +6,11 @@ using CalNotifyApi.Models;
 using CalNotifyApi.Models.Responses;
 using CalNotifyApi.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -22,11 +24,16 @@ namespace CalNotifyApi.Controllers
         private readonly BusinessDbContext _context;
         private readonly ILogger<NotificationResources> _logger;
         private readonly ValidationSender _validation;
-        public NotificationResources(BusinessDbContext context, ILogger<NotificationResources> logger, ValidationSender validation)
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IConfigurationRoot _configuration;
+
+        public NotificationResources(BusinessDbContext context, ILogger<NotificationResources> logger, ValidationSender validation, IHostingEnvironment hostingEnvironment, IConfigurationRoot configuration)
         {
             _context = context;
             _logger = logger;
             _validation = validation;
+            _hostingEnvironment = hostingEnvironment;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -93,16 +100,17 @@ namespace CalNotifyApi.Controllers
         /// <returns></returns>
         [HttpPut("{id}")]
         [SwaggerOperation("PUBLISH_NOTIFICATION", Tags = new[] {Constants.NotificationEndpoint})]
-        [ProducesResponseType(typeof(ResponseShell<SimpleSuccess>), 200)]
+        [ProducesResponseType(typeof(ResponseShell<Notification>), 200)]
         [ValidateNotificationExists]
-        public virtual IActionResult PublishNotification([FromRoute] long id)
+        public virtual async Task<IActionResult> PublishNotification([FromRoute] long id)
         {
             var notification = _context.Notifications.FirstOrDefault(n => n.Id == id);
             var adminId = HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == Constants.UserIdClaimKey);
+            var connectionString = _configuration.GetConnectionString(_hostingEnvironment.EnvironmentName);
 #pragma warning disable 4014
-            new PublishNotificationEvent().Process(_context, adminId.Value, _validation, notification);
+           notification =   new PublishNotificationEvent().Process(_context, adminId.Value, _validation, connectionString, notification);
 #pragma warning restore 4014
-            return ResponseShell.Ok();
+            return ResponseShell.Ok(notification);
         }
         /// <summary>
         /// Get the log of sent messages for a notiification
@@ -111,13 +119,20 @@ namespace CalNotifyApi.Controllers
         /// <returns></returns>
         [HttpGet("{id}/log")]
         [SwaggerOperation("BROADCAST_NOTIFICATION", Tags = new[] {Constants.NotificationEndpoint})]
-        [ProducesResponseType(typeof(ResponseShell<List<BroadCastLogEntry>>), 200)]
+        [ProducesResponseType(typeof(ResponseShell<List<PublishedNotificationLog>>), 200)]
         [ValidateNotificationExists]
         public virtual IActionResult NotificationLog([FromRoute] long id)
         {
             var notification = _context.Notifications.FirstOrDefault(n => n.Id == id);
-            var list = _context.NotificationLog.Where(x => x.NotificationId == notification.Id.Value);
-            return ResponseShell.Ok(list);
+
+            var log = new PublishedNotificationLog()
+            {
+             SentEmail  = _context.NotificationLog.Count(x => x.NotificationId == notification.Id && x.Type == LogType.Email),
+             SentSms =   _context.NotificationLog.Count(x => x.NotificationId == notification.Id && x.Type == LogType.Sms),
+             Published = notification.Published.GetValueOrDefault()
+            };
+            
+            return ResponseShell.Ok(log);
 
         }
     }

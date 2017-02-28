@@ -208,7 +208,7 @@ namespace CalNotifyApi.Services
             emailMessage.Subject = "Cal-Notify Validation Link";
 
 
-            var path = Path.Combine(_hostingEnv.ContentRootPath, "Templates", "email_validation.hbs");
+            var path = Path.Combine(_hostingEnv.ContentRootPath, "Templates", "email_validation_simple.hbs");
             var template = File.ReadAllText(path);
             var verificationTemplate = Handlebars.Compile(template);
             var data = new

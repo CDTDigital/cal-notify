@@ -34,6 +34,7 @@ namespace CalNotifyApi.Controllers
 
         private readonly ITokenMemoryCache _memoryCache;
 
+
         /// <summary>
         /// </summary>
         public GenericUserResources(BusinessDbContext context, ILogger<GenericUserResources> logger, ValidationSender validation, ITokenMemoryCache memoryCache)

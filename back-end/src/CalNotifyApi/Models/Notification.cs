@@ -35,6 +35,9 @@ namespace CalNotifyApi.Models
         [DataMember(Name = "source"), Required]
         public string Source { get; set; }
 
+        [DataMember(Name = "source_id")]
+        public string SourceId { get; set; }
+
         [DataMember(Name = "severity") , Required]
         public Severity Severity { get; set; }
 
