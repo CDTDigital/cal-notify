@@ -78,7 +78,9 @@
                             <input type="email" class="form-control" id="email-input" name="email" placeholder="Enter Email">
                         </div>
                     </div>
-                    
+                    <div class="alert alert-warning js-remind-to-verify-email hide">
+                        <strong><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Warning!</strong> Before you can receive alerts, you need to verify your email.
+                    </div>
                     <hr>
                     
                     <div class="form-group">
@@ -92,6 +94,7 @@
                                     Enabled <input type="checkbox" />
                                 </label>
                             </li>
+
                         </ul>
                     </div>
 
@@ -101,6 +104,10 @@
                             <input type="phone" class="form-control" id="phone-input" name="phone" placeholder="Phone Number">
                         </div>
                     </div>
+                    <div class="alert alert-warning js-remind-to-verify-sms hide">
+                        <strong><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Warning!</strong> Before you can receive alerts, you need to verify your phone number.
+                    </div>
+
                 </div>
                
                 <div class="col-sm-5 col-sm-offset-2">
