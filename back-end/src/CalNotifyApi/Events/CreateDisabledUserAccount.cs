@@ -36,23 +36,33 @@ namespace CalNotifyApi.Events
 
                 if (waitingUeser != null )
                 {
-                    if (!string.IsNullOrWhiteSpace(tempUser.Email))
+                    try
                     {
-                        Log.Information("Sending Email Validation to {user}", tempUser);
+                        if (!string.IsNullOrWhiteSpace(tempUser.Email))
+                        {
+                            Log.Information("Sending Email Validation to {user}", tempUser);
 
-                        await validation.SendValidationToEmail(tempUser);
-                        memoryCache.SetForChallenge(tempUser);
+                            await validation.SendValidationToEmail(tempUser);
+                            memoryCache.SetForChallenge(tempUser);
 
+                        }
+                        else if (!string.IsNullOrWhiteSpace(tempUser.PhoneNumber))
+                        {
+                            Log.Information("Sending SMS Validation to {user}", tempUser);
+
+                            await validation.SendValidationToSms(tempUser);
+                            memoryCache.SetForChallenge(tempUser);
+
+
+                        }
                     }
-                    else if (!string.IsNullOrWhiteSpace(tempUser.PhoneNumber))
+                    catch (Exception e)
                     {
-                        Log.Information("Sending SMS Validation to {user}", tempUser);
-
-                        await validation.SendValidationToSms(tempUser);
-                        memoryCache.SetForChallenge(tempUser);
-
-
+                      Log.Error(e,"Error when sending out a validation email to an incoming user {email} , {phone}", tempUser.Email, tempUser.PhoneNumber);
+                        throw new ProcessEventException("Could not send out a validation link to the number or email provided");
+                       
                     }
+                  
                     throw new ProcessEventException("Your already signed up, you just need to confirm your information. Check your inbox or text messages.");
                 }
 
@@ -96,7 +106,7 @@ namespace CalNotifyApi.Events
                 // We prefer to send validation through email but will send through sms if needed
                 if (!string.IsNullOrWhiteSpace(tempUser.Email))
                 {
-                    Log.Information("Sending Email Validation to {user}", user);
+                    Log.Information("Sending Email Validation to {user}", user.Email);
 
                     await validation.SendValidationToEmail(tempUser);
                     memoryCache.SetForChallenge(tempUser);
@@ -104,7 +114,7 @@ namespace CalNotifyApi.Events
                 }
                 else if (!string.IsNullOrWhiteSpace(tempUser.PhoneNumber))
                 {
-                    Log.Information("Sending SMS Validation to {user}", user);
+                    Log.Information("Sending SMS Validation to {user}", user.PhoneNumber);
 
                     await validation.SendValidationToSms(tempUser);
                     memoryCache.SetForChallenge(tempUser);

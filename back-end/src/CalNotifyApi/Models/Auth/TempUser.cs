@@ -81,12 +81,9 @@ namespace CalNotifyApi.Models.Auth
         {
             get
             {
-                return !string.IsNullOrEmpty(City)
-                       && !string.IsNullOrEmpty(State)
-                       && !string.IsNullOrEmpty(Street)
-                       && !string.IsNullOrEmpty(Zip)
+                return
                        // ReSharper disable once CompareOfFloatsByEqualityOperator
-                       && Latitude != 0
+                       Latitude != 0
                        // ReSharper disable once CompareOfFloatsByEqualityOperator
                        && Longitude != 0;
             }
@@ -139,12 +136,7 @@ namespace CalNotifyApi.Models.Auth
         {
             get
             {
-                return !string.IsNullOrEmpty(Address.City)
-                       && !string.IsNullOrEmpty(Address.State)
-                       && !string.IsNullOrEmpty(Address.Street)
-                       && !string.IsNullOrEmpty(Address.Zip)
-                       // ReSharper disable once CompareOfFloatsByEqualityOperator
-                       && Address.GeoLocation.X != 0
+                return  Address.GeoLocation.X != 0
                        // ReSharper disable once CompareOfFloatsByEqualityOperator
                        && Address.GeoLocation.Y != 0;
             }
