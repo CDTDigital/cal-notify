@@ -292,7 +292,8 @@ $(document).ready(function () {
   		if($(e.target).attr("href") == "#alerts_map_tab" && mapFirstLoad) {
   			$(window).trigger('resize');
   			alertsMap.invalidateSize();
-	    	alertsMap.fitBounds(geoJSONLayer.getBounds());
+  			if(geoJSONLayer)
+	    		alertsMap.fitBounds(geoJSONLayer.getBounds());
 	    	mapFirstLoad = false;
 		}
 	});

@@ -2,12 +2,13 @@
 angular.module('alertsApp', []).controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
         
     //---------------------------------------------------------------------------------------------------
-    //------------------------------------- C O N S T A N T S -------------------------------------------
+    //-------------------------------------- I N I T  V A R S -------------------------------------------
     //---------------------------------------------------------------------------------------------------
 
     $scope.categories = ['Any', 'Fire', 'Flood', 'Weather', 'Tsunami', 'Earthquake'];
     $scope.sources = ['Any', 'NOAA', 'GIS', '...'];
     $scope.severities = ['Emergency', 'NonEmergency'];
+    $scope.alertsLoading = true;
 
     // API Token used as authorization on each API call
     $scope.apiToken = "";
@@ -106,6 +107,7 @@ angular.module('alertsApp', []).controller('alertsCtrl', function($scope, $filte
             url: baseApiAddress + '/v1/notification',
             headers: { 'Content-Type': 'application/json' }
         }).then(function successCallback(response) {
+            $scope.alertsLoading = false;
             // This callback will be called asynchronously when the response is available
             var alerts = response.data.result;
             for(var i = 0, size = alerts.length; i < size; i++) {
@@ -114,7 +116,7 @@ angular.module('alertsApp', []).controller('alertsCtrl', function($scope, $filte
             updateMap();
         }, function errorCallback(response) {
             // Called asynchronously if an error occurs or server returns response with an error status.
-            console.log(response);
+            $scope.alertsLoading = false;
         });
     };
 
@@ -188,10 +190,13 @@ angular.module('alertsApp', []).controller('alertsCtrl', function($scope, $filte
             url: baseApiAddress + '/v1/notification/' + alert.id,
             headers: { 'Content-Type': 'application/json' }
         }).then(function successCallback(response) {
-            // Update alert status
-            alert.status = "Published";
-            alert.published = new Date();
-            setTimeout(function() { $("#publish_btn_" + id).button('reset'); }, 2000);
+            console.log(response);
+            setTimeout(function() { 
+                // Update alert status
+                alert.status = "Published";
+                alert.published = new Date();
+                $("#publish_btn_" + id).button('reset'); 
+            }, 2000);
         }, function errorCallback(response) {
             console.log(response.data.meta.message);
             $("#publish_btn_" + id).button('reset');
@@ -254,13 +259,15 @@ angular.module('alertsApp', []).controller('alertsCtrl', function($scope, $filte
             geoJSON.features.push(newFeature);
         });
 
-        // Add geoJSON layer to the map
-        geoJSONLayer = L.geoJSON(geoJSON, {
-            //style: style,
-            onEachFeature: onEachFeature,
-            pointToLayer: getCategoryIcons
-        }).addTo(alertsMap);
-        alertsMap.fitBounds(geoJSONLayer.getBounds());
+        if(geoJSON.features.length > 0) {
+            // Add geoJSON layer to the map
+            geoJSONLayer = L.geoJSON(geoJSON, {
+                //style: style,
+                onEachFeature: onEachFeature,
+                pointToLayer: getCategoryIcons
+            }).addTo(alertsMap);
+            alertsMap.fitBounds(geoJSONLayer.getBounds());
+        }
     }
 
     function updateLocationFields() {

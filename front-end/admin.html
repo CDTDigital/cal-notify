@@ -157,8 +157,12 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="text-center" ng-show="alerts.length == 0">
+                    <div class="text-center" ng-show="alertsLoading">
                         <i class="fa fa-cog fa-spin fa-2x fa-fw"></i><br/>Loading...
+                    </div>
+                    <div class="text-center" ng-show="!alertsLoading && alerts.length == 0">
+                        <br/><br/>
+                        <i class="fa fa-exclamation-circle fa-2x"></i>&nbsp;&nbsp;No alerts have been added yet...
                     </div>
                 </div>
 
