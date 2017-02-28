@@ -92,7 +92,7 @@ namespace CalNotifyApi.Controllers
         {
             // The eventual user
 
-            var validatedUser = _context.Admins.OfType<WebAdmin>().FirstOrDefault(x => x.Email == model.Email);
+            var validatedUser = _context.Admins.OfType<WebAdmin>().FirstOrDefault(x => x.Email.ToLower() == model.Email.ToLower());
             if (validatedUser == null)
             {
                 // Our response is vague to avoid leaking information
@@ -110,7 +110,6 @@ namespace CalNotifyApi.Controllers
 
             return ResponseShell.Ok(token);
             // return Redirect($"{_config.Urls.Frontend}/{_config.Pages.AdminPage}?user={token.UserId}&token={token.Token}");
-
 
         }
 
@@ -134,7 +133,6 @@ namespace CalNotifyApi.Controllers
         /// Get an admin by their id
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns>
         [HttpGet("{id}")]
         [SwaggerOperation("GET_ADMIN_BY_ID", Tags = new[] { Constants.AdminConfigurationEndpoint })]
         [ProducesResponseType(typeof(ResponseShell<WebAdmin>), 200)]
@@ -167,8 +165,7 @@ namespace CalNotifyApi.Controllers
         /// <summary>
         /// Delete an admin by id
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The admin to remove</param>
         [HttpDelete("{id}")]
         [SwaggerOperation("DELETE_ADMIN_BY_ID", Tags = new[] { Constants.AdminConfigurationEndpoint })]
         [ProducesResponseType(typeof(ResponseShell<SimpleSuccess>), 200)]

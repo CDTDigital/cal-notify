@@ -203,12 +203,12 @@ namespace CalNotifyApi.Services
 
             var emailMessage = new MimeMessage();
 
-            emailMessage.From.Add(new MailboxAddress(_config.Email.Validation.Name, _config.Email.Validation.Address));
+            emailMessage.From.Add(new MailboxAddress( _config.Email.Validation.Address));
             emailMessage.To.Add(new MailboxAddress(model.Email));
             emailMessage.Subject = "Cal-Notify Validation Link";
 
 
-            var path = Path.Combine(_hostingEnv.ContentRootPath, "Templates", "email_validation_simple.hbs");
+            var path = Path.Combine(_hostingEnv.ContentRootPath, "Templates", "email_validation.hbs");
             var template = File.ReadAllText(path);
             var verificationTemplate = Handlebars.Compile(template);
             var data = new
@@ -235,9 +235,12 @@ namespace CalNotifyApi.Services
         {
             try
             {
-                using (var client = new SmtpClient())
+                using (var client = new SmtpClient()
                 {
-                    await client.ConnectAsync(_config.Email.Validation.Server, _config.Email.Validation.Port, SecureSocketOptions.None).ConfigureAwait(false);
+                    
+                })
+                {
+                    await client.ConnectAsync(_config.Email.Validation.Server, _config.Email.Validation.Port).ConfigureAwait(false);
                     // Note: since we don't have an OAuth2 token, disable
                     // the XOAUTH2 authentication mechanism.
                     client.AuthenticationMechanisms.Remove("XOAUTH2");

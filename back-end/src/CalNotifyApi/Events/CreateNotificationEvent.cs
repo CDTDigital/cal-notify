@@ -45,13 +45,21 @@ namespace CalNotifyApi.Events
 
 
         [DataMember(Name = "published")]
-        public DateTime Published { get; set; }
+        public DateTime? Published { get; set; }
 
         public Notification Process(BusinessDbContext context, string id)
         {
             if (string.IsNullOrEmpty(id))
             {
                 throw new ProcessEventException("Could not get the id of the author creating the request");
+            }
+
+            var guid = new Guid(id);
+
+            var admin = context.Admins.FirstOrDefault(x => x.Id == guid);
+            if (admin == null)
+            {
+                throw new ProcessEventException("Could not identify the admin which is trying to make the request. Make sure your passing the authentication token of an admin");
             }
 
 

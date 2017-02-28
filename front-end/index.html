@@ -26,36 +26,21 @@
 </head>
 
 <link href="css/home2.css" rel="stylesheet">
-<script src="https://use.fontawesome.com/36377358ff.js"></script>
+
+<!-- FontAwesome Icons-->
+<link href="css/font-awesome.min.css" rel="stylesheet">
 
 <body>
-<!--
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-            <a class="navbar-brand" href="index.html">Cal-Notify</a> </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">About</a></li>
-                <li><a href="#">Current Alerts</a></li>
-                <li><a href="home2-signup.html">Sign Up</a></li>
-                <li><a href="home2-login.html">Login</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
--->
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-            <a class="navbar-brand" href="index.html"><img src="images/cal-notify-logo.png" class="site-logo"><span class="sr-only">Cal-Notify Emergency Alert System</span></a> </div>
+            <a class="navbar-brand" href="index.html"><img src="images/cal-notify-logo.png" class="site-logo" alt="Cal-Notify Logo"><span class="sr-only">Cal-Notify Emergency Alert System</span></a> </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
 <!--                <li><a href="#">About</a></li>-->
-                <li><a href="home2-current-alerts.html">Current Alerts</a></li>
+                <li><a href="current-alerts.html">Current Alerts</a></li>
                 <li><a href="javascript:;" data-toggle="modal" data-target=".register-modal">Sign Up</a></li>
                 <li><a href="javascript:;" data-toggle="modal" data-target=".login-modal">Login</a></li>
             </ul>
@@ -63,28 +48,21 @@
     </div>
 </nav>
 
-
-
-
 <div class="section section-banner">
     <div class="container">
         <div class="row">
             <div class="col-md-6 col-md-offset-3 text-center m-b-lg">
                 
-                <h2 class="m-t-0">Cal-Notify</h2>
+                <h1 class="m-t-0">Cal-Notify</h1>
                 <p class="lead">Cal-Notify provides real time updates on emergencies and other events in your area, using official sources that you can trust.</p>
                 <p>Sign up and start receiving notifications via email or SMS messages directly on your phone</p>
-                <p><img src="images/notification-type-icons.png" class="m-t"></p>
+                <p><img src="images/notification-type-icons.png" class="m-t" alt=""></p>
                 <button class="btn btn-default btn-lg m-t" data-toggle="modal" data-target=".register-modal">Sign up for Alerts</button>
                 
             </div>
         </div>
     </div>
 </div>
-
-
-
-
 
 <div class="section section-default">
     <div class="container">
@@ -106,63 +84,23 @@
     </div>
 </div>
 
-
-
-
-
-
-
-<!--
-<div class="section section-default">
-    <div class="container">
-        
-        <div class="row">
-           <div class="col-sm-6">
-               <h3>Emergency Notification System</h3>
-               <p>If you live, work or go to school in california and are 18 and over, you may now register your cell phone or VoIP (voice over internet protocol) phone to receive emergency alerts sent by call, text, or email</p>
-               
-               <h3 class="m-t-lg">Be Sure You are Registered to Get the Emergency Call, Text &amp; Email</h3>
-                <p>Emergency officials use the Cal-Notify Emergency Notification System to deliver incident-specific information or potentially life-saving instruction to the precise geographic area(s) affected. Emergency situations may include:</p>
-                <ul>
-                    <li>flooding, wildfires, and subsequent evacuations</li>
-                    <li>public safety incidents including crimes that affect your neighborhood</li>
-                    <li>and post-disaster information about shelters, transportation, or supplies</li>
-                </ul>
-            </div>
-            <div class="col-sm-6">
-                <h3>Types of Alerts</h3>
-                <p>Cal-Notify may inform you of emergency and inportant non-emergency events occouring in your area including:</p>
-                <ul>
-                    <li><strong>Presidential.</strong> Alerts issued by the President or a designee during a national emergency.</li>
-                    <li><strong>Imminent Threat.</strong> Alerts issued when an imminent threat to life or property exists in your area, including severe man-made or natural disasters such as earthquakes, wild fires, hurricanes, and tornadoes.</li> 
-                    <li><strong>AMBER.</strong> Alerts issued to help law enforcement search for and locate an abducted child.</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
--->
-
-
-
-
 <div class="section section-overstated">
     <div class="container">
        <h2 class="text-center">Types of Alerts</h2>
        <p class="text-center m-b-lg">Cal-Notify may inform you of emergency and inportant non-emergency events occouring in your area including:</p>
         <div class="row">
             <div class="col-sm-4">
-                <img src="images/emergency-fire.png" class="img-responsive center-block">
+                <img src="images/emergency-fire.png" class="img-responsive center-block" alt="Emergency">
                 <h3 class="text-center">Emergency</h3>
                 <p>Alerts issued when an imminent threat to life or property exists in your area, including severe man-made or natural disasters such as earthquakes, wild fires, flooding, hurricanes, and tornadoes.</p>
             </div>
             <div class="col-sm-4">
-                <img src="images/emergency-weather.png" class="img-responsive center-block">
+                <img src="images/emergency-weather.png" class="img-responsive center-block" alt="Non-Emergency">
                 <h3 class="text-center">Non-Emergency</h3>
                 <p>Alerts issued when events may impact citizens including, road cloasures, weather advisories, AMBER alerts, </p>
             </div>
             <div class="col-sm-4">
-                <img src="images/emergency-president.png" class="img-responsive center-block">
+                <img src="images/emergency-president.png" class="img-responsive center-block" alt="Official">
                 <h3 class="text-center">Official</h3>
                 <p>Alerts issued by the President or a designee during a national emergency.</p>
             </div>
@@ -174,10 +112,10 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-1">
-                <img src="images/ca-gov.png" class="img-responsive">
+                <img src="images/ca-gov.png" class="img-responsive" alt="State of California">
             </div>
             <div class="col-sm-2">
-                <img src="images/calema-logo.png" class="img-responsive">
+                <img src="images/calema-logo.png" class="img-responsive" alt="Califonia Office of Emergency Services">
             </div>
             <div class="col-sm-9">
                 <a class="admin-login-link" href="javascript:;" data-toggle="modal" data-target=".admin-login-modal">Admin Login</a>
@@ -186,17 +124,13 @@
     </div>
 </div>
 
-
-
-
-
 <!-- Register modal -->
 <div class="modal fade register-modal" tabindex="-1" role="dialog" aria-labelledby="registerModal">
     <form class="modal-dialog modal-md js-form-wrapper-signup" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Sign up for Notifications</h4>
+                <h4 class="modal-title" id="registerModal">Sign up for Notifications</h4>
             </div>
             <div class="modal-body">
 
@@ -243,25 +177,26 @@
     </form>
 </div>
 
-
 <!-- Login modal -->
 <div class="modal fade login-modal js-form-wrapper-login" tabindex="-1" role="dialog" aria-labelledby="loginModal">
     <div class="modal-dialog modal-md js-form-wrapper-login" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Login</h4>
+                <h4 class="modal-title" id="loginModal">Login</h4>
             </div>
             <div class="modal-body js-form-body">
 
                 <div class="input-group m-b-md m-t-md">
-                    <span class="input-group-addon" id="basic-addon1"><i class="fa fa-id-card-o" aria-hidden="true"></i></span>
-                    <input type="text" class="form-control js-contact_info" placeholder="Email or Phone" aria-describedby="basic-addon1" name="contact_info" >
+                     <label for="loginContactInfo" class="sr-only">Email or Phone</label>
+                     <span class="input-group-addon" id="basic-addon1"><i class="fa fa-id-card-o" aria-hidden="true"></i></span>
+                    <input type="text" class="form-control js-contact_info" placeholder="Email or Phone" aria-describedby="basic-addon1" name="contact_info" id="loginContactInfo">
                 </div>
 
                 <div class="input-group m-b-md">
+                    <label for="loginPassword" class="sr-only">Password</label>
                     <span class="input-group-addon" id="addon-password"><i class="fa fa-unlock-alt" aria-hidden="true"></i></span>
-                    <input type="password" class="form-control js-password-input" placeholder="Password" aria-describedby="addon-password" name="password" >
+                    <input type="password" class="form-control js-password-input" placeholder="Password" aria-describedby="addon-password" name="password" id="loginPassword">
                 </div>
 
                 <div class="m-y-md">
@@ -282,18 +217,20 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Admin Login</h4>
+                <h4 class="modal-title" id="adminLoginModal">Admin Login</h4>
             </div>
             <div class="modal-body js-form-body">
 
                 <div class="input-group m-b-md m-t-md">
+                    <label for="adminLoginContactInfo" class="sr-only">Email Address</label>
                     <span class="input-group-addon" id="basic-addon1"><i class="fa fa-user-circle" aria-hidden="true"></i></span>
-                    <input type="text" class="form-control js-contact_info" placeholder="Email" aria-describedby="basic-addon1" name="contact_info" >
+                    <input type="text" class="form-control js-contact_info" placeholder="Email" aria-describedby="basic-addon1" name="contact_info" id="adminLoginContactInfo">
                 </div>
 
                 <div class="input-group m-b-md">
+                    <label for="adminLoginPassword" class="sr-only">Password</label>
                     <span class="input-group-addon" id="addon-password"><i class="fa fa-key" aria-hidden="true"></i></span>
-                    <input type="password" class="form-control js-password-input" placeholder="Password" aria-describedby="addon-password" name="password" >
+                    <input type="password" class="form-control js-password-input" placeholder="Password" aria-describedby="addon-password" name="password" id="adminLoginPassword" >
                 </div>
             </div>
             <div class="modal-footer">
@@ -302,10 +239,6 @@
         </div>
     </div>
 </div>
-
-
-
-
 
 <!-- Bootstrap core JavaScript
     ================================================== --> 

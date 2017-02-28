@@ -25,7 +25,9 @@
 <link rel="stylesheet" href="css/leaflet.draw.css" />
 <link rel="stylesheet" href="css/leaflet.awesome-markers.css" />
 
-<script src="https://use.fontawesome.com/36377358ff.js"></script>
+<!-- FontAwesome Icons-->
+<link href="css/font-awesome.min.css" rel="stylesheet">
+
 <!-- Angular -->
 <script src="js/vendor/angular.min.js"></script> 
 
@@ -89,7 +91,7 @@
                                                     <label for="filterCategory">Category</label>
                                                     <!--<select class="form-control" ng-model="filterCategory" ng-options="x for x in categories"></select>-->
                                                     <select class="form-control" ng-model="filterCategory">
-                                                        <option ng-repeat="category in categories" value="{{category}}">{{category}}</option>
+                                                        <option ng-repeat="category in categories" value="{{category}}" id="filterCategory">{{category}}</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -97,7 +99,7 @@
                                                 <div class="form-group">
                                                     <label for="filterSource">Source</label>
                                                     <select class="form-control" ng-model="filterSource">
-                                                        <option ng-repeat="source in sources" value="{{source}}">{{source}}</option>
+                                                        <option ng-repeat="source in sources" value="{{source}}" id="filterSource">{{source}}</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -114,8 +116,10 @@
                                             <div class="col-sm-6">
                                                 <div class="form-group">
                                                     <label>Date Range</label>
+                                                    <label for="FilterStartDate" class="sr-only">Start Date</label>
                                                     <input type="date" class="form-control" id="FilterStartDate" placeholder="Start">
                                                     to
+                                                    <label for="FilterEndDate" class="sr-only">End Date</label>
                                                     <input type="date" class="form-control" id="FilterEndDate" placeholder="End">
                                                 </div>
                                             </div>
@@ -176,12 +180,12 @@
 </div>
 
 <!-- Large modal -->
-<div class="modal fade alert-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div class="modal fade alert-modal" tabindex="-1" role="dialog" aria-labelledby="newAlertModal">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title"><span ng-if="newAlert">New</span><span ng-if="!newAlert">Update</span> Alert</h4>
+                <h4 class="modal-title" id="newAlertModal"><span ng-if="newAlert">New</span><span ng-if="!newAlert">Update</span> Alert</h4>
             </div>
             <div class="modal-body">
                 <form name="alertForm" validate-non-visible-controls>

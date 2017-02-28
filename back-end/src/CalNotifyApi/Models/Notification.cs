@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using CalNotifyApi.Models.Admins;
+using CalNotifyApi.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using NpgsqlTypes;
@@ -47,7 +48,7 @@ namespace CalNotifyApi.Models
         [DataMember(Name = "created")]
         public DateTime  Created { get; set; }
 
-        [DataMember(Name = "published")]
+        [DataMember(Name = "published"), JsonConverter(typeof(NullableDateTimeConverter))]
         public DateTime? Published { get; set; }
 
 
