@@ -237,11 +237,11 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
             case "Weather":
                 categoryIcon = "cloud"; break;
             case "Tsunami":
-                categoryIcon = "life-ring"; break;
+                categoryIcon = "flag"; break;
             case "Earthquake": 
                 categoryIcon = "globe"; break;
             default:
-                categoryIcon = "medkit";
+                categoryIcon = "star";
         }
         var categoryMarker = L.AwesomeMarkers.icon({
             icon: categoryIcon,
