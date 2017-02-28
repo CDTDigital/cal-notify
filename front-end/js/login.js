@@ -29,9 +29,14 @@ $(document).ready(function () {
             error: function (xhr, status, error) {
                 form.find('.alert').remove(); // clear old alerts
                 if (xhr.responseJSON !== undefined) {
-                    console.log(xhr.responseJSON.meta);
-                    var alert = '<div class="alert alert-danger">' + xhr.responseJSON.meta.message + '</div>'
-                    form.prepend(alert);
+                    if(xhr.responseJSON.meta.details.length > 0){
+                        xhr.responseJSON.meta.details.forEach(function(msg){
+                            var alert = '<div class="alert alert-danger">' + msg + '</div>'
+                            form.prepend(alert);
+                        })
+
+                    }
+
                 } else {
                     var msg = "unknown server error";
                     var alert = '<div class="alert alert-danger">' + msg + '</div>'
@@ -45,12 +50,15 @@ $(document).ready(function () {
     $(".js-form-wrapper-admin-login").submit(function (e) {
         e.preventDefault();
     });
+
+    var form = $('.js-form-wrapper-admin-login .js-form-body');
+
     $(".js-form-wrapper-admin-login .js-login").click(function (e) {
         e.preventDefault();
 
         $(this).button('loading');
 
-        var form = $('.js-form-wrapper-admin-login .js-form-body');
+
 
         var data=  {
             contact_info: form.find('[name="contact_info"]').val(),
@@ -71,8 +79,14 @@ $(document).ready(function () {
             error: function (xhr, status, error) {
                 form.find('.alert').remove(); // clear old alerts
                 if (xhr.responseJSON !== undefined) {
-                    var alert = '<div class="alert alert-danger">' + xhr.responseJSON.meta.message + '</div>'
-                    form.prepend(alert);
+                    if(xhr.responseJSON.meta.details.length > 0){
+                        xhr.responseJSON.meta.details.forEach(function(msg){
+                            var alert = '<div class="alert alert-danger">' + msg + '</div>'
+                            form.prepend(alert);
+                        })
+
+                    }
+
                 } else {
                     var msg = "unknown server error";
                     var alert = '<div class="alert alert-danger">' + msg + '</div>'

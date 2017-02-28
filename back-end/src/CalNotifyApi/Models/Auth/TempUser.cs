@@ -77,17 +77,9 @@ namespace CalNotifyApi.Models.Auth
 
         }
 
-        public bool HasAddress
-        {
-            get
-            {
-                return
-                       // ReSharper disable once CompareOfFloatsByEqualityOperator
-                       Latitude != 0
-                       // ReSharper disable once CompareOfFloatsByEqualityOperator
-                       && Longitude != 0;
-            }
-        }
+        public bool HasAddress => Latitude != 0
+                                  // ReSharper disable once CompareOfFloatsByEqualityOperator
+                                  && Longitude != 0;
 
         public TempUser ShallowCopy()
         {

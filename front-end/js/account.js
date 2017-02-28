@@ -74,6 +74,8 @@ $(document).ready(function () {
 
         userDetails.email = $('#email-input').val();
         userDetails.phone = $('#phone-input').val();
+
+        userDetails.password = $("#password-input").val();
         var update = $.ajax({
             url: baseApiAddress +'/v1/users?auth_token=' + token,
             type: 'PUT',
