@@ -31,8 +31,10 @@ namespace CalNotifyApi.Controllers
         {
             [DataMember(Name = "version")]
             public string Version { get; set; }
+            [DataMember(Name = "information")]
             public string Information { get; set; }
 
+            [DataMember(Name = "status")]
             public string Status { get; set; }
         }
 
