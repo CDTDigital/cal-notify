@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
 
-    var homeRedirect = "/home2.html";
+    var homeRedirect = "/index.html";
 
     function getUrlParameter(name) {
         name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
