@@ -66,19 +66,20 @@ namespace CalNotifyApi.Services
 
         public virtual async Task<bool> SendMSMessage(string phone, Notification notification)
         {
-            /*var  data = new 
+            var path = Path.Combine(_hostingEnv.ContentRootPath, "Templates", "sms_alert.hbs");
+            var template = File.ReadAllText(path);
+            var templateCompiled = Handlebars.Compile(template);
+            var data = new
             {
                 title = notification.Title,
-                message = notification.Details,
-               
-            }*/
-            return await SendMessage(phone, notification.Title + "\n" + notification.Details);
+                details = notification.Details,
+                category = Enum.GetName(typeof(Category), notification.Category),
+                severity = Enum.GetName(typeof(Severity), notification.Severity)
+
+            };
+
+            return await SendMessage(phone, templateCompiled(data));
         }
-
-
-
-      
-
 
 
         private string SetShortToken(TempUser model, TokenType tokenType)
@@ -189,12 +190,28 @@ namespace CalNotifyApi.Services
             emailMessage.To.Add(new MailboxAddress(email));
             emailMessage.Subject = "Cal-Notify Notification";
 
+            var path = Path.Combine(_hostingEnv.ContentRootPath, "Templates", "email_alert.hbs");
+            var template = File.ReadAllText(path);
+            var compiledTemplate = Handlebars.Compile(template);
+            var data = new
+            {
+                title = notification.Title,
+                details = notification.Details,
+                category = Enum.GetName(typeof(Category), notification.Category),
+                severity = Enum.GetName(typeof(Severity), notification.Severity)
+
+            };
+
             var builder = new BodyBuilder();
-            builder.TextBody = notification.Title + "\n" + notification.Details;
+
+            builder.HtmlBody = compiledTemplate(data);
+
+
             emailMessage.Body = builder.ToMessageBody();
 
-           return await SendEmail(emailMessage);
-         
+            await SendEmail(emailMessage);
+            return true;
+
         }
 
         public async Task<string> SendValidationToEmail(TempUser model)

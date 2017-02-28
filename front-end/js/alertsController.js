@@ -18,7 +18,7 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
         $http.defaults.headers.common['Authorization'] = 'Bearer ' + $scope.apiToken;
     };
 
-    var baseApiAddress = "http://api-cal-notify.symsoftsolutions.com";//window.baseApiAddress;
+    var baseApiAddress = window.baseApiAddress;
 
     //---------------------------------------------------------------------------------------------------
     //--------------------------------------- A L E R T S -----------------------------------------------
@@ -177,7 +177,7 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
 
         var location = typeof $scope.currAlert.location == 'object' ? $scope.currAlert.location : JSON.parse($scope.currAlert.location);
         var area = typeof $scope.currAlert.affected_area == 'object' ? $scope.currAlert.affected_area : JSON.parse($scope.currAlert.affected_area);
-        setCoverageMap(location, area);
+        setCoverageMap(location, area || {});
 		$(".alert-modal").modal('show');
     }
 

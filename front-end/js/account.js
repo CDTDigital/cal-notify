@@ -11,16 +11,16 @@ $(document).ready(function () {
     };
 
 
-    var userId =  getUrlParameter('user') ||  localStorage.getItem('user_id');
-    var token =  getUrlParameter('token') || localStorage.getItem('auth_token');
+    var userId = getUrlParameter('user') || localStorage.getItem('user_id');
+    var token = getUrlParameter('token') || localStorage.getItem('auth_token');
 
-    if(userId != '' && userId != null) {
+    if (userId != '' && userId != null) {
         localStorage.setItem('user_id', userId);
     } else {
         window.location.href = baseAddress + homeRedirect;
     }
 
-    if(token != '' && token != null) {
+    if (token != '' && token != null) {
         localStorage.setItem('auth_token', token);
     } else {
         window.location.href = baseAddress + homeRedirect;
@@ -29,18 +29,17 @@ $(document).ready(function () {
 
     var userDetails = {};
 
-    var req = $.get(baseApiAddress + "/v1/users/" + userId,{auth_token: token});
-    req.done(function(data){
+    var req = $.get(baseApiAddress + "/v1/users/" + userId, {auth_token: token});
+    req.done(function (data) {
         userDetails = data.result;
         update();
     })
 
 
-    function update(){
-        console.log(userDetails);
+    function update() {
         $('#emailAlerts').toggleClass('in', userDetails.enabled_email == true)
 
-            $('.js-toggle_email [type="checkbox"]').prop('checked', userDetails.enabled_email);
+        $('.js-toggle_email [type="checkbox"]').prop('checked', userDetails.enabled_email);
 
         $('#email-input').val(userDetails.email);
         $('#phone-input').val(userDetails.phone);
@@ -51,25 +50,30 @@ $(document).ready(function () {
 
         $('.js-verified_sms')
             .toggleClass('fa-check-circle text-success', userDetails.validated_sms == true)
-            .toggleClass('fa-times-circle text-danger', userDetails.validated_sms != true)
+            .toggleClass('fa-times-circle text-danger', userDetails.validated_sms != true);
+
+        $('.js-remind-to-verify-email')
+            .toggleClass('hide', !((userDetails.validated_email == false) && (userDetails.email != '')))
+
+        console.log(userDetails.validated_sms,userDetails.phone != '' )
+        $('.js-remind-to-verify-sms')
+            .toggleClass('hide', !((userDetails.validated_sms == false) && (userDetails.phone != '')))
 
 
-        console.log(userDetails.enabled_sms);
         $('#smsAlerts').toggleClass('in', userDetails.enabled_sms == true);
 
         $('.js-toggle_sms [type="checkbox"]').prop('checked', userDetails.enabled_sms);
 
 
-        console.log(userDetails.address);
         $('#autocomplete').val(userDetails.address.formatted_address);
     }
 
-    window.update  = update;
+    window.update = update;
 
-    $('.js-save').on('click', function(ev){
-        var container =  $('.js-msg-area');
+    $('.js-save').on('click', function (ev) {
+        var container = $('.js-msg-area');
         userDetails['id'] = userId;
-        userDetails.enabled_sms =  $('.js-toggle_sms [type="checkbox"]').prop('checked');
+        userDetails.enabled_sms = $('.js-toggle_sms [type="checkbox"]').prop('checked');
         userDetails.enabled_email = $('.js-toggle_email [type="checkbox"]').prop('checked');
 
         userDetails.email = $('#email-input').val();
@@ -77,33 +81,34 @@ $(document).ready(function () {
 
         userDetails.password = $("#password-input").val();
         var update = $.ajax({
-            url: baseApiAddress +'/v1/users?auth_token=' + token,
+            url: baseApiAddress + '/v1/users?auth_token=' + token,
             type: 'PUT',
             contentType: "application/json",
-           data: JSON.stringify(userDetails),
+            data: JSON.stringify(userDetails),
             success: function (data, status, xhr) {
                 userDetails = data.result;
 
-                console.log("updating")
                 window.update();
                 var alert = '<div class="alert alert-success alert-fixed">Successfully updated your account</div>'
                 alert = container.prepend(alert);
-                setTimeout(function(){
-                   container.find('.alert').fadeOut(200, function(){
-                       $(this).remove()
-                   });
-                },3000)
+                setTimeout(function () {
+                    container.find('.alert').fadeOut(200, function () {
+                        $(this).remove()
+                    });
+                }, 3000)
             },
             error: function (xhr, status, error) {
                 container.find(".alert").remove(); // clear old alerts
                 var alert;
-                console.log(xhr, status);
                 if (xhr.responseJSON !== undefined) {
-                    console.log(xhr.responseJSON.meta);
-                    if(xhr.responseJSON.meta.details.length > 0){
-                        var alert = '<div class="alert alert-danger alert-fixed">' + xhr.responseJSON.meta.details[0] + '</div>'
-                        alert =  container.prepend(alert);
+                    if (xhr.responseJSON.meta.details.length > 0) {
+                        var details = xhr.responseJSON.meta.details != null ? xhr.responseJSON.meta.details : [xhr.responseJSON.meta.message];
+                        details.map(function (msg) {
+                            var alert = '<div class="alert alert-danger alert-fixed">' + msg + '</div>'
+                            alert = container.prepend(alert);
+                        });
                     }
+
 
                 } else {
                     var msg = "unknown server error";
@@ -135,7 +140,6 @@ $(document).ready(function () {
         autocomplete = new google.maps.places.Autocomplete(
             /** @type {!HTMLInputElement} */(document.getElementById('autocomplete')),
             {types: ['geocode']});
-        console.log(autocomplete);
         // When the user selects an address from the dropdown, populate the address
         // fields in the form.
         autocomplete.addListener('place_changed', fillInAddress);
@@ -154,14 +158,13 @@ $(document).ready(function () {
             var addressType = place.address_components[i].types[0];
             if (componentForm[addressType]) {
                 var val = place.address_components[i][componentForm[addressType]];
-                console.log(addressType, val);
                 googlAddressNames[addressType] = val;
                 // document.getElementById(addressType).value = val;
             }
         }
 
         addressDetails["location"] = {
-           x: place.geometry.location.lng(), y: place.geometry.location.lat()
+            x: place.geometry.location.lng(), y: place.geometry.location.lat()
         }
         addressDetails['formatted_address'] = place.formatted_address;
         addressDetails['number'] = googlAddressNames["street_number"];
