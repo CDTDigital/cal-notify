@@ -16,7 +16,7 @@ angular.module('alertsApp', []).controller('alertsCtrl', function($scope, $filte
         $http.defaults.headers.common['Authorization'] = 'Bearer ' + $scope.apiToken;
     };
 
-    var baseApiAddress = "http://api-cal-notify.symsoftsolutions.com";
+    var baseApiAddress = window.baseApiAddress;
 
     //---------------------------------------------------------------------------------------------------
     //--------------------------------------- A L E R T S -----------------------------------------------
