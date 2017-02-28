@@ -46,8 +46,9 @@ namespace CalNotifyApi.Controllers
         [ProducesResponseType(typeof(ResponseShell<Notification>), 200)]
         public virtual IActionResult CreateNotification([FromBody] CreateNotificationEvent model)
         {
-            var adminId =HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == Constants.UserIdClaimKey);
-            var notification = model.Process(_context, adminId?.Value);
+            var adminId = HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == Constants.UserIdClaimKey);
+            
+            var notification = model.Process(_context, adminId.Value);
             return ResponseShell.Ok(notification);
         }
 

@@ -54,6 +54,14 @@ namespace CalNotifyApi.Events
                 throw new ProcessEventException("Could not get the id of the author creating the request");
             }
 
+            var guid = new Guid(id);
+
+            var admin = context.Admins.FirstOrDefault(x => x.Id == guid);
+            if (admin == null)
+            {
+                throw new ProcessEventException("Could not identify the admin which is trying to make the request. Make sure your passing the authentication token of an admin");
+            }
+
 
             var affectedCoordinates = AffectedArea.Coordinates.Select(coor => new Coordinate2D(coor[0], coor[1])).ToArray();
             var notification = new Notification()
