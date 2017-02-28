@@ -45,7 +45,7 @@ namespace CalNotifyApi.Events
 
 
         [DataMember(Name = "published")]
-        public DateTime Published { get; set; }
+        public DateTime? Published { get; set; }
 
         public Notification Process(BusinessDbContext context, string id)
         {

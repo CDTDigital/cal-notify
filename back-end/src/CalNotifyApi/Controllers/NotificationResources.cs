@@ -39,7 +39,7 @@ namespace CalNotifyApi.Controllers
         /// <summary>
         /// Creates a notification
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="model">The notification details and information to create in our database</param>
         /// <returns></returns>
         [HttpPut("")]
         [SwaggerOperation("CREATE_NOTIFICATION", Tags = new[] {Constants.NotificationEndpoint})]
@@ -53,10 +53,8 @@ namespace CalNotifyApi.Controllers
 
 
         /// <summary>
-        /// Lists out notifications
+        /// Lists out all notifications
         /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
         [HttpGet("")]
         [SwaggerOperation("LIST_NOTIFICATION", Tags = new[] { Constants.NotificationEndpoint })]
         [ProducesResponseType(typeof(ResponseShell<List<Notification>>), 200)]
@@ -67,8 +65,9 @@ namespace CalNotifyApi.Controllers
         }
 
         /// <summary>
-        /// Gets a notifications
+        /// Gets a single notification notification
         /// </summary>
+        /// <param name="id">The id of the notification</param>
         [HttpGet("{id}")]
         [SwaggerOperation("GET_NOTIFICATION", Tags = new[] {Constants.NotificationEndpoint})]
         [ProducesResponseType(typeof(ResponseShell<Notification>), 200)]
@@ -96,8 +95,7 @@ namespace CalNotifyApi.Controllers
         /// <summary>
         /// Broadcasts the notification to the affected users
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The id of the notification</param>
         [HttpPut("{id}")]
         [SwaggerOperation("PUBLISH_NOTIFICATION", Tags = new[] {Constants.NotificationEndpoint})]
         [ProducesResponseType(typeof(ResponseShell<Notification>), 200)]
@@ -112,11 +110,12 @@ namespace CalNotifyApi.Controllers
 #pragma warning restore 4014
             return ResponseShell.Ok(notification);
         }
+
+
         /// <summary>
         /// Get the log of sent messages for a notiification
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The id of the notification</param>
         [HttpGet("{id}/log")]
         [SwaggerOperation("BROADCAST_NOTIFICATION", Tags = new[] {Constants.NotificationEndpoint})]
         [ProducesResponseType(typeof(ResponseShell<List<PublishedNotificationLog>>), 200)]
@@ -142,6 +141,23 @@ namespace CalNotifyApi.Controllers
             
             return ResponseShell.Ok(log);
 
+        }
+
+        /// <summary>
+        /// Pulls and updates our database with our sources
+        /// </summary>
+        /// <remarks>
+        /// For this phase of the prototype we have this url public to allow an easy means of periodic updating. 
+        /// It acts like the eventuall webhook it will become.
+        /// </remarks>
+        /// <returns></returns>
+        [HttpGet("pull")]
+        [SwaggerOperation("UPDATE_SOURCES", Tags = new[] {Constants.NotificationEndpoint})]
+        [ProducesResponseType(typeof(ResponseShell<SimpleSuccess>), 200)]
+        public virtual IActionResult UpdateSources()
+        {
+            // TODO
+            return ResponseShell.Ok();
         }
     }
 

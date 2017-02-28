@@ -15,7 +15,7 @@ namespace CalNotifyApi.Models.Admins
             this.Name = name;
             this.Email = email;
             // Identity Related
-            UserName = email;
+            UserName = email.ToLower();
 
             // Always start enabled 
             Enabled = true;
