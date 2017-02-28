@@ -17,5 +17,8 @@ namespace CalNotifyApi.Models
 
         [DataMember(Name = "published")]
         public DateTime Published { get; set; }
+
+        [DataMember(Name = "sent_locations")]
+        public IEnumerable<GeoLocation> SentLocations { get; set; }
     }
 }

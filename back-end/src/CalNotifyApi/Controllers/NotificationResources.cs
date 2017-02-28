@@ -125,11 +125,19 @@ namespace CalNotifyApi.Controllers
         {
             var notification = _context.Notifications.FirstOrDefault(n => n.Id == id);
 
+            var sentusers =
+                _context.NotificationLog.Where(x => x.NotificationId == notification.Id).Select(x => x.UserId);
+
+            var locations =
+                _context.Users.Where(x => sentusers.Contains(x.Id))
+                        .Select(x => x.Address.GeoLocation)
+                        .Select(p => new GeoLocation(p.Y, p.X)).ToList();
             var log = new PublishedNotificationLog()
             {
              SentEmail  = _context.NotificationLog.Count(x => x.NotificationId == notification.Id && x.Type == LogType.Email),
              SentSms =   _context.NotificationLog.Count(x => x.NotificationId == notification.Id && x.Type == LogType.Sms),
-             Published = notification.Published.GetValueOrDefault()
+             Published = notification.Published.GetValueOrDefault(),
+             SentLocations = locations
             };
             
             return ResponseShell.Ok(log);
