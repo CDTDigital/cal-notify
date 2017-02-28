@@ -1,5 +1,6 @@
+var app = angular.module('alertsApp', []);
 
-angular.module('alertsApp', []).controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
+app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
         
     //---------------------------------------------------------------------------------------------------
     //-------------------------------------- I N I T  V A R S -------------------------------------------
@@ -17,7 +18,7 @@ angular.module('alertsApp', []).controller('alertsCtrl', function($scope, $filte
         $http.defaults.headers.common['Authorization'] = 'Bearer ' + $scope.apiToken;
     };
 
-    var baseApiAddress = window.baseApiAddress;
+    var baseApiAddress = "http://api-cal-notify.symsoftsolutions.com";//window.baseApiAddress;
 
     //---------------------------------------------------------------------------------------------------
     //--------------------------------------- A L E R T S -----------------------------------------------
@@ -34,8 +35,8 @@ angular.module('alertsApp', []).controller('alertsCtrl', function($scope, $filte
             self.id = null;
             self.title = "";
             self.details = "";
-            self.location = "{}";
-            self.affected_area = "{}";
+            self.location = "";
+            self.affected_area = "";
             self.category = "";
             self.source = "";
             self.severity = "";
@@ -78,17 +79,19 @@ angular.module('alertsApp', []).controller('alertsCtrl', function($scope, $filte
         }
 
         self.prepareDataForAPI = function () {
-            return { 
-                title: self.title, 
+            var data = { 
+                title: self.title,
                 details: self.details,
                 location: (typeof self.location == 'object' ? self.location : JSON.parse(self.location)),
                 affected_area: (typeof self.affected_area == 'object' ? self.affected_area : JSON.parse(self.affected_area)),
                 category: self.category,
                 source: self.source,
                 severity: self.severity,
-                status: self.status,
-                published: (!self.published ? "0001-01-01T00:00:00" : self.published)
+                status: self.status
             };
+            if(self.published)
+                data.published = self.published;
+            return data;
         }
 
         return self;
@@ -124,7 +127,6 @@ angular.module('alertsApp', []).controller('alertsCtrl', function($scope, $filte
 
     $scope.createAlert = function() {
         $(".save-alert-btn").button('loading');
-        updateLocationFields();
 
         $http({
             method: 'PUT',
@@ -143,7 +145,7 @@ angular.module('alertsApp', []).controller('alertsCtrl', function($scope, $filte
 
     $scope.updateAlert = function() {
         $(".save-alert-btn").button('loading');
-    	updateLocationFields();
+
         // Retrieve alert by id 
     	var alert = $filter("filter")($scope.alerts, { id: $scope.alertId }, true)[0];
         var alertIndex = $scope.alerts.indexOf(alert);
@@ -183,6 +185,7 @@ angular.module('alertsApp', []).controller('alertsCtrl', function($scope, $filte
         $("#publish_btn_" + id).button('loading');
         // Retrieve alert by id 
     	var alert = $filter("filter")($scope.alerts, { id: id }, true)[0];
+        var alertIndex = $scope.alerts.indexOf(alert);
 
         // Broadcast the notification to the affected users
         $http({
@@ -190,11 +193,12 @@ angular.module('alertsApp', []).controller('alertsCtrl', function($scope, $filte
             url: baseApiAddress + '/v1/notification/' + alert.id,
             headers: { 'Content-Type': 'application/json' }
         }).then(function successCallback(response) {
-            console.log(response);
             setTimeout(function() { 
                 // Update alert status
                 alert.status = "Published";
                 alert.published = new Date();
+                $scope.alerts[alertIndex] = alert;
+                $scope.$apply();
                 $("#publish_btn_" + id).button('reset'); 
             }, 2000);
         }, function errorCallback(response) {
@@ -268,11 +272,6 @@ angular.module('alertsApp', []).controller('alertsCtrl', function($scope, $filte
             }).addTo(alertsMap);
             alertsMap.fitBounds(geoJSONLayer.getBounds());
         }
-    }
-
-    function updateLocationFields() {
-        $scope.currAlert.location = $(".coverage-map-coords").val();
-        $scope.currAlert.affected_area = $(".coverage-map-area-coords").val();
     }
 
     function closeModal() { 

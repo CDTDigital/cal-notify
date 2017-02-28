@@ -184,41 +184,41 @@
                 <h4 class="modal-title"><span ng-if="newAlert">New</span><span ng-if="!newAlert">Update</span> Alert</h4>
             </div>
             <div class="modal-body">
-                <form>
+                <form name="alertForm" validate-non-visible-controls>
                     <!-- TITLE -->
                     <div class="form-group">
-                        <label for="exampleTitle">Title</label>
-                        <input type="text" class="form-control" id="exampleTitle" ng-model="currAlert.title" placeholder="Message Title or Subject">
+                        <label for="alertTitle">Title</label>
+                        <input type="text" class="form-control" name="title" id="alertTitle" ng-model="currAlert.title" placeholder="Message Title or Subject" required>
                     </div>
 
                     <!-- SEVERITY -->
                     <div class="form-group">
-                        <label for="exampleSeverity">Severity</label>
-                        <select class="form-control" id="exampleSeverity" ng-model="currAlert.severity">
+                        <label for="alertSeverity">Severity</label>
+                        <select class="form-control" name="severity" id="alertSeverity" ng-model="currAlert.severity" required>
                             <option ng-repeat="severity in severities" value="{{severity}}">{{severity}}</option>
                         </select>
                     </div>
 
                     <!-- CATEGORY -->
                     <div class="form-group">
-                        <label for="filterCategoryModal">Category</label>
-                        <select class="form-control" id="filterCategoryModal" ng-model="currAlert.category">
+                        <label for="alertCategory">Category</label>
+                        <select class="form-control" name="category" id="alertCategory" ng-model="currAlert.category" required>
                             <option ng-repeat="category in categories" value="{{category}}">{{category}}</option>
                         </select>
                     </div>
                     
                     <!-- SOURCE -->
                     <div class="form-group">
-                        <label for="filterSourceModal">Source</label>
-                        <select class="form-control" id="filterSourceModal" ng-model="currAlert.source">
+                        <label for="alertSource">Source</label>
+                        <select class="form-control" name="source" id="alertSource" ng-model="currAlert.source" required>
                             <option ng-repeat="source in sources" value="{{source}}">{{source}}</option>
                         </select>
                     </div>                
                     
                     <!-- SHORT DESCRIPTION -->
                     <div class="form-group">
-                        <label for="filterDescriptionModal">Short Description</label>
-                        <input type="text" class="form-control" id="filterDescriptionModal" ng-model="currAlert.details" placeholder="Short description less than 90 characters">
+                        <label for="alertDescription">Short Description</label>
+                        <input type="text" class="form-control" name="description" id="alertDescription" ng-model="currAlert.details" placeholder="Short description less than 90 characters" required>
                     </div>
 
                     <!-- MAP -->
@@ -227,16 +227,16 @@
                         <p ng-if="!newAlert" class="affected-area-text">Use the drawing tools to define the area that should receive the alert:</p>
                         <p ng-if="newAlert" class="affected-area-text">Drop a pin on the alert's location & use the drawing tools to define the affected area:</p>
                         <div class="coverage-map"></div>
-                        <input type="hidden" class="coverage-map-coords" ng-model="currAlert.location">
-                        <input type="hidden" class=" coverage-map-area-coords" ng-model="currAlert.affected_area">
+                        <input type="hidden" name="location" class="coverage-map-coords" ng-model="currAlert.location" required>
+                        <input type="hidden" name="affectedArea" class=" coverage-map-area-coords" ng-model="currAlert.affected_area" required>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <span class="modal-error-msg">An error occurred</span>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button ng-if="!newAlert" type="button" class="btn btn-primary save-alert-btn" ng-click="updateAlert()" data-loading-text="Updating alert...">Save Changes</button>
-                <button ng-if="newAlert" type="button" class="btn btn-primary save-alert-btn" ng-click="createAlert()" data-loading-text="Creating alert...">Create Alert</button>
+                <button ng-if="!newAlert" ng-disabled="alertForm.$invalid" type="button" class="btn btn-primary save-alert-btn" ng-click="updateAlert()" data-loading-text="Updating alert...">Save Changes</button>
+                <button ng-if="newAlert" ng-disabled="alertForm.$invalid" type="button" class="btn btn-primary save-alert-btn" ng-click="createAlert()" data-loading-text="Creating alert...">Create Alert</button>
             </div>
         </div>
     </div>

@@ -28,6 +28,34 @@ function bindDrawnItemsToInputs() {
         	$('.coverage-map-area-coords').val(geometry);
         }
 	}
+	updateAlertLocationInputs();
+}
+
+function bindDeletedItemsToInputs() {
+	// Clear inputs where the geometry has been deleted
+	var features = drawnItems.toGeoJSON().features;
+	var locationFound = false, affectedAreaFound = false;
+	for(var i = 0; i < features.length; i++) {
+		var geometry = JSON.stringify(features[i].geometry).replace('[[[','[[').replace(']]]',']]');
+		// Since delete can be done randomly, always check for the type of geometry and update accordingly
+		if (features[i].geometry.type === "Point") {
+			locationFound = true;
+        } else {
+        	affectedAreaFound = true;
+        }
+	}
+	if(!locationFound)
+		$('.coverage-map-coords').val('');
+	if(!affectedAreaFound)
+		$('.coverage-map-area-coords').val('');
+	updateAlertLocationInputs();
+}
+
+function updateAlertLocationInputs() {
+	scope.$apply(function() { 
+        scope.currAlert.location = $(".coverage-map-coords").val();
+		scope.currAlert.affected_area = $(".coverage-map-area-coords").val();
+    });
 }
 
 // ----------- Map builder for alert CRUD operations -----------
@@ -135,6 +163,7 @@ function setCoverageMap(location, area, radius) {
 		        	inputArea.val(geometry);
 		        }
 	        });
+	        updateAlertLocationInputs();
 			
 			drawnItems.addLayer(e.layer);
 			coverageMap.fitBounds(drawnItems.getBounds(), { maxZoom: settings.maxZoom });
@@ -145,13 +174,8 @@ function setCoverageMap(location, area, radius) {
 		});
 
 		coverageMap.on(L.Draw.Event.DELETED, function(e) {
-			var type = e.layerType;
-			if (type === 'marker') {
-				inputPin.val('');
-	        } else {
-	        	inputArea.val('');
-	        }
 			drawnItems.removeLayer(e.layer);
+			bindDeletedItemsToInputs();
 		});
 	}
 
@@ -166,7 +190,6 @@ function setCoverageMap(location, area, radius) {
         });
 		L.polygon(area.coordinates).addTo(drawnItems);
 	}
-	bindDrawnItemsToInputs();
 
 	$(window).one('alert_modal_shown', function (e) {
        	$(".coverage-map").css("opacity","1");
@@ -177,6 +200,7 @@ function setCoverageMap(location, area, radius) {
        	} else {
        		coverageMap.setView([38.572958, -121.490101], 9);
        	}
+       	bindDrawnItemsToInputs();
    	});
 }
 
