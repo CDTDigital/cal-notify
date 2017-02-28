@@ -19,7 +19,10 @@
 <!-- Custom styles for this template -->
 <link href="css/dashboard.css" rel="stylesheet">
 <link href="css/admin.css" rel="stylesheet">
-    <script src="https://use.fontawesome.com/36377358ff.js"></script>
+
+<!-- FontAwesome Icons-->
+<link href="css/font-awesome.min.css" rel="stylesheet">
+
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -55,58 +58,49 @@
             <div class="row">
                 <div class="col-sm-5">
 
-                        <div class="form-group">
-                            <h2>Email Notifications</h2>
-                            <ul class="list-unstyled">
-                                <li>
-                                    <b>
-                                        Verified?  <i class=" js-verified_email fa " aria-hidden="true"></i>
-                                    </b>
+                    <div class="form-group">
+                        <h2>Email Notifications</h2>
+                        <ul class="list-unstyled">
+                            <li>
+                                <strong>Verified?  <i class=" js-verified_email fa " aria-hidden="true"></i></strong>
+                            </li>
+                            <li>
+                                <label data-toggle="collapse"  class="js-toggle_email" data-target="#emailAlerts" aria-expanded="true" aria-controls="emailAlerts">
+                                    Enabled? <input type="checkbox" />
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
 
-                                </li>
-                                <li>
-                                    <label data-toggle="collapse"  class="js-toggle_email" data-target="#emailAlerts" aria-expanded="true" aria-controls="emailAlerts">
-                                        Enabled? <input type="checkbox"  />
-
-                                    </label>
-                                </li>
-                            </ul>
-
-
+                    <div class="collapse in" id="emailAlerts">
+                        <div class="m-y">
+                            <label for="email-input" class="sr-only">Enter Email</label>
+                            <input type="email" class="form-control" id="email-input" name="email" placeholder="Enter Email">
                         </div>
-
-                        <div class="collapse in" id="emailAlerts">
-                            <div class="m-y">
-                                <input type="email" class="form-control" id="email-input" name="email" placeholder="Enter Email">
-                            </div>
-                        </div>
+                    </div>
+                    
                     <hr>
-                        <div class="form-group">
-                            <h2>SMS (Text Message) Notifications</h2>
-                            <ul class="list-unstyled">
-                                <li>
-                                    <b>
-                                        Verified? <i class=" js-verified_sms fa " aria-hidden="true"></i>
-                                    </b>
-                                </li>
-                                <li>
-                                    <label  class="js-toggle_sms" data-toggle="collapse" data-target="#smsAlerts" aria-expanded="true" aria-controls="smsAlerts">
-                                        Enabled <input type="checkbox" />
+                    
+                    <div class="form-group">
+                        <h2>SMS (Text Message) Notifications</h2>
+                        <ul class="list-unstyled">
+                            <li>
+                                <strong>Verified? <i class=" js-verified_sms fa " aria-hidden="true"></i></strong>
+                            </li>
+                            <li>
+                                <label  class="js-toggle_sms" data-toggle="collapse" data-target="#smsAlerts" aria-expanded="true" aria-controls="smsAlerts">
+                                    Enabled <input type="checkbox" />
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
 
-                                    </label>
-                                </li>
-                            </ul>
-
+                    <div class="collapse in" id="smsAlerts">
+                        <div class="m-y">
+                            <label for="phone-input" class="sr-only">Mobile Phone Number</label>
+                            <input type="phone" class="form-control" id="phone-input" name="phone" placeholder="Phone Number">
                         </div>
-
-                        <div class="collapse in" id="smsAlerts">
-                            <div class="m-y">
-
-                                <input type="phone" class="form-control" id="phone-input" name="phone" placeholder="Phone Number">
-                            </div>
-
-                        </div>
-                            
+                    </div>
                 </div>
                
                 <div class="col-sm-5 col-sm-offset-2">
@@ -115,7 +109,7 @@
                     <label for="autocomplete">Your home or office location</label>
                     <input type="text" class="form-control" id="autocomplete" placeholder="Enter Address"   autocomplete="off" onFocus="geolocate()">
                     <hr>                  
-                    <label for="examplePassword2">Change your password</label>
+                    <label for="password-input">Change your password</label>
                     <input type="password" class="form-control" id="password-input" placeholder="Set a Password">
                 </div>               
             </div>
@@ -132,12 +126,12 @@
 </div>
 
 <!-- Large modal -->
-<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modalPublishAlert">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Publish Alert</h4>
+                <h4 class="modal-title" id="modalPublishAlert">Publish Alert</h4>
             </div>
             <div class="modal-body">
                 <form>
