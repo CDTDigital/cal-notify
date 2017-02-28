@@ -148,7 +148,7 @@ namespace CalNotifyApi.Controllers
         }
 
         /// <summary>
-        /// Pulls and updates our database with our sources
+        /// Pulls and updates our database with notifications from external USGS and NOAA sources
         /// </summary>
         /// <remarks>
         /// For this phase of the prototype we have this url public to allow an easy means of periodic updating. 
@@ -158,10 +158,9 @@ namespace CalNotifyApi.Controllers
         [HttpGet("pull")]
         [SwaggerOperation("UPDATE_SOURCES", Tags = new[] {Constants.NotificationEndpoint})]
         [ProducesResponseType(typeof(ResponseShell<SimpleSuccess>), 200)]
+        [AllowAnonymous]
         public virtual async Task<IActionResult> UpdateSources()
         {
-            // TODO
-
             await new PullFromSourcesEvent().Process(_context);
             return ResponseShell.Ok();
         }
