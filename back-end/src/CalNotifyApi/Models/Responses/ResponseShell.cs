@@ -98,7 +98,7 @@ namespace CalNotifyApi.Models.Responses
 
         public static IActionResult Error(int statusCode, string message, ModelStateDictionary modelState)
         {
-            var errors = modelState.Values.SelectMany(m => m.Errors.Select(er => er.ErrorMessage)).ToList();
+            var errors = modelState.Values.SelectMany(m => m.Errors.Select(er => !string.IsNullOrWhiteSpace(er.ErrorMessage) ? er.ErrorMessage : er.Exception.ToString())).ToList();
             return Error(statusCode, message, errors);
         }
 
