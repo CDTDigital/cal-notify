@@ -22,7 +22,7 @@ namespace CalNotifyApi.Events
         {
 
             var queryString = $@"
-              SELECT DISTINCT users.""Id"", users.""ValidatedEmail"", users.""ValidatedSms"",  users.""Enabled"", users.""Email"", users.""PhoneNumber"",  users.""EnabledEmail"", users.""EnabledSms"",
+              SELECT DISTINCT ON(users.""Id"") users.""Id"", users.""ValidatedEmail"", users.""ValidatedSms"",  users.""Enabled"", users.""Email"", users.""PhoneNumber"",  users.""EnabledEmail"", users.""EnabledSms"",
                 addr.""GeoLocation"", addr.""UserId"",
                 noti.""AffectedArea"" FROM public.""Address""  addr, public.""AllUsers"" users, public.""Notifications"" noti
                 where ST_Intersects(ST_SetSRID(noti.""AffectedArea"",4326),addr.""GeoLocation"") and  noti.""Id"" = {notification.Id}
@@ -93,6 +93,7 @@ namespace CalNotifyApi.Events
         {
             var options = new DbContextOptionsBuilder<BusinessDbContext>();
             options.UseNpgsql(connectionString);
+
          
             using (var context = new BusinessDbContext(options.Options))
             {
