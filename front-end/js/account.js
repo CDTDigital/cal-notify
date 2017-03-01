@@ -69,9 +69,52 @@ $(document).ready(function () {
     }
 
     window.update = update;
+    var container = $('.js-msg-area');
+    $('.js-resend-validation').on('click', function(ev){
+        userDetails['id'] = userId;
+        userDetails.email = $('#email-input').val();
+        userDetails.phone = $('#phone-input').val();
+
+        var update = $.ajax({
+            url: baseApiAddress + '/v1/users/resend?auth_token=' + token,
+            type: 'PUT',
+            contentType: "application/json",
+            data: JSON.stringify(userDetails),
+            success: function (data, status, xhr) {
+
+                var alert = '<div class="alert alert-success alert-fixed">Successfully sent verification. Check your inbox or phone.</div>'
+                alert = container.prepend(alert);
+                setTimeout(function () {
+                    container.find('.alert-fixed').fadeOut(200, function () {
+                        $(this).remove()
+                    });
+                }, 3000)
+            },
+            error: function (xhr, status, error) {
+                container.find(".alert-fixed").remove(); // clear old alerts
+                var alert;
+                if (xhr.responseJSON !== undefined) {
+                    if (xhr.responseJSON.meta.details.length > 0) {
+                        var details = xhr.responseJSON.meta.details != null ? xhr.responseJSON.meta.details : [xhr.responseJSON.meta.message];
+                        details.map(function (msg) {
+                            var alert = '<div class="alert alert-danger alert-fixed">' + msg + '</div>'
+                            alert = container.prepend(alert);
+                        });
+                    }
+
+
+                } else {
+                    var msg = "unknown server error";
+                    var alert = '<div class="alert alert-danger alert-fixed">' + msg + '</div>'
+                    alert = container.prepend(alert);
+                }
+
+
+            }
+        });
+    });
 
     $('.js-save').on('click', function (ev) {
-        var container = $('.js-msg-area');
         userDetails['id'] = userId;
         userDetails.enabled_sms = $('.js-toggle_sms [type="checkbox"]').prop('checked');
         userDetails.enabled_email = $('.js-toggle_email [type="checkbox"]').prop('checked');
@@ -92,13 +135,13 @@ $(document).ready(function () {
                 var alert = '<div class="alert alert-success alert-fixed">Successfully updated your account</div>'
                 alert = container.prepend(alert);
                 setTimeout(function () {
-                    container.find('.alert').fadeOut(200, function () {
+                    container.find('.alert-fixed').fadeOut(200, function () {
                         $(this).remove()
                     });
                 }, 3000)
             },
             error: function (xhr, status, error) {
-                container.find(".alert").remove(); // clear old alerts
+                container.find(".alert-fixed").remove(); // clear old alerts
                 var alert;
                 if (xhr.responseJSON !== undefined) {
                     if (xhr.responseJSON.meta.details.length > 0) {

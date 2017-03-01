@@ -87,6 +87,30 @@ namespace CalNotifyApi.Models.Auth
         }
     }
 
+    [DataContract]
+    public class ResendValidateUser : IValidatableObject
+    {
+        [DataMember(Name = "email"), EmailAddress]
+        public virtual string Email { get; set; }
+
+        [DataMember(Name = "phone"), Phone]
+        public virtual string PhoneNumber { get; set; }
+
+        [DataMember(Name = "id")]
+        public virtual Guid Id { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (string.IsNullOrWhiteSpace(Email) && string.IsNullOrWhiteSpace(PhoneNumber))
+            {
+                yield return new ValidationResult("Need to provide at least an Email or Phone number.");
+            }
+
+    
+
+        }
+    }
+
 
     [DataContract]
     public class UpdateableUser : IValidatableObject
