@@ -77,7 +77,7 @@ namespace CalNotifyApi.Services
             {
                 Expires = expires.ToUnixTimeSeconds(),
                 Token = handler.WriteToken(securityToken),        
-                GoogleServicesKey = _config.Google.MapsKey,
+               
                 UserId = user.Id.ToString()
             };
         }

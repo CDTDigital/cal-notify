@@ -28,6 +28,7 @@ $(document).ready(function () {
             },
             error: function (xhr, status, error) {
                 form.find('.alert').remove(); // clear old alerts
+                console.log(xhr.responseJSON);
                 if (xhr.responseJSON !== undefined) {
                     if(xhr.responseJSON.meta.details.length > 0){
                         xhr.responseJSON.meta.details.forEach(function(msg){
@@ -35,7 +36,11 @@ $(document).ready(function () {
                             form.prepend(alert);
                         })
 
+                    } else {
+                        var alert = '<div class="alert alert-danger">' + xhr.responseJSON.meta.message + '</div>'
+                        form.prepend(alert);
                     }
+
 
                 } else {
                     var msg = "unknown server error";
@@ -77,6 +82,7 @@ $(document).ready(function () {
                 $(".js-form-wrapper-admin-login .js-login").button("reset");
             },
             error: function (xhr, status, error) {
+                console.log(xhr.responseJSON);
                 form.find('.alert').remove(); // clear old alerts
                 if (xhr.responseJSON !== undefined) {
                     if(xhr.responseJSON.meta.details.length > 0){
@@ -85,6 +91,10 @@ $(document).ready(function () {
                             form.prepend(alert);
                         })
 
+
+                    } else {
+                        var alert = '<div class="alert alert-danger">' + xhr.responseJSON.meta.message + '</div>'
+                        form.prepend(alert);
                     }
 
                 } else {

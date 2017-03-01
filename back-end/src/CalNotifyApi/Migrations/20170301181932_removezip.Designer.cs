@@ -10,9 +10,10 @@ using CalNotifyApi.Models;
 namespace CalNotifyApi.Migrations
 {
     [DbContext(typeof(BusinessDbContext))]
-    partial class BusinessDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170301181932_removezip")]
+    partial class removezip
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:PostgresExtension:postgis", "'postgis', '', ''")
