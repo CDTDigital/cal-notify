@@ -69,6 +69,7 @@
 
             <div class="tab-content">
 
+                <!-- FILTERS -->
                 <div class="panel-group" id="panel-filter" role="tablist" aria-multiselectable="true" ng-show="alerts.length > 0">
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="collapsePanelOne">
@@ -80,17 +81,17 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="filterCategory">Category</label>
+                                                <label for="filterCategory">Category</label>&nbsp;
                                                 <!--<select class="form-control" ng-model="filterCategory" ng-options="x for x in categories"></select>-->
-                                                <select class="form-control" ng-model="filterCategory" id="filterCategory">
+                                                <select class="form-control" ng-model="filters.category" id="filterCategory">
                                                     <option ng-repeat="category in categories" value="{{category}}">{{category}}</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="filterSource">Source</label>
-                                                <select class="form-control" ng-model="filterSource" id="filterSource">
+                                                <label for="filterSource">Source</label>&nbsp;
+                                                <select class="form-control" ng-model="filters.source" id="filterSource">
                                                     <option ng-repeat="source in sources" value="{{source}}">{{source}}</option>
                                                 </select>
                                             </div>
@@ -99,15 +100,16 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <strong>Severity</strong>
-                                                <div class="checkbox" ng-repeat="severity in severities">
-                                                    <label> <input type="checkbox" value=""> {{severity}}</label> &nbsp;
+                                                <strong>Severity</strong>&nbsp;
+                                                <div class="checkbox">
+                                                    <label> <input type="checkbox" value="" ng-model="filters.severityEmergency"> Emergency</label> &nbsp;
+                                                    <label> <input type="checkbox" value="" ng-model="filters.severityNonEmergency"> Non-Emergency</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <strong>Date Range</strong>
+                                                <strong>Date Range</strong>&nbsp;
                                                 <label for="FilterStartDate" class="sr-only">Start Date</label>
                                                 <input type="date" class="form-control" id="FilterStartDate" placeholder="Start">
                                                 to
@@ -138,7 +140,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="alert in alerts">
+                                <tr ng-repeat="alert in alerts | criteriaMatch:filters">
                                     <td style="text-align:center">
                                         <span ng-if="alert.severity == 'Emergency'" class="glyphicon glyphicon-warning-sign text-danger"></span>
                                         <span ng-if="alert.severity == 'NonEmergency'" class="glyphicon glyphicon-warning-sign text-warning"></span>
