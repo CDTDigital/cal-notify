@@ -223,7 +223,8 @@
                     <div class="form-group">
                         <label>Affected area</label>
                         <p ng-if="!newAlert" class="affected-area-text">Use the drawing tools to define the area that should receive the alert:</p>
-                        <p ng-if="newAlert" class="affected-area-text">Drop a pin on the alert's location & use the drawing tools to define the affected area:</p>
+                        <p ng-if="newAlert" class="affected-area-text">Drop a pin on the alert's location & use the drawing tools to define the affected area: <br><span class="text-danger">(Both pin and polygon are required to create alert)</span></p>
+                        
                         <div class="coverage-map"></div>
                         <input type="hidden" name="location" class="coverage-map-coords" ng-model="currAlert.location" required>
                         <input type="hidden" name="affectedArea" class=" coverage-map-area-coords" ng-model="currAlert.affected_area" required>
