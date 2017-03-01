@@ -313,7 +313,7 @@ $(document).ready(function () {
 	    for (var j = 0; j < categories.length; j++) {
 	        div.innerHTML += '<div><i class="fa fa-' + categories[j].icon + '" aria-hidden="true"></i> ' + categories[j].name + '</div>';
 	    }
-	    console.log(div);
+	    
 	    return div;
 	};
 

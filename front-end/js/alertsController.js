@@ -138,6 +138,7 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
             $scope.alerts.splice(0, 0, new Alert(response.data.result, true));
             updateMap();
             closeModal();
+            setTimeout(function() { highlightNewAlert(); }, 500);
         }, function errorCallback(response) {
             showErrorInModal(response.data.meta.message);
         });
@@ -167,8 +168,10 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
         });
     };
 
-    $scope.editAlert = function(id) {
-    	$scope.newAlert = false;
+    $scope.editAlert = function(id, duplicate) {
+        if(typeof duplicate == 'undefined') duplicate = false;
+
+    	$scope.newAlert = duplicate;
     	$scope.alertId = id;
 
     	// Retrieve alert by id 
@@ -259,10 +262,12 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
         // Collect geometries from alerts and create geoJSON
         var geoJSON = { type: "FeatureCollection", features: [] }
         $.each($scope.alerts, function( index, alert ) {
+            // Create JSON object in case it was converted to string
+            alert.location = (typeof alert.location == 'object' ? alert.location : JSON.parse(alert.location));
             var newFeature = { type: "Feature", geometry: alert.location, properties: { title: alert.title, category: alert.category, severity: alert.severity } }; 
             geoJSON.features.push(newFeature);
         });
-
+        
         if(geoJSON.features.length > 0) {
             // Add geoJSON layer to the map
             geoJSONLayer = L.geoJSON(geoJSON, {
@@ -272,6 +277,15 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
             }).addTo(alertsMap);
             alertsMap.fitBounds(geoJSONLayer.getBounds());
         }
+    }
+
+    function highlightNewAlert() {
+        // Scroll to top and hightlight 1st row for a second
+        $("body").animate({"scrollTop": "0px"}, 100);
+        $("table tbody tr:first-child").addClass("highlight");
+        setTimeout(function() {
+            $("table tbody tr:first-child").removeClass("highlight");
+        }, 1000);
     }
 
     function closeModal() { 
