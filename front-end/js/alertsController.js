@@ -1,5 +1,44 @@
 var app = angular.module('alertsApp', []);
 
+// CUSTOM FILTER FOR ALERTS
+app.filter("criteriaMatch", function() {
+
+    function categoryCriteria(alert, filters) {
+        if(typeof filters.category === 'undefined' || filters.category == "Any")
+            return true;
+        else
+            return alert.category === filters.category;
+    }
+
+    function severityCriteria(alert, filters) {
+        var match = false;
+
+        if(!filters.severityEmergency && !filters.severityNonEmergency) {
+            return true;
+        } else {
+            if(filters.severityEmergency && alert.severity == "Emergency")
+                match = true;
+            if(filters.severityNonEmergency && alert.severity == "NonEmergency")
+                match = true;
+        }
+        
+        return match;
+    }
+
+    function sourceCriteria(alert, filters) {
+        if(typeof filters.source === 'undefined' || filters.source == "Any")
+            return true;
+        else
+            return alert.source === filters.source;
+    }
+
+    return function(alert, filters) {
+        return alert.filter(function(element) { 
+            return categoryCriteria(element,filters) && severityCriteria(element,filters) && sourceCriteria(element,filters);
+        });
+    };
+});
+
 app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
         
     //---------------------------------------------------------------------------------------------------
@@ -10,6 +49,7 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
     $scope.sources = ['Any', 'NOAA', 'GIS', '...'];
     $scope.severities = ['Emergency', 'NonEmergency'];
     $scope.alertsLoading = true;
+    $scope.filters = { category: "Any", source: "Any", severityEmergency: false, severityNonEmergency: false };
 
     // API Token used as authorization on each API call
     $scope.apiToken = "";
@@ -114,7 +154,7 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
             // This callback will be called asynchronously when the response is available
             var alerts = response.data.result;
             for(var i = 0, size = alerts.length; i < size; i++) {
-                $scope.alerts.push(new Alert(alerts[i], true));
+                $scope.alerts.unshift(new Alert(alerts[i], true));
             }
             updateMap();
         }, function errorCallback(response) {
@@ -214,6 +254,17 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
         $scope.currAlert = new Alert();
     };
 
+    $scope.updateAlertsMap = function() {
+        updateMap();
+    };
+
+    // Update map when filters change
+
+    $scope.$watch('filters.category', function(newVal, oldVal){ updateMap(); });
+    $scope.$watch('filters.source', function(newVal, oldVal){ updateMap(); });
+    $scope.$watch('filters.severityEmergency', function(newVal, oldVal){ updateMap(); });
+    $scope.$watch('filters.severityNonEmergency', function(newVal, oldVal){ updateMap(); });
+
     //---------------------------------------------------------------------------------------------------
     //------------------------------ P R I V A T E  M E T H O D S ---------------------------------------
     //---------------------------------------------------------------------------------------------------
@@ -259,9 +310,12 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
         if(geoJSONLayer)
             alertsMap.removeLayer(geoJSONLayer);
 
+        // Filter alerts first, then create geoJSON
+        var mapAlerts = $filter('criteriaMatch')($scope.alerts,$scope.filters);
+
         // Collect geometries from alerts and create geoJSON
         var geoJSON = { type: "FeatureCollection", features: [] }
-        $.each($scope.alerts, function( index, alert ) {
+        $.each(mapAlerts, function( index, alert ) {
             // Create JSON object in case it was converted to string
             alert.location = (typeof alert.location == 'object' ? alert.location : JSON.parse(alert.location));
             var newFeature = { type: "Feature", geometry: alert.location, properties: { title: alert.title, category: alert.category, severity: alert.severity } }; 
