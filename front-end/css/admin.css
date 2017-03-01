@@ -606,6 +606,9 @@ a.shortcut-tiles {
   color: #cc0000;
   font-size: 15px;
 }
+.highlight {
+  background-color: rgba(244, 185, 66, 0.6) !important;
+}
 .preview-toggle {
   margin-bottom: 10px;
 }
