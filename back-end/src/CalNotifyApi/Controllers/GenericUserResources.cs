@@ -84,6 +84,41 @@ namespace CalNotifyApi.Controllers
             return ResponseShell.Ok(fetchedUsers);
         }
 
+        /// <summary>
+        /// Resnds the validation message to a user's set email or phone.
+        /// </summary>
+        /// <param name="tempUser"></param>
+        /// <returns></returns>
+        [HttpPut("resend")]
+        [SwaggerOperation("RESEND_VALIDATED_GENERICUSER_BY_ID", Tags = new[] {Constants.GenericUserEndpoint})]
+        [ProducesResponseType(typeof(ResponseShell<SimpleSuccess>), 200)]
+        public virtual async Task<IActionResult> ResendValidation([FromBody] ResendValidateUser tempUser)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Id == tempUser.Id);
+            if (user == null)
+            {
+                // Our response is vague to avoid leaking information
+                return ResponseShell.Error("Could not find an account with that information");
+            }
+
+            if (!string.IsNullOrWhiteSpace(tempUser.Email) && !user.ValidatedEmail)
+            {
+                Log.Information("Sending Email Validation to {user}", tempUser);
+                var temp = new TempUser(user);
+                await _validation.SendValidationToEmail(temp);
+                _memoryCache.SetForChallenge(temp);
+
+            }
+
+            if (!string.IsNullOrWhiteSpace(tempUser.PhoneNumber) && !user.ValidatedSms)
+            {
+                Log.Information("Sending SMS Validation to {user}", tempUser);
+                var temp = new TempUser(user);
+                await _validation.SendValidationToSms(temp);
+                _memoryCache.SetForChallenge(temp);
+            }
+            return ResponseShell.Ok();
+        }
 
         /// <summary>
         /// Updates a GenericUser's properties such as Email or Sms via their unique id.
@@ -91,6 +126,7 @@ namespace CalNotifyApi.Controllers
         /// 
         [HttpPut("")]
         [SwaggerOperation("UPDATE_GENERICUSER_BY_ID", Tags = new[] { Constants.GenericUserEndpoint })]
+        [ProducesResponseType(typeof(ResponseShell<GenericUser>),200)]
         public virtual async Task<IActionResult> UpdateById([FromBody] UpdateableUser tempUser)
         {
             try
