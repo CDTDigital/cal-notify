@@ -296,6 +296,29 @@ $(document).ready(function () {
 		position: 'topright'
 	}));
 
+	// Add legend to map
+	var legend = L.control({position: 'bottomright'});
+	legend.onAdd = function (map) {
+
+	    var div = L.DomUtil.create('div', 'info legend'),
+	        severities = [{ color: "#CF3C28", name: "Emergency" }, { color: "#37A7DA", name: "Non-Emergency" }],
+	        categories = [{ icon: "fire", name: "Fire" }, { icon: "tint", name: "Flood" }, { icon: "cloud", name: "Weather" }, 
+	        			  { icon: "flag", name: "Tsunami" }, { icon: "globe", name: "Earthquake" }, { icon: "star", name: "Any" }];
+
+	    // Generate a label for each Severity & Category type
+	    for (var i = 0; i < severities.length; i++) {
+	        div.innerHTML += '<div><i style="background:' + severities[i].color + '"></i> ' + severities[i].name + '</div>';
+	    }
+	    div.innerHTML += '<hr/>';
+	    for (var j = 0; j < categories.length; j++) {
+	        div.innerHTML += '<div><i class="fa fa-' + categories[j].icon + '" aria-hidden="true"></i> ' + categories[j].name + '</div>';
+	    }
+	    console.log(div);
+	    return div;
+	};
+
+	legend.addTo(alertsMap);
+
     // Use resize event to set new map height and zoom level
 	window.onresize = function() {
 	    var mapWidth = $("#alerts_map").width();
