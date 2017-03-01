@@ -75,7 +75,8 @@ namespace CalNotifyApi.Models
         Weather,
         Earthquake,
         Tsunami,
-        Other
+        Other,
+        Any
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
