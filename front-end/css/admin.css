@@ -593,6 +593,9 @@ a.shortcut-tiles {
 .info-tiles.tiles-default:hover .tiles-footer {
   background: #515151;
 }
+.site-logo {
+  max-height: 100%;
+}
 #alerts_map {
   width: 100%;
 }

@@ -47,10 +47,6 @@ namespace CalNotifyApi.Services
 
         public DbSet<BroadCastLogEntry> NotificationLog { get; set; }
 
-        /// <summary>
-        ///  The list of potential zipcodes which can be affected by alerts
-        /// </summary>
-        public DbSet<ZipCodeInfo> ZipCodes { get; set; }
 
         /// <summary>
         /// List of notifications in the system
@@ -133,19 +129,7 @@ namespace CalNotifyApi.Services
         /// <returns></returns>
         public static async Task<bool> SeedDatabase(this BusinessDbContext context, string contentRoot, bool isDevel, IServiceProvider services)
         {
-          /*  var path = Path.Combine(contentRoot, "zipcodes.csv");
-            var file = File.OpenRead(path);
-            var csv = new CsvReader(new StreamReader(file));
-            csv.Configuration.RegisterClassMap<ZipCodeInfoMap>();
-            foreach (var record in csv.GetRecords<ZipCodeInfo>())
-            {
-              
-                if (context.ZipCodes.FirstOrDefault(zip => zip.Zipcode == record.Zipcode) == null)
-                {
-                    context.ZipCodes.Add(record);
-                }
-             
-            }*/
+          
             foreach (var adminEvent in Constants.Testing.TestAdmins)
             {
 
@@ -158,22 +142,6 @@ namespace CalNotifyApi.Services
     }
 
 
-    /// <summary>
-    /// Helper for marshelling and seeding our database zipcode table
-    /// </summary>
-    public sealed class ZipCodeInfoMap : CsvClassMap<ZipCodeInfo>
-    {
-        public ZipCodeInfoMap()
-        {
-            Map(z => z.Zipcode).Name("Zipcode");
-            Map(z => z.City).Name("City");
-            Map(z => z.Region).Name("Region");
-            Map(x => x.County).Name("County");
-            Map(x => x.Location).ConvertUsing(row => new PostgisPoint(row.GetField<double>("Latitude"), row.GetField<double>("Longitude")) {SRID = Constants.SRID});
-          
-
-        }
-    }
 
    
 }
