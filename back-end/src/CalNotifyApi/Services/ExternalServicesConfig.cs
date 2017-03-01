@@ -2,9 +2,7 @@
 {
     public class ExternalServicesConfig
     {
-        public GeocodioConfig Geocodio { get; set; }
         public TwilloConfig Twillo { get; set; }
-        public GoogleConfig Google { get; set; }
 
         public Urls Urls { get; set; }
         public Pages Pages { get; set; }
@@ -12,16 +10,7 @@
         public EmailConfig Email { get; set; }
     }
 
-
-    public class GoogleConfig
-    {    
-        public string MapsKey { get; set; }
-    }
-
-    public class GeocodioConfig
-    {
-        public string SecretKey { get; set; }
-    }
+ 
 
     public class TwilloConfig
     {

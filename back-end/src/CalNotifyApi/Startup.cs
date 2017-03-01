@@ -131,7 +131,6 @@ namespace CalNotifyApi
 
                 ConfigureConfigRoot(services);  // Global configuration
 
-                services.AddTransient<GeocodeIO>();
                 ConfigureMemoryCaches(services); // short lived, memory based persistance
                 ConfigureTokens(services);      // jwt service provider
                 ConfigureSwagger(services);
