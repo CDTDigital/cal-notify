@@ -44,13 +44,10 @@ An example configuration is listed below
   },
 
   "Services": {
-   
-    "Google": {
-      "MapsKey": "fakeg3hw_azxR8u9fakegrQU"
-    },
-    "Urls": {
-      "Frontend": "http://yourdomain.com",
-      "Backend": "http://api-yourdomain.com"
+  
+     "Urls": {
+      "Frontend": "http://localhost:3000",
+      "Backend": "http://localhost:3002"
     },
     "Email": {
       "Validation": {
@@ -78,6 +75,16 @@ An example configuration is listed below
 
 }
 ```
+
+
+
+
+
+## Swagger
+
+Once the project is up and running go to the swagger docs which by default is http://localhost:3002/swagger/index.html
+
+To complete the setup run the grunt default task in the `/front-end` folder which starts up the front-end server at http://localhost:3000/
 
 
 
