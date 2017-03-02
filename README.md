@@ -45,7 +45,7 @@ To-Do: Get feedback from Matt C.
 
  [Cal-Notify  API](http://api-cal-notify.symsoftsolutions.com/swagger/index.html)
 
- To-Do: Matt C. to review and add details to this.
+ For further details, such as how to authenticate, common responses, etc. Read the introduction located at the top of the API documentation.
 
 ## Comply with Section 508 of the Americans with Disabilities Act and WCAG 2.0
 
