@@ -10,6 +10,7 @@ SymSoft Solutions assigned one person - Daniel Calzada - as the leader of the pr
 ## Multidisciplinary Team
 
 assembled a multidisciplinary team to deliver the prototype. We created a “war room” where team members worked side-by-side and freely collaborated across all aspects of the solution from the user experience design to the technical programming and usability testing. The team included the following labor categories / team members:
+
 1. Product Manager - Savita Farooqui
 2. Technical Architect - Abdul Farooqui
 3. Interaction Designer/User Researcher/Usability Tester - Mark Aplet
@@ -26,6 +27,7 @@ assembled a multidisciplinary team to deliver the prototype. We created a “war
 
 ## Understand What People Needs
 [Placeholder]
+
 ## Used at least a minimum of three “user-centric design” techniques and/or tools
 [Placeholder]
 
@@ -39,7 +41,6 @@ We used GitHub to document code commits as shown in our GitHub repository
 To-Do: Get feedback from Matt C.
 
 ## Use Swagger to document the RESTful API
-
  We used Swagger to document the RESTful API and provided a link to the Swagger API as follows:
 
  [Cal-Notify  API](http://api-cal-notify.symsoftsolutions.com/swagger/index.html)
@@ -70,6 +71,7 @@ Our prototype works on multiple devices by way of a responsive design
 
 ## Use at Least Five Modern and Open-source Technologies
 Our solution included the following modern and open-source technologies:
+
 1.	ASP.NET core
 2.	Postgres/PostGIS
 3.	Swagger
