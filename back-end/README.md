@@ -1,26 +1,20 @@
 # Project Setup
 
-We require a few packages to be installed for running the backend system.
+The following are instructions on setting up a development environment for the cal-notify project.
 
-
+## Pre-requisites
+These are the pre-requisite packages and frameworks that will be required:
+* .NET Core: https://www.microsoft.com/net/core. The SDK is required at a minimum, but you can install the tools as well if you are using Microsoft Visual Studio (highly recommended). Follow the instructions provided on the website for installation and configuration.
+* PostgreSQL: https://www.postgresql.org/download/. Follow the instructions provided on the website for installation and configuration.
+* PostGIS: http://postgis.net/install/. Follow the instructions provided on the website for installation and configuration.
 
 ## RESTful Server
 
-We are leveraging .net core as the platform powering our Restful API, so make sure you have the sdk's installed and the required tooling. A quick google search of `.net core install` will take you to what you needed but for completeness here are the direct links as of late:
-
-* [Visual studio tooling](https://www.microsoft.com/net/core#windowsvs2015)
-* [sdk and runtime](https://www.microsoft.com/net/download/core#/current)
-
-
-
+We are leveraging .NET Core as the platform powering our restful API, so make sure you have the .NET Core SDKs installed and the required tooling for Visual Studio. Once that is complete, open the Visual Studio solution file for the project and you should be ready to go. See the Configuration section below on configuring the project for your local development environment.
 
 ### Data Persistence
 
-For data storage PostgreSQL is our go to, and as such, it also must be installed. Visit the [download page](https://www.postgresql.org/download/)  for more detailed instructions to set it up. 
-
-
-
-
+For data storage PostgreSQL is our go to, and as such, it also must be installed. Make sure also to install and enable the PostGIS extension, which is used for performing geospatial queries.
 
 ### Configuration
 
