@@ -7,8 +7,10 @@ These are the pre-requisite packages and frameworks that will be required:
 * .NET Core: https://www.microsoft.com/net/core. The SDK is required at a minimum, but you can install the tools as well if you are using Microsoft Visual Studio (highly recommended). Follow the instructions provided on the website for installation and configuration.
 * PostgreSQL: https://www.postgresql.org/download/. Follow the instructions provided on the website for installation and configuration.
 * PostGIS: http://postgis.net/install/. Follow the instructions provided on the website for installation and configuration.
+* Node.js: https://nodejs.org/en/download/. Follow the instructions provided on the website for installation and configuration.
+* Grunt: https://gruntjs.com/getting-started. Requires Node.js first. Follow the instructions provided on the website for installation and configuration.
 
-## RESTful Server
+## Back End (RESTful Server)
 
 We are leveraging .NET Core as the platform powering our restful API, so make sure you have the .NET Core SDKs installed and the required tooling for Visual Studio. Once that is complete, open the Visual Studio solution file for the project and you should be ready to go. See the Configuration section below on configuring the project for your local development environment.
 
@@ -18,9 +20,7 @@ For data storage PostgreSQL is our go to, and as such, it also must be installed
 
 ### Configuration
 
-For backend processes and other setup we need to have a set of api keys and paths setup for our specific environment.
-
-An example configuration is listed below
+Configuration for the ASP.NET core backend happens through the "appsettings.json" file. An example configuration is listed below.
 
 ```
 {
@@ -70,15 +70,19 @@ An example configuration is listed below
 }
 ```
 
+The items above will need to be adjusted in terms of configuration for local development as follows:
+* Logging - for the appropriate level of logging needed.
+* Connection Strings - so that you can connect to the appropriate Postgres instances on your local development machine.
+* Service API Keys - for geocoding and Google Maps access.
+* Email Settings - for the system to send notification e-mails.
+* Twillo - configurations for the Twillo API that sends SMS.
 
+### Swagger
 
+Once the project is up and running, go to the swagger documentation URL, which is http://localhost:3002/swagger/index.html by default. This is usually the first test that ensures all is running as expected for the backend. You can also hit some of the API endpoints to ensure functionality, but at this point, you can start development.
 
+## Front End (Public and Admin UI)
 
-## Swagger
+Open a command prompt at the front-end folder of the project (where you will see a "project.json" file). Run "npm install" at the command prompt, which will download and install the necessary packages needed for front-end development. This is required for compilation of less files and JavaScript files via the Grunt task runner.
 
-Once the project is up and running go to the swagger docs which by default is http://localhost:3002/swagger/index.html
-
-To complete the setup run the grunt default task in the `/front-end` folder which starts up the front-end server at http://localhost:3000/
-
-
-
+Once installation is complete, run "grunt" at the command prompt, which will compile the front-end project, launch a BrowserSync server, and automatically invoke a web browser for the front-end project (usually navigating to http://localhost:3000/). The browser will automatically refresh as changes are made to files in the front-end project.
