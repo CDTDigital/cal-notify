@@ -29,7 +29,10 @@ assembled a multidisciplinary team to deliver the prototype. We created a “war
 [Placeholder]
 
 ## Used at least a minimum of three “user-centric design” techniques and/or tools
-[Placeholder]
+1. Participatory Design: We worked with California citizens, employees, and stakeholders to define and refine the user interface and user experience.  
+2. Usability Testing: Provides immediate feedback at key points that effectively informed our team of issues with our interface elements and functionality. Users were asked to verbalize what they were doing and why they were doing it. 
+3. Interviews: User interviews were conducted to quickly identify and address issues or gaps between users expectations and product features. 
+
 
 To-Do
 
