@@ -75,6 +75,8 @@ function setCoverageMap(location, area, radius) {
 
 	if (typeof coverageMap !== 'undefined') {
 		drawnItems.clearLayers();
+		$('.coverage-map-coords').val('');
+		$('.coverage-map-area-coords').val('');
 	} else {
 		// Init map
 		coverageMap = new L.map($('.coverage-map')[0]).setView([38.663, -98.454], 4);
