@@ -113,6 +113,14 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
             }
         }
 
+        self.addBroadcastDetails = function (log) {
+            self.sent_email = log.sent_email;
+            self.sent_sms = log.sent_sms;
+            self.sent_total = self.sent_email + self.sent_sms;
+            self.published = new Date(log.published);
+            self.sent_locations = log.sent_locations;
+        }
+
         self.convertDatesToString = function () {
             self.created = (self.created ? $filter('date')(self.created, "yyyy-MM-dd'T'HH:mm:ss") : self.created);
             self.published = (self.published ? $filter('date')(self.published, "yyyy-MM-dd'T'HH:mm:ss") : self.published);
@@ -250,6 +258,35 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
         });
     };
 
+    $scope.getAlert = function(id) {
+        $http({
+            method: 'GET',
+            url: baseApiAddress + '/v1/notification/' + id,
+            headers: { 'Content-Type': 'application/json' }
+        }).then(function successCallback(response) {
+            // Update current alert based on returned object
+            $scope.currAlert = new Alert(response.data.result, true);
+            // Get broadcast details of alert
+            $scope.getAlertDetails(id);
+        }, function errorCallback(response) {
+            console.log(response.data.meta.message);
+        });
+    };
+
+    $scope.getAlertDetails = function(id) {
+        $http({
+            method: 'GET',
+            url: baseApiAddress + '/v1/notification/' + id + '/log',
+            headers: { 'Content-Type': 'application/json' }
+        }).then(function successCallback(response) {
+            // Update alert details based on returned object
+            $scope.currAlert.addBroadcastDetails(response.data.result);
+            updateMapForCurrentAlert();
+        }, function errorCallback(response) {
+            console.log(response.data.meta.message);
+        });
+    };
+
     $scope.resetAlert = function() {
         $scope.currAlert = new Alert();
     };
@@ -274,35 +311,42 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
     // Bind infowindows to features
     function onEachFeature(feature, layer) {
         if (feature.properties) {
-            layer.bindPopup("<b>" + feature.properties.category + "</b><br/>" +feature.properties.title);
+            if (feature.properties.category)
+                layer.bindPopup("<b>" + feature.properties.category + "</b><br/>" +feature.properties.title);
+            else
+                layer.bindPopup("<b>" + feature.properties.title + "</b>");
         }
     }
 
     // Style map features, add category icons
     function getCategoryIcons(feature, latlng) {
-        // Marker colors: 'red', 'darkred', 'orange', 'green', 'darkgreen', 'blue', 'purple', 'darkpuple', 'cadetblue'
-        // Categories ['Any', 'Fire', 'Flood', 'Weather', 'Tsunami', 'Earthquake'];
-        var categoryIcon = "";
-        switch(feature.properties.category) {
-            case "Fire":
-                categoryIcon = "fire"; break;
-            case "Flood":
-                categoryIcon = "tint"; break;
-            case "Weather":
-                categoryIcon = "cloud"; break;
-            case "Tsunami":
-                categoryIcon = "flag"; break;
-            case "Earthquake": 
-                categoryIcon = "globe"; break;
-            default:
-                categoryIcon = "star";
-        }
-        var categoryMarker = L.AwesomeMarkers.icon({
-            icon: categoryIcon,
-            markerColor: (feature.properties.severity == "Emergency" ? 'red' : 'blue')
-        });
+        if(feature.properties) {
+            // Marker colors: 'red', 'darkred', 'orange', 'green', 'darkgreen', 'blue', 'purple', 'darkpuple', 'cadetblue'
+            // Categories ['Any', 'Fire', 'Flood', 'Weather', 'Tsunami', 'Earthquake'];
+            var categoryIcon = "";
+            switch(feature.properties.category) {
+                case "Fire":
+                    categoryIcon = "fire"; break;
+                case "Flood":
+                    categoryIcon = "tint"; break;
+                case "Weather":
+                    categoryIcon = "cloud"; break;
+                case "Tsunami":
+                    categoryIcon = "flag"; break;
+                case "Earthquake": 
+                    categoryIcon = "globe"; break;
+                default:
+                    categoryIcon = "star";
+            }
+            var categoryMarker = L.AwesomeMarkers.icon({
+                icon: categoryIcon,
+                markerColor: (feature.properties.severity == "Emergency" ? 'red' : 'blue')
+            });
 
-        return L.marker(latlng, {icon: categoryMarker});
+            return L.marker(latlng, {icon: categoryMarker});
+        } else {
+            return L.marker(latlng, {icon: L.AwesomeMarkers.icon({ icon: 'home', markerColor: 'blue' })});
+        }
     }
 
     function updateMap() {
@@ -325,7 +369,43 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
         if(geoJSON.features.length > 0) {
             // Add geoJSON layer to the map
             geoJSONLayer = L.geoJSON(geoJSON, {
-                //style: style,
+                onEachFeature: onEachFeature,
+                pointToLayer: getCategoryIcons
+            }).addTo(alertsMap);
+            alertsMap.fitBounds(geoJSONLayer.getBounds());
+        }
+    }
+
+    function updateMapForCurrentAlert() {
+        // Clear geoJSON layer
+        if(geoJSONLayer)
+            alertsMap.removeLayer(geoJSONLayer);
+
+        // Collect geometries from alerts and create geoJSON
+        var geoJSON = { type: "FeatureCollection", features: [] }
+
+        // Add alert location
+        var locationFeature = { type: "Feature", geometry: $scope.currAlert.location, properties: { title: $scope.currAlert.title, category: $scope.currAlert.category, severity: $scope.currAlert.severity } }; 
+        geoJSON.features.push(locationFeature);
+        
+        // Add alert affected area
+        var area = $scope.currAlert.affected_area;
+        area.coordinates = [area.coordinates];
+        var areaGeoJSON = { type: "Feature", geometry: area, properties: { title: "Affected area" } }; 
+        geoJSON.features.push(areaGeoJSON);
+
+        // Add sent locations to map
+        $.each($scope.currAlert.sent_locations, function( index, location ) {
+            // Create JSON object in case it was converted to string
+            location = (typeof location == 'object' ? location : JSON.parse(location));
+            var locationGeometry = { type: "Point", coordinates: [location.lng, location.lat] };
+            var newFeature = { type: "Feature", geometry: locationGeometry, properties: { title: "User location" } }; 
+            geoJSON.features.push(newFeature);
+        });
+        
+        if(geoJSON.features.length > 0) {
+            // Add geoJSON layer to the map
+            geoJSONLayer = L.geoJSON(geoJSON, {
                 onEachFeature: onEachFeature,
                 pointToLayer: getCategoryIcons
             }).addTo(alertsMap);

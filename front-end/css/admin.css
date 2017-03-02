@@ -612,6 +612,16 @@ a.shortcut-tiles {
 .highlight {
   background-color: rgba(244, 185, 66, 0.6) !important;
 }
+.alert-details-header h1 {
+  display: inline-block !important;
+}
+.alert-details-header a {
+  vertical-align: bottom;
+}
+.alert-detail-hr {
+  margin-top: 0px;
+  margin-bottom: 40px;
+}
 .preview-toggle {
   margin-bottom: 10px;
 }
