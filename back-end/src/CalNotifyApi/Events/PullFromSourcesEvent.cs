@@ -18,7 +18,7 @@ namespace CalNotifyApi.Events
     {
 
         private const string USGS =
-            "http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Earthquakes/EarthquakesFromLastSevenDays/MapServer/0/query?text=&geometry=&geometryType=esriGeometryPoint&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&objectIds=&where=magnitude+%3E+5.5&time=&returnCountOnly=false&returnIdsOnly=false&returnGeometry=true&maxAllowableOffset=&outSR=&outFields=*&f=pjson";
+            "http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Earthquakes/EarthquakesFromLastSevenDays/MapServer/0/query?text=&geometry=&geometryType=esriGeometryPoint&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&objectIds=&where=magnitude+%3E+3+AND+longitude+%3E+31+AND+longitude+%3C+43.5+AND+latitude+%3C+-112.5+AND+latitude+%3E+-128&time=&returnCountOnly=false&returnIdsOnly=false&returnGeometry=true&maxAllowableOffset=&outSR=&outFields=*&f=pjson";
 
         private const string NOAA =
             "https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Observations/ahps_riv_gauges/MapServer/0/query?where=objectid+%3E+0+AND+state+%3D+%27CA%27&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&f=pjson";
@@ -67,6 +67,7 @@ namespace CalNotifyApi.Events
 
                     double observed;
                     double action;
+                    double flood; 
                     if (!Double.TryParse(attr.Observed, out observed) || !Double.TryParse(attr.Action, out action))
                     {
                         continue;
@@ -81,18 +82,20 @@ namespace CalNotifyApi.Events
                         continue;
                     }
 
+                    var didFloodParse = Double.TryParse(attr.Flood, out flood);
+
                     DateTime created;
                     var didGetDate = DateTime.TryParse(attr.ObserveDateTime, out created);
 
                     var noti = new Notification()
                     {
-                        Title = attr.Waterbody,
+                        Title = attr.Location + ", "+  attr.Waterbody,
                         Details = attr.Url,
                         Location = new PostgisPoint(attr.Longititude, attr.Latitude) { SRID = Constants.SRID },
                         Category = Category.Flood,
                         Source = "NOAA",
                         SourceId = "NOAA" + attr.Id,
-                        Severity = Severity.Emergency,
+                        Severity = didFloodParse && observed > flood ? Severity.Emergency :  Severity.NonEmergency,
                         Status = NotiStatus.New,
                         Created = (didGetDate) ? created : DateTime.Now,
                         AuthorId = admin.Id
@@ -140,13 +143,13 @@ namespace CalNotifyApi.Events
                     var didGetDate = DateTime.TryParse(attr.ObserveDateTime, out created);
                     var noti = new Notification()
                     {
-                        Title = attr.Magnitude + "Earthquake",
+                        Title = attr.Magnitude + " Earthquake",
                         Details = attr.Region,
                         Location = new PostgisPoint(attr.Longititude, attr.Latitude) { SRID = Constants.SRID },
                         Category = Category.Earthquake,
                         Source = "USGS",
                         SourceId = "USGS" + attr.Id,
-                        Severity = Severity.Emergency,
+                        Severity = attr.Magnitude > 5 ? Severity.Emergency : Severity.NonEmergency,
                         Status = NotiStatus.New,
                         Created = (didGetDate) ? created : DateTime.Now,
                         AuthorId = admin.Id
@@ -228,6 +231,12 @@ namespace CalNotifyApi.Events
     {
         [DataMember(Name = "objectid")]
         public string Id { get; set; }
+
+
+        [DataMember(Name = "location")]
+        public string Location { get; set; }
+
+
         [DataMember(Name = "waterbody")]
         public string Waterbody { get; set; }
 
