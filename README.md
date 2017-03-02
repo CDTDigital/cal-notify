@@ -2,6 +2,59 @@
 
 Cal-Notify provides real time updates on emergencies and other events in your area, using official sources that you can trust.
 
+## How We Built Cal-Notify
+
+To quickly design and develop a working prototype from start to finish, we used a combination of user-centered design and agile development. We used Scrum as our framework while we adhered to the principles of the agile manifesto for clear communication and workflow amongst the team.
+
+We developed the prototype functionality through two Sprints one-week long. By the end of each sprint we generated a potentially shippable product, which put in front of real users for getting their feedback and include that feedback in the next iteration.
+Here is an overview of the activities executed during each sprint.
+
+### Sprint 0
+
+- Defined the initial Product Backlog with Acceptance Criteria, and refined that backlog 
+- Agreed on Sprint and Release Level Definition of Done
+- Defined code standards and design guidelines
+- Defined the Application Architecture and Technology Stack
+- Defined Continuous Integration Server and Continuous deployment strategy
+- Setup Agile tracking tools (Jira)
+- Research and initial users interviews
+- Generated initial wireframes and gather users’ feedback.
+
+By the end of Sprint 0, we generated an HTML version of the application simulating the end-to-end functionality. Then we performed usability tests with users, and collected valuable feedback which was used to improve the next iteration of the prototype.
+
+### Sprint 1
+
+-	Developed the committed user stories and automated tests
+-	Deployed the application in a production environment on Amazon Web Services by using configuration and release management tools
+-	Code Review sessions
+-	Pair programming and pair testing
+-	Configured application monitoring by using Amazon CloudWatch detailed monitoring.
+-	Executed additional usability testing with the actual application and integrated additional feedback from users.
+-	Automatic and manual testing in multiple mobile devices
+-	Executed regression, accessibility and load testing.
+
+By the end of Sprint 1, we released an end to end solution which we made available for real users to test and provide feedback. Based on this feedback we implemented some of the improvements for upcoming iterations and documented some other that are out of the scope of this prototype but that were identified as functionality that provides value to users.
+
+Across all the sprints, we executed the following activities:
+
+-	Sprint Planning
+--	Estimation (using the planning poker technique for assigning story points)
+- Daily Scrums
+- Sprint Review
+- Sprint Retrospective
+
+We also created a Slack channel for quick communication, and integrated that channel with our continuous testing, integration and delivery tools.  
+
+## Our User-Centered Approach.
+
+We developed our prototype by keeping this simple idea in mind, Cal-Notify is not out app, it is our user’s app. This allowed us to keep the focus in the users all the time. 
+
+We started our research by conducting user interviews and a survey to generate concepts and understand user needs. After we collected the initial information we gathered the users again and conducted a condensed version of the Google Ventures Design Sprint. As a result of it, we generated an initial HTML prototype which was presented to the users, and refined based on that feedback. 
+
+## The Technology
+
+ToDo
+
 # The Explicit RFI Requirements
 
 ## Team Leader
