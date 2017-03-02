@@ -244,7 +244,7 @@ app.controller('alertsCtrl', function($scope, $filter, $sce, $timeout, $http) {
         $scope.currAlert = new Alert(alert);
 
         var location = typeof $scope.currAlert.location == 'object' ? $scope.currAlert.location : JSON.parse($scope.currAlert.location);
-        var area = typeof $scope.currAlert.affected_area == 'object' ? $scope.currAlert.affected_area : JSON.parse($scope.currAlert.affected_area);
+        var area = typeof $scope.currAlert.affected_area == 'object' ? $scope.currAlert.affected_area : ($scope.currAlert.affected_area != "" ? JSON.parse($scope.currAlert.affected_area) : null);
         setCoverageMap(location, area || {});
 
 		$(".alert-modal").modal('show');
