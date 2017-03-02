@@ -133,10 +133,11 @@
                                     <th>Severity</th>
                                     <th>Title</th>
                                     <th>Description</th>
+                                    <th>Status</th>
                                     <th>Created</th>
                                     <th>Category</th>
-                                    <th>Date Sent</th>
-                                    <th>Publish</th>
+                                    <!--<th>Date Sent</th>-->
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -146,12 +147,16 @@
                                         <span ng-if="alert.severity == 'NonEmergency'" class="glyphicon glyphicon-warning-sign text-warning"></span>
                                     </td>
                                     <td>
-                                        <span class="text-uppercase"><a href="" ng-click="editAlert(alert.id)">{{ alert.title }}</a></span>
+                                        <span><a href="" ng-click="editAlert(alert.id)">{{ alert.title }}</a></span>
                                     </td>
-                                    <td class="text-uppercase">{{ alert.details }}</td>
+                                    <td>{{ alert.details }}</td>
+                                    <td>
+                                        <a ng-if="alert.status == 'Published'" href="notification-detail.html?alertId={{alert.id}}&token={{apiToken}}">Published</a>
+                                        <span ng-if="alert.status != 'Published'">{{alert.status}}</span>
+                                    </td>
                                     <td><time datetime="{{alert.created}}">{{ alert.created | date: 'mediumDate' }}</time></td>
                                     <td class="text-uppercase">{{ alert.category }}</td>
-                                    <td><time datetime="{{alert.published}}">{{ alert.published | date: 'mediumDate' }}</time></td>
+                                    <!--<td><time datetime="{{alert.published}}">{{ alert.published | date: 'mediumDate' }}</time></td>-->
                                     <td>
                                         <button ng-if="alert.status != 'Published'" id="publish_btn_{{alert.id}}" class="btn btn-default publish-btn" data-loading-text="Notifying users..." ng-click="publishAlert(alert.id)">Publish</button>
                                         <button ng-if="alert.status == 'Published'" class="btn btn-success republish-btn" data-loading-text="Updating..." ng-click="editAlert(alert.id, true)">Duplicate</button>
