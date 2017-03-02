@@ -13,7 +13,6 @@ $(document).ready(function () {
             contact_info: form.find('[name="contact_info"]').val(),
             password: form.find('[name="password"]').val()
         };
-        console.log(data);
 
         $.ajax({
             url: baseApiAddress + '/v1/users/login',
@@ -49,6 +48,22 @@ $(document).ready(function () {
                 }
             }
         });
+    });
+
+    // Check if enter is pressed on clients password login
+    $(".js-form-wrapper-login .js-password-input").keypress(function(e) {
+        // Enter pressed?
+        if(e.which == 10 || e.which == 13) {
+            $(".js-form-wrapper-login .js-login").trigger('click');
+        }
+    });
+
+    // Check if enter is pressed on admin's password login
+    $(".js-form-wrapper-admin-login .js-password-input").keypress(function(e) {
+        // Enter pressed?
+        if(e.which == 10 || e.which == 13) {
+            $(".js-form-wrapper-admin-login .js-login").trigger('click');
+        }
     });
 
 
