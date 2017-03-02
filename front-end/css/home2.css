@@ -254,6 +254,23 @@ body.modal-open {
 .site-logo {
   max-height: 100%;
 }
+.modal-header {
+  background-color: #222;
+  color: #f2f2f2;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.modal-header .close {
+  opacity: 0.5;
+  color: #fff;
+}
+.modal-header .close:hover {
+  opacity: 0.8;
+}
 .pac-container {
   z-index: 2000;
 }

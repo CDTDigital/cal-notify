@@ -147,11 +147,11 @@
                                         <span ng-if="alert.severity == 'NonEmergency'" class="glyphicon glyphicon-warning-sign text-warning"></span>
                                     </td>
                                     <td>
-                                        <span><a href="" ng-click="editAlert(alert.id)">{{ alert.title }}</a></span>
+                                        <span><a href="" ng-click="editAlert(alert.id)" title="Edit">{{ alert.title }}</a></span>
                                     </td>
                                     <td>{{ alert.details }}</td>
                                     <td>
-                                        <a ng-if="alert.status == 'Published'" href="notification-detail.html?alertId={{alert.id}}&token={{apiToken}}">Published</a>
+                                        <a ng-if="alert.status == 'Published'" href="notification-detail.html?alertId={{alert.id}}&token={{apiToken}}" title="View Details">Published</a>
                                         <span ng-if="alert.status != 'Published'">{{alert.status}}</span>
                                     </td>
                                     <td><time datetime="{{alert.created}}">{{ alert.created | date: 'mediumDate' }}</time></td>
