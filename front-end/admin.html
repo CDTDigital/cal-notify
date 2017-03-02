@@ -200,7 +200,7 @@
                     <!-- TITLE -->
                     <div class="form-group">
                         <label for="alertTitle">Title</label>
-                        <input type="text" class="form-control" name="title" id="alertTitle" ng-model="currAlert.title" placeholder="Message Title or Subject" required>
+                        <input type="text" class="form-control" name="title" id="alertTitle" ng-model="currAlert.title" placeholder="Message Title or Subject" maxlength="100" required>
                     </div>
 
                     <!-- SEVERITY -->
@@ -230,7 +230,7 @@
                     <!-- SHORT DESCRIPTION -->
                     <div class="form-group">
                         <label for="alertDescription">Short Description</label>
-                        <input type="text" class="form-control" name="description" id="alertDescription" ng-model="currAlert.details" placeholder="Short description less than 90 characters" required>
+                        <input type="text" class="form-control" name="description" id="alertDescription" ng-model="currAlert.details" placeholder="Short description less than 100 characters" maxlength="100" required>
                     </div>
 
                     <!-- MAP -->

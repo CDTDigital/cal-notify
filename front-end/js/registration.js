@@ -2,6 +2,7 @@ $(document).ready(function () {
 
     var addressDetails = {};
 
+    $('[data-toggle="tooltip"]').tooltip();
 
     $(".js-form-wrapper-signup .js-next").click(function (e) {
         var button = $(this);
