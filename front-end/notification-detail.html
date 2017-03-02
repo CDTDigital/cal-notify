@@ -64,7 +64,12 @@
     <div class="text-center" ng-show="alertsLoading">
         <i class="fa fa-cog fa-spin fa-2x fa-fw"></i><br/>Retrieving alert information...
     </div>
-    <div class="row" ng-show="!alertsLoading">
+    <div class="text-center" ng-show="!alertsLoading && !currAlert.id">
+        <br/><br/>
+        <i class="fa fa-exclamation-circle fa-2x"></i>&nbsp;&nbsp;An error occurred retrieving the alert's information, make sure you're logged in and try again
+        <br/><br/>
+    </div>
+    <div class="row" ng-show="!alertsLoading && currAlert.id">
         <div class="col-sm-8">
             <p>{{currAlert.details}}</p>
             <br/>
@@ -136,6 +141,7 @@
     <div class="row">
         <div class="col-sm-12">
             <h3>Map of affected area</h3>
+            <p>The polygon wrapping all icons is the affected area, each <b>blue icon represents a user</b> that has been notified either by email or sms, and the <b>red icon is the alert's location</b>.</p>
             <div id="alerts_map"></div>
         </div>
     </div>

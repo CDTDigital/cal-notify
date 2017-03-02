@@ -48,7 +48,14 @@ app.filter("criteriaMatch", function() {
     };
 });
 
-app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
+app.filter('detectURLs', function($sce) {
+    return function(text) {
+        var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+        return $sce.trustAsHtml(text.replace(exp,"<a target='_blank' href='$1'>$1</a>")); 
+    };
+});
+
+app.controller('alertsCtrl', function($scope, $filter, $sce, $timeout, $http) {
         
     //---------------------------------------------------------------------------------------------------
     //-------------------------------------- I N I T  V A R S -------------------------------------------
@@ -96,6 +103,7 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
             self.published_by = null;
         } else {
             self = obj;
+
             // Convert string date to date objects
             self.created = (self.created && self.created != "" ? new Date(self.created) : self.created);
             self.published = (self.published && self.published != "" ? new Date(self.published) : self.published);
