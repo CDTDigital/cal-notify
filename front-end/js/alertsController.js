@@ -62,7 +62,7 @@ app.controller('alertsCtrl', function($scope, $filter, $sce, $timeout, $http) {
     //---------------------------------------------------------------------------------------------------
 
     $scope.categories = ['Any', 'Fire', 'Flood', 'Weather', 'Tsunami', 'Earthquake'];
-    $scope.sources = ['Any', 'NOAA', 'GIS', '...'];
+    $scope.sources = ['Any', 'NOAA', 'USGS'];
     $scope.severities = ['Emergency', 'NonEmergency'];
     $scope.alertsLoading = true;
     $scope.filters = { category: "Any", source: "Any", severityEmergency: false, severityNonEmergency: false };
