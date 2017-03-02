@@ -145,7 +145,7 @@ namespace CalNotifyApi.Events
                     {
                         Title = attr.Magnitude + " Earthquake",
                         Details = attr.Region,
-                        Location = new PostgisPoint(attr.Longititude, attr.Latitude) { SRID = Constants.SRID },
+                        Location = new PostgisPoint(attr.Latitude, attr.Longititude) { SRID = Constants.SRID },
                         Category = Category.Earthquake,
                         Source = "USGS",
                         SourceId = "USGS" + attr.Id,
