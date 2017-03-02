@@ -47,9 +47,6 @@ namespace CalNotifyApi.Controllers
 
 
 
-        // ENDPOINTS FOR RETRIEVING GenericUser OBJECTS
-        #region retrival
-
         /// <summary>
         /// Retrieves a GenericUser by their unique id
         /// </summary>
@@ -71,7 +68,6 @@ namespace CalNotifyApi.Controllers
         /// Retrieves a list of all Users in the system
         /// </summary>
         /// <param name="pagination"></param>
-        /// <returns></returns>
         [HttpGet("")]
         [Authorize(Constants.AdminRole)]
         [Produces("application/json", Type = typeof(ResponseShell<List<GenericUser>>))]
@@ -88,7 +84,6 @@ namespace CalNotifyApi.Controllers
         /// Resnds the validation message to a user's set email or phone.
         /// </summary>
         /// <param name="tempUser"></param>
-        /// <returns></returns>
         [HttpPut("resend")]
         [SwaggerOperation("RESEND_VALIDATED_GENERICUSER_BY_ID", Tags = new[] {Constants.GenericUserEndpoint})]
         [ProducesResponseType(typeof(ResponseShell<SimpleSuccess>), 200)]
@@ -123,7 +118,6 @@ namespace CalNotifyApi.Controllers
         /// <summary>
         /// Updates a GenericUser's properties such as Email or Sms via their unique id.
         /// </summary>
-        /// 
         [HttpPut("")]
         [SwaggerOperation("UPDATE_GENERICUSER_BY_ID", Tags = new[] { Constants.GenericUserEndpoint })]
         [ProducesResponseType(typeof(ResponseShell<GenericUser>),200)]
@@ -210,10 +204,6 @@ namespace CalNotifyApi.Controllers
             _context.AllUsers.Remove(user);
             return ResponseShell.Ok(new MaybeSuccess() { Success = true });
         }
-
-
-        #endregion
-
 
 
 

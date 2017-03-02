@@ -69,7 +69,7 @@ namespace CalNotifyApi.Controllers
         }
 
         /// <summary>
-        /// Gets a single notification notification
+        /// Gets a single notification
         /// </summary>
         /// <param name="id">The id of the notification</param>
         [HttpGet("{id}")]
@@ -101,17 +101,17 @@ namespace CalNotifyApi.Controllers
         /// </summary>
         /// <param name="id">The id of the notification</param>
         [HttpPut("{id}")]
-        [SwaggerOperation("PUBLISH_NOTIFICATION", Tags = new[] {Constants.NotificationEndpoint})]
+        [SwaggerOperation("PUBLISH_NOTIFICATION", Tags = new[] { Constants.NotificationEndpoint })]
         [ProducesResponseType(typeof(ResponseShell<Notification>), 200)]
         [ValidateNotificationExists]
-        public virtual async Task<IActionResult> PublishNotification([FromRoute] long id)
+        public virtual IActionResult PublishNotification([FromRoute] long id)
         {
             var notification = _context.Notifications.FirstOrDefault(n => n.Id == id);
             var adminId = HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == Constants.UserIdClaimKey);
             var connectionString = _configuration.GetConnectionString(_hostingEnvironment.EnvironmentName);
-#pragma warning disable 4014
-           notification =   new PublishNotificationEvent().Process(_context, adminId.Value, _validation, connectionString, notification);
-#pragma warning restore 4014
+
+            notification = new PublishNotificationEvent().Process(_context, adminId.Value, _validation, connectionString, notification);
+
             return ResponseShell.Ok(notification);
         }
 
@@ -167,6 +167,7 @@ namespace CalNotifyApi.Controllers
     }
 
     /// <summary>
+    /// Validate that the notification exists in our database
     /// </summary>
     public class ValidateNotificationExists : TypeFilterAttribute
     {

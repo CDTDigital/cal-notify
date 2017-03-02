@@ -117,58 +117,11 @@ namespace CalNotifyApi.Controllers
         /// <returns></returns>
         [HttpPost("create"), Consumes("application/json"), Produces("application/json", Type = typeof(ResponseShell<SimpleSuccess>))]
         [SwaggerOperation(operationId: "CreateUser", Tags = new[] { Constants.GenericUserEndpoint })]
-
         public async Task<IActionResult> CreateWithChallenge([FromBody] TempUser tempUser)
         {
             await new CreateDisabledUserAccount().Process(_hostingEnvironment, _memoryCache, _context, _validation, tempUser);
             return ResponseShell.Ok();
         }
-
-
-
-        /// <summary>
-        /// Allows setting the user password for a new user
-        /// </summary>
-        /// <param name="token">Token which was sent to verify user owns messaing account.</param>
-        /// <param name="password"></param>
-        /// <returns></returns>
-  /*      [HttpPost("password"), ProducesResponseType(typeof(ResponseShell<SimpleSuccess>),200)]
-        [SwaggerOperation("Set a user passowrd", Tags = new[] { Constants.GenericUserEndpoint })]
-        [GenericUserResources.ValidateGenricExistsAttribute]
-        public async Task<IActionResult> SetPassword([FromBody] SetPasswordEvent model)
-        {
-            // Get our Saved User from Memory
-            TempUser savedUser;
-            try
-            {
-                // Get our Saved User from Memory
-                savedUser = new CheckValidationTokenEvent().Process(_memoryCache, model.Token);
-            }
-            catch (CheckValidationTokenException e)
-            {
-                return Redirect(_config.Email.Validation.ResendPage);
-            }
-           
-            var exisitingUser = _context.AllUsers.FirstOrDefault(x => x.Id == savedUser.Id);
-
-          
-
-            // A new user, validate the first avaible sms
-            if (!exisitingUser.Enabled)
-            {
-                return ResponseShell.Error("User is not enabled yet");
-            }
-      
-            exisitingUser.SetPassword(model.Password);
-            _context.SaveChanges();
-           
-            var endToken = await _tokenService.GetToken(exisitingUser);
-
-            // All good, lets provide our token
-            return ResponseShell.Ok(endToken);
-        }*/
-
-
 
 
         /// <summary>
@@ -180,8 +133,6 @@ namespace CalNotifyApi.Controllers
         /// Once you get back a token, [see an example of using this token to authorize swagger](token_example.gif).
         /// </remarks>
         /// <param name="token">Token which was sent to verify user owns messaing account.</param>
-        /// <param name="password">Password to use for subsequent account logins.</param>    
-
         [HttpGet("validate"), ProducesResponseType(typeof(ResponseShell<TokenInfo>), 200)]
         [SwaggerOperation("ValidateToken", Tags = new[] { Constants.GenericUserEndpoint })]
         public async Task<IActionResult> Validate([FromQuery] string token)
