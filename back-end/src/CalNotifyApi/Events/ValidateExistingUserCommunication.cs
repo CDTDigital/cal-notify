@@ -30,12 +30,27 @@ namespace CalNotifyApi.Events
 
             if (!string.IsNullOrEmpty(exisitingUser.Email) && tempUser.TokenType == TokenType.EmailToken)
             {
+                // remove old account
+                var existingUsername = context.Users.FirstOrDefault(x => x.UserName == tempUser.Email && (x.Id != exisitingUser.Id));
+                if (existingUsername != null)
+                {
+                    context.AllUsers.Remove(existingUsername);
+                }
+               
+
                 exisitingUser.Email = tempUser.Email;
                 exisitingUser.ValidatedEmail = true;
 
             }
             if (!string.IsNullOrEmpty(exisitingUser.PhoneNumber) && tempUser.TokenType == TokenType.SmsToken)
             {
+                // remove old account
+                var existingUsername = context.Users.FirstOrDefault(x => x.UserName == tempUser.PhoneNumber && (x.Id != exisitingUser.Id));
+                if (existingUsername != null)
+                {
+                    context.AllUsers.Remove(existingUsername);
+                }
+
                 exisitingUser.PhoneNumber = tempUser.PhoneNumber;
                 exisitingUser.ValidatedSms = true;
 

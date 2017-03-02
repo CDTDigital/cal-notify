@@ -30,7 +30,7 @@ namespace CalNotifyApi.Events
 
                 await GetNOAA(context);
                 await GetUSGS(context);
-
+                Log.Information("Pulled latest notifications from external sources");
             }
 
             catch (Exception e)
