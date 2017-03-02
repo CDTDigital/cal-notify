@@ -41,11 +41,11 @@ We used GitHub to document code commits as shown in our GitHub repository
 To-Do: Get feedback from Matt C.
 
 ## Use Swagger to document the RESTful API
- We used Swagger to document the RESTful API and provided a link to the Swagger API as follows:
+We used Swagger to document the RESTful API and provided a link to the Swagger API as follows:
 
- [Cal-Notify  API](http://api-cal-notify.symsoftsolutions.com/swagger/index.html)
+[Cal-Notify  API](http://api-cal-notify.symsoftsolutions.com/swagger/index.html)
 
- For further details, such as how to authenticate, common responses, etc. Read the introduction located at the top of the API documentation.
+For further details, such as how to authenticate, common responses, etc. Read the introduction located at the top of the API documentation.
 
 ## Comply with Section 508 of the Americans with Disabilities Act and WCAG 2.0
 
@@ -67,7 +67,9 @@ To-Do: Provide the link to the Usability test pages (Mark?)
 To-Do: Daniel to add this
 
 ## Create a Prototype that works on multiple devices, and presents a responsive design
-Our prototype works on multiple devices by way of a responsive design
+We used the open source framework Bootstrap for the prototype sites. Bootstrap is a mobile first framework that provides user interface elements that adapt their presentation for a myriad of devices and viewport sizes. 
+
+To test responsive compatibility, We make use of a “Device Lab” to simultaneously check multiple devices at once. Our device lab consists of number of popular platforms and software versions. We maintain a mix of Android phones and tablets, iOS phones and tablets, and Windows based phones.
 
 ## Use at Least Five Modern and Open-source Technologies
 Our solution included the following modern and open-source technologies:
