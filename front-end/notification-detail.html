@@ -61,7 +61,10 @@
         </div>
     </div>
     <hr class="alert-detail-hr"/>
-    <div class="row">
+    <div class="text-center" ng-show="alertsLoading">
+        <i class="fa fa-cog fa-spin fa-2x fa-fw"></i><br/>Retrieving alert information...
+    </div>
+    <div class="row" ng-show="!alertsLoading">
         <div class="col-sm-8">
             <p>{{currAlert.details}}</p>
             <br/>
@@ -77,10 +80,10 @@
                 <dd class="col-sm-9 col-xs-8">{{currAlert.source}}</dd>
 
                 <dt class="col-sm-3 col-xs-4">Created:</dt>
-                <dd class="col-sm-9 col-xs-8"><time datetime="{{currAlert.created}}">{{ currAlert.created | date: 'mediumDate' }}</time></dd>
+                <dd class="col-sm-9 col-xs-8"><time datetime="{{currAlert.created}}">{{ currAlert.created | date: 'medium' }}</time></dd>
                 
                 <dt class="col-sm-3 col-xs-4">Published:</dt>
-                <dd class="col-sm-9 col-xs-8"><time datetime="{{currAlert.published}}">{{ currAlert.published | date: 'mediumDate' }}</time></dd>
+                <dd class="col-sm-9 col-xs-8"><time datetime="{{currAlert.published}}">{{ currAlert.published | date: 'medium' }}</time></dd>
             </dl>
         </div>
         

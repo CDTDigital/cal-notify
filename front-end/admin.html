@@ -12,6 +12,7 @@
 
 <!-- Bootstrap core CSS -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
 
 <!-- FontAwesome Icons-->
 <link href="css/font-awesome.min.css" rel="stylesheet">
@@ -111,10 +112,10 @@
                                             <div class="form-group">
                                                 <strong>Date Range</strong>&nbsp;
                                                 <label for="FilterStartDate" class="sr-only">Start Date</label>
-                                                <input type="date" class="form-control" id="FilterStartDate" placeholder="Start">
+                                                <input type="text" class="form-control" ng-model="filters.startDate" id="filter_start_date" placeholder="Start">
                                                 to
                                                 <label for="FilterEndDate" class="sr-only">End Date</label>
-                                                <input type="date" class="form-control" id="FilterEndDate" placeholder="End">
+                                                <input type="text" class="form-control" ng-model="filters.endDate" id="filter_end_date" placeholder="End">
                                             </div>
                                         </div>
                                     </div>
@@ -154,9 +155,9 @@
                                         <a ng-if="alert.status == 'Published'" href="notification-detail.html?alertId={{alert.id}}&token={{apiToken}}" title="View Details">Published</a>
                                         <span ng-if="alert.status != 'Published'">{{alert.status}}</span>
                                     </td>
-                                    <td><time datetime="{{alert.created}}">{{ alert.created | date: 'mediumDate' }}</time></td>
+                                    <td><time datetime="{{alert.created}}" title="{{alert.created | date: 'medium' }}">{{ alert.created | date: 'mediumDate' }}</time></td>
                                     <td class="text-uppercase">{{ alert.category }}</td>
-                                    <!--<td><time datetime="{{alert.published}}">{{ alert.published | date: 'mediumDate' }}</time></td>-->
+                                    <!--<td><time datetime="{{alert.published}}" title="{{alert.created | date: 'medium' }}">{{ alert.published | date: 'mediumDate' }}</time></td>-->
                                     <td>
                                         <button ng-if="alert.status != 'Published'" id="publish_btn_{{alert.id}}" class="btn btn-default publish-btn" data-loading-text="Notifying users..." ng-click="publishAlert(alert.id)">Publish</button>
                                         <button ng-if="alert.status == 'Published'" class="btn btn-success republish-btn" data-loading-text="Updating..." ng-click="editAlert(alert.id, true)">Duplicate</button>
@@ -262,6 +263,9 @@
 <script src="js/bootstrap.min.js"></script> 
 <!-- Just to make our placeholder images work. Don't actually copy the next line! --> 
 <script src="js/vendor/holder.min.js"></script> 
+<!-- Datetime picker -->
+<script src="js/vendor/moment.min.js"></script>
+<script src="js/vendor/bootstrap-datetimepicker.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug --> 
 <!--<script src="js/ie10-viewport-bug-workaround.js"></script>-->
 <!-- Leaflet scripts -->
