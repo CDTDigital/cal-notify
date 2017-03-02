@@ -15,20 +15,20 @@ namespace CalNotifyApi.Models.Addresses
     [DataContract]
     public abstract class SimpleAddress
     {
-        [DataMember(Name = "number")]
+        [DataMember(Name = "number"), MaxLength(80)]
         public string Number { get; set; }
 
-        [DataMember(Name = "street")]
+        [DataMember(Name = "street"), MaxLength(80)]
         public string Street { get; set; }
 
-        [DataMember(Name = "state")]
+        [DataMember(Name = "state"), MaxLength(80)]
         public string State { get; set; }
 
 
-        [DataMember(Name = "zip")]
+        [DataMember(Name = "zip"), MaxLength(80)]
         public string Zip { get; set; }
 
-        [DataMember(Name = "city")]
+        [DataMember(Name = "city"), MaxLength(80)]
         public string City { get; set; }
 
 
@@ -36,7 +36,7 @@ namespace CalNotifyApi.Models.Addresses
         /// A complete string representation of the address
         /// <remarks>Not used</remarks>
         /// </summary>
-        [DataMember(Name = "formatted_address")]
+        [DataMember(Name = "formatted_address"), MaxLength(80)]
         public string FormattedAddress { get; set; }
     }
 
