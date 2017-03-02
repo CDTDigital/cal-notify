@@ -14,13 +14,13 @@ $(document).ready(function () {
     var userId = getUrlParameter('user') || localStorage.getItem('user_id');
     var token = getUrlParameter('token') || localStorage.getItem('auth_token');
 
-    if (userId != '' && userId != null) {
+    if (userId !== '' && userId !== null) {
         localStorage.setItem('user_id', userId);
     } else {
         window.location.href = baseAddress + homeRedirect;
     }
 
-    if (token != '' && token != null) {
+    if (token !== '' && token !== null) {
         localStorage.setItem('auth_token', token);
     } else {
         window.location.href = baseAddress + homeRedirect;
@@ -114,6 +114,22 @@ $(document).ready(function () {
         });
     });
 
+    $('.js-delete').on('click', function(ev){
+
+        var update = $.ajax({
+            url: baseApiAddress + '/v1/users/' + userId + '?auth_token=' + token,
+            type: 'DELETE',
+            contentType: "application/json",
+            data: JSON.stringify(userDetails),
+            success: function (data, status, xhr) {
+                localStorage.removeItem('user_id');
+                localStorage.removeItem('auth_token');
+                document.location.href="/";
+            }
+
+            });
+
+    })
     $('.js-save').on('click', function (ev) {
         userDetails['id'] = userId;
         userDetails.enabled_sms = $('.js-toggle_sms [type="checkbox"]').prop('checked');

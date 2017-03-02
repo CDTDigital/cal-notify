@@ -230,7 +230,7 @@ namespace CalNotifyApi.Services
             var verificationTemplate = Handlebars.Compile(template);
             var data = new
             {
-                name = model.Name ?? "hello",
+                name = model.Name ?? model.Email,
                 tokenurl = GetTokenUrl(model),
                 helpurl = $"{_config.Urls.Frontend.Trim('/')}/{_config.Pages.HelpPage}"
             };

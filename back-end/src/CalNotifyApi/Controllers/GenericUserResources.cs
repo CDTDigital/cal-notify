@@ -199,7 +199,6 @@ namespace CalNotifyApi.Controllers
 
         [HttpDelete("{id}")]
         [ValidateGenricExists]
-        [Authorize(Constants.AdminRole)] // Lock down deleting a GenericUser
         [SwaggerOperation("DELETE_GenericUser_BY_ID",
             Tags = new[] { Constants.GenericUserEndpoint, Constants.AdminConfigurationEndpoint })]
         [ProducesResponseType(typeof(ResponseShell<MaybeSuccess>), 200)]
@@ -208,6 +207,7 @@ namespace CalNotifyApi.Controllers
 
             var user = _context.Users.FirstOrDefault(u => u.Id == new Guid(id));
             _context.AllUsers.Remove(user);
+            _context.SaveChanges();
             return ResponseShell.Ok(new MaybeSuccess() { Success = true });
         }
 

@@ -45,7 +45,7 @@ namespace CalNotifyApi.Models.Auth
         public virtual Guid Id { get; set; }
 
 
-        [DataMember(Name = "phone"), Phone]
+        [DataMember(Name = "phone"), MaxLength(20)]
         public virtual string PhoneNumber { get; set; }
 
 
@@ -120,7 +120,7 @@ namespace CalNotifyApi.Models.Auth
         [DataMember(Name = "password"), MaxLength(80)]
         public virtual string Password { get; set; }
 
-        [DataMember(Name = "email"), EmailAddress, MaxLength(80)]
+        [DataMember(Name = "email"), MaxLength(80)]
         public virtual string Email { get; set; }
 
 
@@ -128,7 +128,7 @@ namespace CalNotifyApi.Models.Auth
         public virtual Guid Id { get; set; }
 
 
-        [DataMember(Name = "phone"), Phone, MaxLength(80)]
+        [DataMember(Name = "phone"), MaxLength(20)]
         public virtual string PhoneNumber { get; set; }
 
 
