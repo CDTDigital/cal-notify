@@ -260,6 +260,24 @@ $(document).ready(function () {
 		$(".alert-modal").modal('show');
 	});
 
+	// Init datetime pickers
+
+	// If alertId is present we're in the alert details page, in which case we don't need the datepicker
+	if(alertId == "") {
+		$('#filter_start_date').datetimepicker({ format: 'MMM D, YYYY, h:mm a' });
+		$('#filter_end_date').datetimepicker({ format: 'MMM D, YYYY, h:mm a' });
+
+		// Listener to change scope filters
+		$("#filter_start_date").on("dp.change", function() {
+	        scope.filters.startDate = $("#filter_start_date").val();
+	        scope.$apply();
+	    });
+	    $("#filter_end_date").on("dp.change", function() {
+	        scope.filters.endDate = $("#filter_end_date").val();
+	        scope.$apply();
+	    });
+	}
+
 	// -------- Init Alerts Map (tab) --------
 
 	var largeMapHeight = 650;

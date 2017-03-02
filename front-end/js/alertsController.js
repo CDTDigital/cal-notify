@@ -32,9 +32,18 @@ app.filter("criteriaMatch", function() {
             return alert.source === filters.source;
     }
 
+    function datesCriteria(alert, filters) {
+        if(typeof filters.startDate !== 'undefined' && typeof filters.endDate !== 'undefined') {
+            var startDate = new Date(filters.startDate);
+            var endDate = new Date(filters.endDate);
+            return (alert.created >= startDate && alert.created <= endDate);
+        }
+        return true;
+    }
+
     return function(alert, filters) {
         return alert.filter(function(element) { 
-            return categoryCriteria(element,filters) && severityCriteria(element,filters) && sourceCriteria(element,filters);
+            return categoryCriteria(element,filters) && severityCriteria(element,filters) && sourceCriteria(element,filters) && datesCriteria(element, filters);
         });
     };
 });
@@ -253,7 +262,6 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
                 $("#publish_btn_" + id).button('reset'); 
             }, 2000);
         }, function errorCallback(response) {
-            console.log(response.data.meta.message);
             $("#publish_btn_" + id).button('reset');
         });
     };
@@ -269,7 +277,7 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
             // Get broadcast details of alert
             $scope.getAlertDetails(id);
         }, function errorCallback(response) {
-            console.log(response.data.meta.message);
+            $scope.alertsLoading = false;
         });
     };
 
@@ -282,8 +290,9 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
             // Update alert details based on returned object
             $scope.currAlert.addBroadcastDetails(response.data.result);
             updateMapForCurrentAlert();
+            $scope.alertsLoading = false;
         }, function errorCallback(response) {
-            console.log(response.data.meta.message);
+            $scope.alertsLoading = false;
         });
     };
 
