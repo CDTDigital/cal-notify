@@ -126,7 +126,7 @@ app.controller('alertsCtrl', function($scope, $filter, $sce, $timeout, $http) {
             } else {
                 // Create JSON object in case it was converted to string
                 self.location = (typeof self.location == 'object' ? self.location : JSON.parse(self.location));
-                self.affected_area = (typeof self.affected_area == 'object' ? self.affected_area : JSON.parse(self.affected_area));
+                self.affected_area = (typeof self.affected_area == 'object' ? self.affected_area : (self.affected_area != "" ? JSON.parse(self.affected_area) : self.affected_area));
             }
         }
 
@@ -246,6 +246,7 @@ app.controller('alertsCtrl', function($scope, $filter, $sce, $timeout, $http) {
         var location = typeof $scope.currAlert.location == 'object' ? $scope.currAlert.location : JSON.parse($scope.currAlert.location);
         var area = typeof $scope.currAlert.affected_area == 'object' ? $scope.currAlert.affected_area : JSON.parse($scope.currAlert.affected_area);
         setCoverageMap(location, area || {});
+
 		$(".alert-modal").modal('show');
     }
 
