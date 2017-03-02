@@ -271,6 +271,12 @@ body.modal-open {
 .modal-header .close:hover {
   opacity: 0.8;
 }
+.input-group-addon {
+  min-width: 44px;
+}
+.disclosure {
+  font-size: 15px;
+}
 .pac-container {
   z-index: 2000;
 }
