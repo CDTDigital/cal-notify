@@ -230,7 +230,7 @@ namespace CalNotifyApi.Services
             var verificationTemplate = Handlebars.Compile(template);
             var data = new
             {
-                name = model.Name ?? "hello",
+                name = model.Name ?? model.Email,
                 tokenurl = GetTokenUrl(model),
                 helpurl = $"{_config.Urls.Frontend.Trim('/')}/{_config.Pages.HelpPage}"
             };
@@ -275,7 +275,7 @@ namespace CalNotifyApi.Services
             catch (Exception e)
             {
                 Log.Fatal(e, Constants.Messages.EmailValidationFailure);
-                throw new ProcessEventException(Constants.Messages.EmailValidationFailure, new List<string>() { e.Message, e.HelpLink, e.Source });
+                throw new ProcessEventException("Could not send verification to that email. Please use a different email address");
             }
         }
 

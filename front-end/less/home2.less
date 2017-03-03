@@ -3,8 +3,8 @@
 
 
 .cover-img() {
-    //background: url(../images/nasa-earthquakes-global.jpg) no-repeat top center; 
-    background: url(../images/urban-notify.png) no-repeat bottom center; 
+    //background: url(../images/nasa-earthquakes-global.jpg) no-repeat top center;
+    background: url(../images/urban-notify-v3.png) no-repeat bottom center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -13,11 +13,11 @@
 
 html, body {
     height: 100%;
-    
+
     //background: #43C6AC;
     //background: -webkit-linear-gradient(to left, #43C6AC , #191654);
-    //background: linear-gradient(to left, #43C6AC , #191654);  
-            
+    //background: linear-gradient(to left, #43C6AC , #191654);
+
 }
 
 body.modal-open {
@@ -77,42 +77,44 @@ body.modal-open {
 
 .section {
     padding: 100px 0;
-    
+
     &-default {
         background: white;
     }
-    
+
     &-banner {
         .cover-img();
         color: darken(#0c4e77, 5%);
         //text-shadow: 1px 1px 1px #fff;
-        
-        
-        
+
+
+
         @media (min-width: @screen-sm-min) {
-            
-            padding-top: 200px;
+
+            // padding-top: 200px;
+            padding-top:150px;
             padding-bottom: 300px;
         }
-        
+
     }
-    
+
     &-signup {
         padding: 300px 0;
     }
-    
+
     &-overstated {
         //background: rgba(70,70,70,1.00);
         //background: #bb461b;    // Dark Orange
         //background: rgba(251,125,38,1.00);     // Map Orange
-        background: #c1eac3;
+        // background: #c1eac3;     // light green
+        background:#D3F0FE;         // light blue
         //color: white;
     }
-    
+
     &-standout {
         background: rgba(70,70,70,1.00);
     }
-    
+
     &-collapsed {
         padding: 0;
     }
@@ -134,3 +136,18 @@ body.modal-open {
     }
 }
 
+// BUTTONS
+.btn-danger {
+    background:#f05642;
+    text-shadow:1px 0 2px #691a17;
+
+    &:hover {
+        background:#d42811;
+    }
+}
+
+// IMAGES
+
+.img-sm {
+    max-width:120px;
+}

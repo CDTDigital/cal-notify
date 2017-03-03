@@ -25,21 +25,27 @@ namespace CalNotifyApi.Migrations
                     b.Property<long?>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("City");
+                    b.Property<string>("City")
+                        .HasMaxLength(80);
 
-                    b.Property<string>("FormattedAddress");
+                    b.Property<string>("FormattedAddress")
+                        .HasMaxLength(80);
 
                     b.Property<PostgisPoint>("GeoLocation");
 
-                    b.Property<string>("Number");
+                    b.Property<string>("Number")
+                        .HasMaxLength(80);
 
-                    b.Property<string>("State");
+                    b.Property<string>("State")
+                        .HasMaxLength(80);
 
-                    b.Property<string>("Street");
+                    b.Property<string>("Street")
+                        .HasMaxLength(80);
 
                     b.Property<Guid>("UserId");
 
-                    b.Property<string>("Zip");
+                    b.Property<string>("Zip")
+                        .HasMaxLength(80);
 
                     b.HasKey("Id");
 
@@ -120,7 +126,8 @@ namespace CalNotifyApi.Migrations
             modelBuilder.Entity("CalNotifyApi.Models.Notification", b =>
                 {
                     b.Property<long?>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50);
 
                     b.Property<PostgisPolygon>("AffectedArea");
 
@@ -142,7 +149,8 @@ namespace CalNotifyApi.Migrations
                     b.Property<int>("Severity");
 
                     b.Property<string>("Source")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<string>("SourceId");
 
