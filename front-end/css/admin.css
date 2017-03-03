@@ -615,8 +615,20 @@ a.shortcut-tiles {
 .highlight {
   background-color: rgba(244, 185, 66, 0.6) !important;
 }
+.new-alert-btn {
+  color: #fff;
+  background-color: #333;
+}
 table td:nth-child(2) {
   max-width: 400px;
+}
+table .text-danger {
+  color: #e63900;
+  font-size: 22px;
+}
+table .text-warning {
+  color: #e69900;
+  font-size: 22px;
 }
 table td {
   overflow: hidden;
