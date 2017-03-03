@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CalNotifyApi.Events.Exceptions;
 using CalNotifyApi.Models;
 using CalNotifyApi.Services;
+using Newtonsoft.Json;
 using NpgsqlTypes;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -150,7 +151,7 @@ namespace CalNotifyApi.Events
     {
         public void Apply(Schema model, SchemaFilterContext context)
         {
-            model.Default = new CreateNotificationEvent()
+            model.Default = JsonConvert.SerializeObject(new CreateNotificationEvent()
             {
                 Title = "Example Notification",
                 Details = "Example notification details",
@@ -178,7 +179,7 @@ namespace CalNotifyApi.Events
                 Category = Category.Fire,
                 Severity = Severity.Emergency,
                 Source = "TEST"
-            };
+            }, Constants.CreateJsonSerializerSettings());
         }
     }
 }
