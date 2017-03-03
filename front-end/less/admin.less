@@ -42,12 +42,29 @@
     background-color: rgba(244, 185, 66, 0.6) !important;
 }
 
+.new-alert-btn {
+    color: #fff;
+    background-color: #333;
+}
+
+// Alerts table
+
 table td:nth-child(2) { 
     max-width: 400px;
 }
 
-table td {
-    overflow: hidden;
+table {
+    .text-danger {
+        color: #e63900;
+        font-size: 22px;
+    }
+    .text-warning {
+        color: #e69900;
+        font-size: 22px;
+    }
+    td {
+        overflow: hidden;
+    }
 }
 
 // Custom modal header

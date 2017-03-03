@@ -56,7 +56,8 @@
     <div class="row">
         <div class="col-sm-12 main">
             <h1 class="page-header">Alerts Dashboard</h1>
-            <p>Welcome administrator, the dashboard is <b>populated automatically</b> by constant monitoring of several <b>USGS & NOAA sources</b> for emergencies, but you can manually create alerts or modify those already retrieved from our sources.</p>
+            <p>Welcome administrator!</p>
+            <p>The dashboard is <b>populated automatically</b> by constant monitoring of several <b>USGS & NOAA sources</b> for emergencies, but you can manually create alerts or modify those already retrieved from our sources.</p>
             <p>An alert is not sent to users until the admin selects the publish button associated to the alert, once it's published, a link will appear on the status of the alert, this will redirect you to a page which contains details about users reached in the affected area.</p>
             <p>The alerts can be presented using the default list view <i class="glyphicon glyphicon-th-list"></i> or within a map separated by category and severity <i class="glyphicon glyphicon-map-marker"></i>. To locate specific alerts please expand the filters section, every change will automatically update the list & map.</p><br/>
             <div class="row">
@@ -135,11 +136,11 @@
                             <thead>
                                 <tr>
                                     <th>Severity</th>
+                                    <th>Category</th>
                                     <th>Title</th>
                                     <th>Description</th>
                                     <th>Status</th>
                                     <th>Created</th>
-                                    <th>Category</th>
                                     <!--<th>Date Sent</th>-->
                                     <th>Actions</th>
                                 </tr>
@@ -147,9 +148,10 @@
                             <tbody>
                                 <tr ng-repeat="alert in alerts | criteriaMatch:filters">
                                     <td style="text-align:center">
-                                        <span ng-if="alert.severity == 'Emergency'" class="glyphicon glyphicon-warning-sign text-danger"></span>
+                                        <span ng-if="alert.severity == 'Emergency'" class="glyphicon glyphicon-exclamation-sign text-danger"></span>
                                         <span ng-if="alert.severity == 'NonEmergency'" class="glyphicon glyphicon-warning-sign text-warning"></span>
                                     </td>
+                                    <td>{{ alert.category }}</td>
                                     <td>
                                         <span><a href="" ng-click="editAlert(alert.id)" title="Edit">{{ alert.title }}</a></span>
                                     </td>
@@ -159,10 +161,9 @@
                                         <span ng-if="alert.status != 'Published'">{{alert.status}}</span>
                                     </td>
                                     <td><time datetime="{{alert.created}}" title="{{alert.created | date: 'medium' }}">{{ alert.created | date: 'mediumDate' }}</time></td>
-                                    <td class="text-uppercase">{{ alert.category }}</td>
                                     <!--<td><time datetime="{{alert.published}}" title="{{alert.created | date: 'medium' }}">{{ alert.published | date: 'mediumDate' }}</time></td>-->
                                     <td>
-                                        <button ng-if="alert.status != 'Published'" id="publish_btn_{{alert.id}}" class="btn btn-default publish-btn" data-loading-text="Notifying users..." ng-click="publishAlert(alert.id)">Publish</button>
+                                        <button ng-if="alert.status != 'Published'" class="btn btn-default publish-btn" data-loading-text="Notifying users..." ng-click="confirmPublishAlert(alert.id)">Publish</button>
                                         <button ng-if="alert.status == 'Published'" class="btn btn-success republish-btn" data-loading-text="Updating..." ng-click="editAlert(alert.id, true)">Duplicate</button>
                                     </td>
                                 </tr>
@@ -197,6 +198,10 @@
             </div>
             <div class="modal-body">
                 <form name="alertForm" validate-non-visible-controls>
+                    <div ng-if="missingAffectedArea" class="alert alert-warning fade in">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>Missing Affected Area</strong>. To publish, please use the map below to define the area that will be notified about the alert.
+                    </div>
                     <!-- TITLE -->
                     <div class="form-group">
                         <label for="alertTitle">Title</label>
@@ -252,6 +257,26 @@
                     <button ng-if="!newAlert" ng-disabled="alertForm.$invalid" type="button" class="btn btn-primary save-alert-btn" ng-click="updateAlert()" data-loading-text="Updating alert...">Save Changes</button>
                     <button ng-if="newAlert" ng-disabled="alertForm.$invalid" type="button" class="btn btn-primary save-alert-btn" ng-click="createAlert()" data-loading-text="Creating alert...">Create Alert</button>
                 </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation modal -->
+<div class="modal fade confirmation-modal" tabindex="-1" role="dialog" aria-labelledby="confirmationModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Publish Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                You are about to send notifications to all users within the affected area, would you like to continue?
+            </div>
+            <div class="modal-footer">
+                <span class="modal-error-msg">An error occurred</span>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="publish_alert" class="btn btn-primary publish-btn" data-loading-text="Notifying users..." ng-click="publishAlert()">Publish</button>
             </div>
         </div>
     </div>

@@ -62,9 +62,11 @@ app.controller('alertsCtrl', function($scope, $filter, $sce, $timeout, $http) {
     //---------------------------------------------------------------------------------------------------
 
     $scope.categories = ['Any', 'Fire', 'Flood', 'Weather', 'Tsunami', 'Earthquake'];
-    $scope.sources = ['Any', 'NOAA', 'USGS'];
+    $scope.sources = ['Any', 'NOAA', 'USGS', 'Manual entry'];
     $scope.severities = ['Emergency', 'NonEmergency'];
     $scope.alertsLoading = true;
+    $scope.missingAffectedArea = false;
+    $scope.publishAlertId = null;
     $scope.filters = { category: "Any", source: "Any", severityEmergency: false, severityNonEmergency: false };
 
     // API Token used as authorization on each API call
@@ -250,30 +252,48 @@ app.controller('alertsCtrl', function($scope, $filter, $sce, $timeout, $http) {
 		$(".alert-modal").modal('show');
     }
 
-    $scope.publishAlert = function(id) {
-        $("#publish_btn_" + id).button('loading');
+    $scope.confirmPublishAlert = function(id) {
         // Retrieve alert by id 
-    	var alert = $filter("filter")($scope.alerts, { id: id }, true)[0];
-        var alertIndex = $scope.alerts.indexOf(alert);
-
-        // Broadcast the notification to the affected users
-        $http({
-            method: 'PUT',
-            url: baseApiAddress + '/v1/notification/' + alert.id,
-            headers: { 'Content-Type': 'application/json' }
-        }).then(function successCallback(response) {
-            setTimeout(function() { 
-                // Update alert status
-                alert.status = "Published";
-                alert.published = new Date();
-                $scope.alerts[alertIndex] = alert;
-                $scope.$apply();
-                $("#publish_btn_" + id).button('reset'); 
-            }, 2000);
-        }, function errorCallback(response) {
-            $("#publish_btn_" + id).button('reset');
-        });
+        var alert = $filter("filter")($scope.alerts, { id: id }, true)[0];
+        // Check if alert already has an affected area defined, if it doesn't open the edit modal
+        if(!alert.affected_area || alert.affected_area == "") {
+            $scope.missingAffectedArea = true;
+            $scope.editAlert(id);
+        } else {
+            $scope.publishAlertId = id;
+            $(".confirmation-modal").modal('show');
+        }
     };
+
+    $scope.publishAlert = function() {
+        if($scope.publishAlertId) {
+            $("#publish_alert").button('loading');
+            
+            // Retrieve alert by id 
+            var alert = $filter("filter")($scope.alerts, { id: $scope.publishAlertId }, true)[0];
+            var alertIndex = $scope.alerts.indexOf(alert);
+
+            // Broadcast the notification to the affected users
+            $http({
+                method: 'PUT',
+                url: baseApiAddress + '/v1/notification/' + alert.id,
+                headers: { 'Content-Type': 'application/json' }
+            }).then(function successCallback(response) {
+                setTimeout(function() { 
+                    // Update alert status
+                    alert.status = "Published";
+                    alert.published = new Date();
+                    $scope.alerts[alertIndex] = alert;
+                    $scope.$apply();
+                    $(".confirmation-modal").modal('hide');
+                    $("#publish_alert").button('reset');
+                }, 2000);
+            }, function errorCallback(response) {
+                $("#publish_alert").button('reset');
+                $(".modal-error-msg").text(response.data.meta.message);
+            });
+        }
+    }
 
     $scope.getAlert = function(id) {
         $http({

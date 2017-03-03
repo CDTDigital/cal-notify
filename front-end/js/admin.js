@@ -218,6 +218,9 @@ function getUrlParameter(name) {
 }
 
 $(document).ready(function () {
+
+	$('[data-toggle="tooltip"]').tooltip();
+
 	// Reference to AngularJS scope
 	scope = angular.element($("body")).scope();
 
@@ -237,6 +240,14 @@ $(document).ready(function () {
 
 	// Alert modal handlers
 
+	$(".alert-modal").on('hidden.bs.modal', function () {
+		// Clear missing area flag so next time the modal is opened the warning msg is gone
+		scope.$apply(function(){ 
+	    	scope.missingAffectedArea = false;
+	    	scope.publishAlertId = null;
+	    });
+	});
+
 	$(".alert-modal").on('shown.bs.modal', function () {
 		// Notify that modal is loaded so the map is resized
 		var evt = $.Event('alert_modal_shown');
@@ -245,6 +256,10 @@ $(document).ready(function () {
 
 	$(".alert-modal").on('show.bs.modal', function () {
 		$(".coverage-map").css("opacity","0");
+		$(".modal-error-msg").text("");
+	});
+
+	$(".confirmation-modal").on('show.bs.modal', function () {
 		$(".modal-error-msg").text("");
 	});
 
