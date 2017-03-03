@@ -139,13 +139,14 @@ To test responsive compatibility, We make use of a “Device Lab” to simultane
 ## Use at Least Five Modern and Open-source Technologies
 Our solution included the following modern and open-source technologies:
 
-1.	ASP.NET core
-2.	Postgres/PostGIS
-3.	Swagger
-4.	AngularJS
-5.	Bootstrap
-6.	Jenkins CI
-7.	xUnit
+1. ASP.NET core
+2. Postgres/PostGIS
+3. Swagger
+4. AngularJS
+5. Bootstrap
+6. Jenkins CI
+7. xUnit
+8. LESS
 
 ## Deploy the prototype on an IaaS or PaaS provider,
 
