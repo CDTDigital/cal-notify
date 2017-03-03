@@ -33,7 +33,7 @@ The technical architecture and approach was defined in Sprint 0 as follows. Just
 - The backbone of the prototype would be a ASP.NET Core, Swagger API.
 - The database used would be PostgreSQL/PostGIS (to support geospatial queries).
 - The front-end would be developed using Bootstrap and Angular.
-- Application flow would be from the front-end, to the Swagger API, and then to the database. See detailed diagram [here - TODO](http://).
+- Application flow would be from the front-end, to the Swagger API, and then to the database. [See detailed diagram](https://github.com/SymSoftSolutions/cal-notify/blob/master/images/architecture-diagram.pdf)
 - Unit tests would be conducted with xUnit.
 - Continuous integration would be performed by Jenkins.
 
