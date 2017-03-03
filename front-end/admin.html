@@ -95,7 +95,8 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="filterSource">Source</label>&nbsp;
+                                                <label for="filterSource">Source</label>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <select class="form-control" ng-model="filters.source" id="filterSource">
                                                     <option ng-repeat="source in sources" value="{{source}}">{{source}}</option>
                                                 </select>
@@ -105,7 +106,7 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <strong>Severity</strong>&nbsp;
+                                                <strong>Severity</strong>&nbsp;&nbsp;&nbsp;
                                                 <div class="checkbox">
                                                     <label> <input type="checkbox" value="" ng-model="filters.severityEmergency"> Emergency</label> &nbsp;
                                                     <label> <input type="checkbox" value="" ng-model="filters.severityNonEmergency"> Non-Emergency</label>
@@ -146,7 +147,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="alert in alerts | criteriaMatch:filters" on-finish-render="ngRepeatFinished">
+                                <tr ng-repeat="alert in filteredAlerts = (alerts | criteriaMatch:filters)" on-finish-render="ngRepeatFinished">
                                     <td style="text-align:center">
                                         <span ng-if="alert.severity == 'Emergency'" class="glyphicon glyphicon-exclamation-sign text-danger"></span>
                                         <span ng-if="alert.severity == 'NonEmergency'" class="glyphicon glyphicon-warning-sign text-warning"></span>
@@ -176,6 +177,10 @@
                     </div>
                     <div class="text-center" ng-show="alertsLoading">
                         <i class="fa fa-cog fa-spin fa-2x fa-fw"></i><br/>Loading...
+                    </div>
+                    <div class="text-center" ng-show="!alertsLoading && alerts.length > 0 && filteredAlerts.length == 0">
+                        <br/><br/>
+                        <i class="fa fa-exclamation-circle fa-2x"></i>&nbsp;&nbsp;No alerts found for the specified filters
                     </div>
                     <div class="text-center" ng-show="!alertsLoading && alerts.length == 0">
                         <br/><br/>
