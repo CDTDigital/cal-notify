@@ -58,7 +58,7 @@
             <h1 class="page-header">Alerts Dashboard</h1>
             <p>Welcome administrator!</p>
             <p>The dashboard is <b>populated automatically</b> by constant monitoring of several <b>USGS & NOAA sources</b> for emergencies, but you can manually create alerts or modify those already retrieved from our sources.</p>
-            <p>An alert is not sent to users until the admin selects the publish button associated to the alert, once it's published, a link will appear on the status of the alert, this will redirect you to a page which contains details about users reached in the affected area.</p>
+            <p>An alert is not sent to users until the admin selects the publish button associated with it, once published, a link will appear on the status of the alert, this will redirect you to a page containing details about users reached in the affected area.</p>
             <p>The alerts can be presented using the default list view <i class="glyphicon glyphicon-th-list"></i> or within a map separated by category and severity <i class="glyphicon glyphicon-map-marker"></i>. To locate specific alerts please expand the filters section, every change will automatically update the list & map.</p><br/>
             <div class="row">
                 <div class="col-xs-6">
@@ -181,10 +181,12 @@
                     <div class="text-center" ng-show="!alertsLoading && alerts.length > 0 && filteredAlerts.length == 0">
                         <br/><br/>
                         <i class="fa fa-exclamation-circle fa-2x"></i>&nbsp;&nbsp;No alerts found for the specified filters
+                        <br/><br/>
                     </div>
                     <div class="text-center" ng-show="!alertsLoading && alerts.length == 0">
                         <br/><br/>
                         <i class="fa fa-exclamation-circle fa-2x"></i>&nbsp;&nbsp;No alerts have been added yet...
+                        <br/><br/>
                     </div>
                 </div>
 
