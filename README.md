@@ -11,7 +11,7 @@ Here is an overview of the activities executed during each sprint.
 
 ### Sprint 0
 
-- Defined the [initial Product Backlog](https://github.com/SymSoftSolutions/cal-notify/blob/master/documentation/ux/agile-process/initial-product-backlog.pdf) with Acceptance Criteria, and refined that backlog 
+- Defined the [initial Product Backlog](https://github.com/SymSoftSolutions/cal-notify/blob/master/documentation/agile-process/initial-product-backlog.pdf) with Acceptance Criteria, and refined that backlog 
 - Agreed on Sprint and Release Level Definition of Done
 - Defined code standards and [style guide](http://cal-notify.symsoftsolutions.com/style-guide/index.html)
 - Defined the Application Architecture and Technology Stack
@@ -85,18 +85,20 @@ Assembled a multidisciplinary team to deliver the prototype. We created a “war
 12. Business Analyst - Savita Farooqui
 13. Digital Performance Analyst - Miranda Singler
 
-## Understand What People Needs
-[Placeholder]
+## Understood what people needed, by including people in the prototype development and design process
 
-## Used at least a minimum of three “user-centric design” techniques and/or tools
-1. Participatory Design: We worked with California citizens, employees, and stakeholders to define and refine the user interface and user experience.  
-2. Usability Testing: Provides immediate feedback at key points that effectively informed our team of issues with our interface elements and functionality. Users were asked to verbalize what they were doing and why they were doing it. 
-3. Interviews: User interviews were conducted to quickly identify and address issues or gaps between users expectations and product features. 
+We utilized user-centered design that included real world users throughout the development of the Cal-Notify prototype. At the outset, we conducted user interviews and a survey to generate concepts and understand user intents and we continually tested the emergent design with actual users at each stage of the iterative. The resulting prototype was therefore based on an understanding from real users as to what they felt was critical, how they would want to complete tasks and how they would want to receive information and interact with the Cal-Notify service beyond the initial signup. Artifacts from [our user-centered design process can be found here:] (https://github.com/SymSoftSolutions/cal-notify/tree/master/documentation/ux)
 
 
-To-Do
+## Used at least a minimum of three (3) “user-centric design” techniques and/or tools
 
-[Link to the User Centric Design Page](https://#)
+- User-driven Development. We used Iterative User-driven Development throughout the design and development process to continually test the validity of the design with actual users at each stage of the process from statement of requirements to conceptual story-boarding to interactive prototyping and completed code. Through iterative design, we optimized the product based on how users indicated they would want to see the product function versus building it and expecting them to adapt to the user experience we ourselves envisioned. We continually validated the design with users at the completion of each iteration so that we validated the entire user experience. Our multi-disciplinary team brought to bear a variety of skills and perspectives so that user reactions to the product were propagated across all aspects of the system including the user interface, but also the business rules and the supporting API and data layers of the application. The entire team was informed by user-centered design inputs throughout the iterative development of the solution.
+
+- User Personas. Based on our user research, we created key personas as a backdrop for conceptual and detailed design which helped us create a shared understanding of the wants and needs of groups of real world users of the system. We used these personas to generate refined versions of users with slightly different characteristics in order to add depth to our thinking about how to design the prototype. The users we involved in our user-centered design process possessed key elements of these personas. For example, individuals who had been impacted personally by a natural disaster, and individuals who had not been impacted personally but had loved ones impacted and individuals who had no first-hand experience but were highly interested in following impactful events such as fires, floods and earthquakes.
+
+- Storyboarding, Use Cases and Scenarios. We used storyboarding with real world users that reflected our User Personas in order to identify specific use cases and more detailed scenarios to address in our prototype. We focused storyboarding sessions on generating design concepts that would resolve specific use cases and scenarios that we jointly identified with pool of users. These included “happy path” best case scenarios and also more problematic scenarios such as users who for one reason or another wanted to opt-out of receiving alerts. Our primary focus for the prototype due mainly to time constraints was on high likelihood “typical” scenarios for the User Personas we created. 	
+
+- [Online Survey](https://www.surveymonkey.com/r/H5RVP5Z) In order to establish a broad basis for persona and use case development at the outset of our user-centered design process, we conducted an online survey to develop some quantitative data about the potential pool of likely users. This survey which included basic user research such as whether not users had personal experience with natural disasters and how they would want to receive alerts provided foundational data for us to begin the process of identifying Personas and Use Cases. The survey yielded results such as the facts that while the majority of potential users had never been personally impacted by a natural disaster, the vast majority of potential users would still sign up for alerts. This was important for Persona development in that one key persona characteristic was that of being “more curious than concerned” with regard to Cal-Notify alerts.
 
 ## Use GitHub to Document Code Commits
 We used GitHub to document code commits as shown in our GitHub repository
