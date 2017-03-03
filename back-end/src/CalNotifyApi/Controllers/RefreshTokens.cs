@@ -33,24 +33,28 @@ namespace CalNotifyApi.Controllers
               ILogger<RefreshTokens> logger,
             ITokenMemoryCache memoryCache,
              TokenAuthOptions tokenOptions,
-              TokenService tokenService, IHostingEnvironment hostingEnvironment) 
+              TokenService tokenService, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
             _smsSender = smsSender;
             _logger = logger;
             _memoryCache = memoryCache;
-                   
+
             _tokenService = tokenService;
             _hostingEnvironment = hostingEnvironment;
         }
 
-       
 
+        /// <summary>
+        /// Provides a endpoint for client side applications to refresh a users token via a sms sent token
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("refresh"), Consumes("application/json"), Produces("application/json", Type = typeof(ResponseShell<SimpleSuccess>))]
         [SwaggerOperation(operationId: "RefreshTokens", Tags = new[] { Constants.AuthorizationTag })]
         public async Task<IActionResult> Refresh([FromBody] RefreshTempUser model)
         {
- 
+
             var existing = _context.Users.FirstOrDefault(user => user.PhoneNumber == model.PhoneNumber);
             if (existing == null)
             {
@@ -68,10 +72,10 @@ namespace CalNotifyApi.Controllers
                 _memoryCache.SetForChallenge(new TempUser(existing));
 
                 // All good thus far, now we just wait on our user to validate
-                return ResponseShell.Ok( new SimpleSuccess() {Success = true});
+                return ResponseShell.Ok(new SimpleSuccess() { Success = true });
             }
 
-           
+
             // Fire off our validation
             var token = await _smsSender.SendValidationToSms(new TempUser()
             {
@@ -83,12 +87,17 @@ namespace CalNotifyApi.Controllers
             // Hold our token and model for a while to give our user a chance to validate their info
             _memoryCache.SetForChallenge(new TempUser(existing));
 
-            
+
             // All good thus far, now we just wait on our user to validate
-            return ResponseShell.Ok( new SimpleSuccess());
+            return ResponseShell.Ok(new SimpleSuccess());
         }
 
-        /// <param name="model">GenericUser object to be created.</param>    
+
+        /// <summary>
+        /// Validates if a user has entered in the proper token. See also the refresh endpoint.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("validate"), Consumes("application/json"), Produces("application/json", Type = typeof(ResponseShell<TokenInfo>))]
         [SwaggerOperation(operationId: "ValidateToken", Tags = new[] { Constants.AuthorizationTag })]
         public async Task<IActionResult> Validate([FromBody]TokenCheck model)
