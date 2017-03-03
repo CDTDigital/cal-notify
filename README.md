@@ -55,7 +55,6 @@ By the end of Sprint 1, we released an end to end solution which we made availab
 Across all the sprints, we executed the following activities:
 
 -	Sprint Planning
---	Estimation (using the planning poker technique for assigning story points)
 - Daily Scrums
 - Sprint Review
 - Sprint Retrospective
@@ -129,15 +128,12 @@ We created the following style guide:
 [Cal-Notify Style-Guide](http://cal-notify.symsoftsolutions.com/style-guide/index.html)
 
 ## Perform Usability Tests with People
-in addition to our user-driven development process, we conducted usability testing at key junctures of the process including with the interactive prototype and final product
-
-To-Do: Provide the link to the Usability test pages (Mark?)
+in addition to our user-driven development process, we conducted [usability testing](https://github.com/SymSoftSolutions/cal-notify/blob/master/images/symsoft-solutions-cal-notify_3-usability-tests.jpg) at key junctures of the process including with the [interactive prototype](https://github.com/SymSoftSolutions/cal-notify/blob/master/images/symsoft-solutions-cal-notify_0-mockups.jpg) and final product
 
 ## Use an Iterative Approach, Where Feedback Informed Subsequent Work or Versions of the Prototype
 We developed Cal-Notify functionality through two Sprints one-week long each. During each iteration, we followed the [U.S. Digital Services Playbook](https://playbook.cio.gov) and by the end of each Sprint, we released an end-to-end solution which solved our user’s key needs and we conducted multiple usability test with real users. From the collected feedback we improved the following iterations of the prototype.
 
 We used Scrum as our framework while adhered to the principles of the agile manifesto, and we rigorously executed all the Scrum Activities. We also used multiple agile tools to facilitate collaboration, for example the integration of GitHub, Jira, Jenkins, AWS and Slack during the development and testing processes. 
-
 
 ## Create a Prototype that works on multiple devices, and presents a responsive design
 We used the open source framework Bootstrap for the prototype sites. Bootstrap is a mobile first framework that provides user interface elements that adapt their presentation for a myriad of devices and viewport sizes. 
