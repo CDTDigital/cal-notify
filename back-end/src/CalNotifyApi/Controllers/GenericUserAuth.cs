@@ -10,6 +10,7 @@ using CalNotifyApi.Models.Auth;
 using CalNotifyApi.Models.Responses;
 using CalNotifyApi.Models.Services;
 using CalNotifyApi.Services;
+using CalNotifyApi.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -79,7 +80,7 @@ namespace CalNotifyApi.Controllers
         {
             // The eventual user
 
-            var validatedUser = _context.AllUsers.Where(u => u.Enabled).FirstOrDefault(x => x.Email == model.ContactInfo || x.PhoneNumber == model.ContactInfo);
+            var validatedUser = _context.AllUsers.Where(u => u.Enabled).FirstOrDefault(x => x.Email == model.ContactInfo || x.PhoneNumber == model.ContactInfo.CleanPhone());
             if (validatedUser == null)
             {
                 // Our response is vague to avoid leaking information
@@ -147,7 +148,7 @@ namespace CalNotifyApi.Controllers
             {
                 return Redirect($"{_config.Urls.Frontend}/{_config.Pages.ResendPage}");
             }
-
+            savedUser.PhoneNumber = savedUser.PhoneNumber.CleanPhone();
             var exisitingUser = _context.AllUsers.FirstOrDefault(x => x.Id == savedUser.Id);
 
             // we  have a user at this point, otherwise we would have thrown our processer error earlier

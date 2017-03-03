@@ -9,6 +9,7 @@ using CalNotifyApi.Models.Auth;
 using CalNotifyApi.Models.Responses;
 using CalNotifyApi.Models.Services;
 using CalNotifyApi.Services;
+using CalNotifyApi.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -98,16 +99,17 @@ namespace CalNotifyApi.Controllers
 
             if (!string.IsNullOrWhiteSpace(tempUser.Email) && !user.ValidatedEmail)
             {
-                Log.Information("Sending Email Validation to {user}", tempUser);
+                Log.Information("Sending Email Validation to {user}", tempUser.Email);
                 var temp = new TempUser(user);
                 await _validation.SendValidationToEmail(temp);
                 _memoryCache.SetForChallenge(temp);
 
             }
-
+           
             if (!string.IsNullOrWhiteSpace(tempUser.PhoneNumber) && !user.ValidatedSms)
             {
-                Log.Information("Sending SMS Validation to {user}", tempUser);
+                tempUser.PhoneNumber = tempUser.PhoneNumber.CleanPhone();
+                Log.Information("Sending SMS Validation to {user}", tempUser.PhoneNumber);
                 var temp = new TempUser(user);
                 await _validation.SendValidationToSms(temp);
                 _memoryCache.SetForChallenge(temp);
@@ -161,7 +163,7 @@ namespace CalNotifyApi.Controllers
                         _memoryCache.SetForChallenge(temp);
 
                     }
-
+                    tempUser.PhoneNumber = tempUser.PhoneNumber.CleanPhone();
                     if (!string.IsNullOrWhiteSpace(tempUser.PhoneNumber) && tempUser.PhoneNumber != user.PhoneNumber)
                     {
                         user.PhoneNumber = tempUser.PhoneNumber;

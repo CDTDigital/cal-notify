@@ -8,6 +8,7 @@ using CalNotifyApi.Models.Addresses;
 using CalNotifyApi.Models.Auth;
 using CalNotifyApi.Models.Services;
 using CalNotifyApi.Services;
+using CalNotifyApi.Utils;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -21,6 +22,7 @@ namespace CalNotifyApi.Events
         {
             using (var transaction = context.Database.BeginTransaction())
             {
+                tempUser.PhoneNumber = tempUser.PhoneNumber.CleanPhone();
                 // Check out our users, if we already someone, then no need to validate, its just an error
                 var check = await context.Users.AnyAsync(u => (!string.IsNullOrEmpty(u.PhoneNumber) && (u.PhoneNumber == tempUser.PhoneNumber)) || (!string.IsNullOrEmpty(u.Email) &&  (u.Email == tempUser.Email)));
                 if (check)

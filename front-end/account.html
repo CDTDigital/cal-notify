@@ -102,7 +102,7 @@
                     <div class="collapse in" id="smsAlerts">
                         <div class="m-y">
                             <label for="phone-input" class="sr-only">Mobile Phone Number</label>
-                            <input type="phone" class="form-control" id="phone-input" name="phone" placeholder="Phone Number">
+                            <input type="phone" class="form-control" id="phone-input" name="phone" placeholder="Phone Number" onblur="formatPhone(this);">
                         </div>
                     </div>
                     <div class="alert alert-warning js-remind-to-verify-sms hide">
