@@ -619,8 +619,13 @@ a.shortcut-tiles {
   color: #fff;
   background-color: #333;
 }
-table td:nth-child(2) {
-  max-width: 400px;
+table {
+  /*td:nth-child(3) { 
+        max-width: 400px;
+    }*/
+  /*td:nth-child(6) { 
+        min-width: 60px;
+    }*/
 }
 table .text-danger {
   color: #e63900;

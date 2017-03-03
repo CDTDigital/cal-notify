@@ -71,7 +71,7 @@
     </div>
     <div class="row" ng-show="!alertsLoading && currAlert.id">
         <div class="col-sm-8">
-            <p>{{currAlert.details}}</p>
+            <p><span ng-bind-html='currAlert.details | detectURLs'></span></p>
             <br/>
             <!-- Alert Meta-->
             <dl class="row">
