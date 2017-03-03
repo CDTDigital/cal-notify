@@ -18,7 +18,7 @@ Here is an overview of the activities executed during each sprint.
 - Defined Continuous Integration Server and Continuous deployment strategy
 - Setup Agile tracking tools (Jira)
 - Research and initial [users interviews] (https://github.com/SymSoftSolutions/cal-notify/tree/master/documentation/ux/user-interviews)
-- Generated [initial wireframes](https://github.com/SymSoftSolutions/cal-notify/blob/docs/images/symsoft-solutions-cal-notify_0-mockups.jpg) and gather users’ feedback.
+- Generated [initial wireframes](https://github.com/SymSoftSolutions/cal-notify/blob/master/images/symsoft-solutions-cal-notify_1-wireframes.jpg) and gather users’ feedback.
 - Identify and document [user's journey](https://github.com/SymSoftSolutions/cal-notify/blob/master/documentation/ux/user-research/cal-notify-user-journey.pdf)
 
 The technical architecture and approach was defined in Sprint 0 as follows. Justification for the technologies chosen were evaluated per the USDS playbook.
