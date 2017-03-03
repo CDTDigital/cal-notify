@@ -43,6 +43,8 @@ $(document).ready(function () {
 
         $('#email-input').val(userDetails.email);
         $('#phone-input').val(userDetails.phone);
+
+        formatPhone($('#phone-input').get(0));
         $('.js-verified_email')
             .toggleClass('fa-check-circle text-success', userDetails.validated_email == true)
             .toggleClass('fa-times-circle text-danger', userDetails.validated_email != true)
@@ -258,5 +260,14 @@ $(document).ready(function () {
     }
 
     window.geolocate = geolocate;
+
+    window.formatPhone = function formatPhone(obj) {
+        var numbers = obj.value.replace(/\D/g, ''),
+            char = {0:'(',3:') ',6:' - '};
+        obj.value = '';
+        for (var i = 0; i < numbers.length; i++) {
+            obj.value += (char[i]||'') + numbers[i];
+        }
+    }
 
 });

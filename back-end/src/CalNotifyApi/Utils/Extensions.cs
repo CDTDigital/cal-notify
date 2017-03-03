@@ -73,6 +73,12 @@ namespace CalNotifyApi.Utils
             return rgx.IsMatch(phone);
         }
 
+        private static readonly Regex digitsOnly = new Regex(@"[^\d]");
+
+        public static string CleanPhone(this string phone)
+        {
+            return digitsOnly.Replace(phone, "");
+        }
 
         /// <summary>
         /// Gets the full path to the target project path that we wish to test

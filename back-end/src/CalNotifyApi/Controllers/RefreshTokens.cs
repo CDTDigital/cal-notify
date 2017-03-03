@@ -7,6 +7,7 @@ using CalNotifyApi.Models.Auth;
 using CalNotifyApi.Models.Responses;
 using CalNotifyApi.Models.Services;
 using CalNotifyApi.Services;
+using CalNotifyApi.Utils;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -54,8 +55,8 @@ namespace CalNotifyApi.Controllers
         [SwaggerOperation(operationId: "RefreshTokens", Tags = new[] { Constants.AuthorizationTag })]
         public async Task<IActionResult> Refresh([FromBody] RefreshTempUser model)
         {
-
-            var existing = _context.Users.FirstOrDefault(user => user.PhoneNumber == model.PhoneNumber);
+ 
+            var existing = _context.Users.FirstOrDefault(user => user.PhoneNumber == model.PhoneNumber.CleanPhone());
             if (existing == null)
             {
                 return ResponseShell.Error("Could not find user.", new List<string>()
