@@ -24,7 +24,7 @@ Here is an overview of the activities executed during each sprint.
 - Defined Continuous Integration Server and Continuous deployment strategy
 - Setup Agile tracking tools (Jira)
 - Research and initial [users interviews] (https://github.com/SymSoftSolutions/cal-notify/tree/master/documentation/ux/user-interviews)
-- Generated [initial wireframes](https://github.com/SymSoftSolutions/cal-notify/blob/docs/images/symsoft-solutions-cal-notify_0-mockups.jpg) and gather users’ feedback.
+- Generated [initial wireframes](https://github.com/SymSoftSolutions/cal-notify/blob/master/images/symsoft-solutions-cal-notify_1-wireframes.jpg) and gather users’ feedback.
 - Identify and document [user's journey](https://github.com/SymSoftSolutions/cal-notify/blob/master/documentation/ux/user-research/cal-notify-user-journey.pdf)
 
 The technical architecture and approach was defined in Sprint 0 as follows. Justification for the technologies chosen were evaluated per the USDS playbook.
@@ -55,7 +55,6 @@ By the end of Sprint 1, we released an end to end solution which we made availab
 Across all the sprints, we executed the following activities:
 
 -	Sprint Planning
---	Estimation (using the planning poker technique for assigning story points)
 - Daily Scrums
 - Sprint Review
 - Sprint Retrospective
@@ -109,8 +108,6 @@ We utilized user-centered design that included real world users throughout the d
 ## Use GitHub to Document Code Commits
 We used GitHub to document code commits as shown in our GitHub repository
 
-To-Do: Get feedback from Matt C.
-
 ## Use Swagger to document the RESTful API
 We used Swagger to document the RESTful API and provided a link to the Swagger API as follows:
 
@@ -129,9 +126,8 @@ We created the following style guide:
 [Cal-Notify Style-Guide](http://cal-notify.symsoftsolutions.com/style-guide/index.html)
 
 ## Perform Usability Tests with People
-in addition to our user-driven development process, we conducted usability testing at key junctures of the process including with the interactive prototype and final product
 
-To-Do: Provide the link to the Usability test pages (Mark?)
+in addition to our user-driven development process, we conducted [usability testing](https://github.com/SymSoftSolutions/cal-notify/tree/master/documentation/ux/user-testing) at key junctures of the process including with the interactive prototype and final product
 
 ## Use an Iterative Approach, Where Feedback Informed Subsequent Work or Versions of the Prototype
 
