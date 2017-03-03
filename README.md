@@ -11,16 +11,18 @@ Here is an overview of the activities executed during each sprint.
 
 ### Sprint 0
 
-- Defined the initial Product Backlog with Acceptance Criteria, and refined that backlog 
+- Defined the [initial Product Backlog](https://github.com/SymSoftSolutions/cal-notify/blob/master/documentation/ux/agile-process/initial-product-backlog.pdf) with Acceptance Criteria, and refined that backlog 
 - Agreed on Sprint and Release Level Definition of Done
-- Defined code standards and design guidelines
+- Defined code standards and [style guide](http://cal-notify.symsoftsolutions.com/style-guide/index.html)
 - Defined the Application Architecture and Technology Stack
 - Defined Continuous Integration Server and Continuous deployment strategy
 - Setup Agile tracking tools (Jira)
-- Research and initial users interviews
-- Generated initial wireframes and gather users’ feedback.
+- Research and initial [users interviews] (https://github.com/SymSoftSolutions/cal-notify/tree/master/documentation/ux/user-interviews)
+- Generated [initial wireframes](https://github.com/SymSoftSolutions/cal-notify/blob/docs/images/symsoft-solutions-cal-notify_0-mockups.jpg) and gather users’ feedback.
+- Identify and document [user's journey](https://github.com/SymSoftSolutions/cal-notify/blob/master/documentation/ux/user-research/cal-notify-user-journey.pdf)
 
 The technical architecture and approach was defined in Sprint 0 as follows. Justification for the technologies chosen were evaluated per the USDS playbook.
+
 - The prototype would be deployed in the Amazon Web Services cloud.
 - The backbone of the prototype would be a ASP.NET Core, Swagger API.
 - The front-end would be developed using Bootstrap and Angular.
@@ -146,4 +148,4 @@ Our solution included the following modern and open-source technologies:
 We deployed the prototype on Amazon Web Services (AWS)
 
 ## Develop automated unit tests for their code
-We developed and executed automated unit and integration tests for code using xUnit library. Test results [can be viewed here](https://github.com/SymSoftSolutions/cal-notify/tree/master/back-end/src/Tests)
+We developed and executed automated unit and integration tests for code using xUnit library. Test scripts [can be viewed here](https://github.com/SymSoftSolutions/cal-notify/tree/master/back-end/src/Tests)
