@@ -1,4 +1,5 @@
-﻿using Swashbuckle.AspNetCore.Swagger;
+﻿using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace CalNotifyApi.Models.Responses
@@ -7,10 +8,10 @@ namespace CalNotifyApi.Models.Responses
     {
         public void Apply(Schema model, SchemaFilterContext context)
         {
-            model.Default = new Meta()
+            model.Default =JsonConvert.SerializeObject( new Meta()
             {
                 Code = 200,
-            };
+            }, Constants.CreateJsonSerializerSettings());
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -30,11 +31,11 @@ namespace CalNotifyApi.Events
     {
         public void Apply(Schema model, SchemaFilterContext context)
         {
-            model.Default = new AdminLoginEvent()
+            model.Default = JsonConvert.SerializeObject( new AdminLoginEvent()
             {
                 Email = Constants.Testing.TestAdmins.First().Email,
                 Password = Constants.Testing.TestAdmins.First().Password
-            };
+            }, Constants.CreateJsonSerializerSettings());
         }
     }
 
@@ -64,11 +65,12 @@ namespace CalNotifyApi.Events
     {
         public void Apply(Schema model, SchemaFilterContext context)
         {
-            model.Default = new AdminLoginEvent()
+
+            model.Default = JsonConvert.SerializeObject(new AdminLoginEvent()
             {
                 Email = Constants.Testing.TestUsers.First().Email,
                 Password = Constants.Testing.DefaultUserPass
-            };
+            }, Constants.CreateJsonSerializerSettings());
         }
     }
 }
