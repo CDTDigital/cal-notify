@@ -42,6 +42,7 @@
 <!--                <li><a href="#">About</a></li>-->
                 <li><a href="javascript:;" data-toggle="modal" data-target=".register-modal">Sign Up</a></li>
                 <li><a href="javascript:;" data-toggle="modal" data-target=".login-modal">Login</a></li>
+                <li><a href="javascript:;" data-toggle="modal" data-target=".admin-login-modal">Admin Dashboard</a></li>
             </ul>
         </div>
     </div>
@@ -121,7 +122,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                <a class="admin-login-link" href="javascript:;" data-toggle="modal" data-target=".admin-login-modal">Admin Login</a>
+                <br/>
             </div>
         </div>
     </div>
@@ -167,7 +168,7 @@
                     <label for="phone-input" class="sr-only">SMS</label>
                     <div class="input-group m-b-md m-t-md">
                         <span class="input-group-addon" id="basic-addon3"><i class="fa fa-mobile" aria-hidden="true"></i></span>
-                        <input onblur="formatPhone(this);" type="phone" class="form-control input-lg" id="phone-input" name="phone" placeholder="SMS Text (Mobile Phone)" aria-describedby="basic-addon3">
+                        <input onblur="formatPhone(this);" type="phone" class="form-control input-lg" id="phone-input" name="phone" maxlength="10" placeholder="SMS Text (Mobile Phone)" aria-describedby="basic-addon3">
                     </div>
                 </div>
 
@@ -210,10 +211,6 @@
                     <label for="loginPassword" class="sr-only">Password</label>
                     <span class="input-group-addon" id="addon-password"><i class="fa fa-key" aria-hidden="true"></i></span>
                     <input type="password" class="form-control js-password-input" placeholder="Password" aria-describedby="addon-password" name="password" id="loginPassword">
-                </div>
-
-                <div class="m-y-md">
-                    <a href="index.html">Register</a>
                 </div>
 
             </div>
