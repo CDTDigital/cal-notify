@@ -1,5 +1,18 @@
 var app = angular.module('alertsApp', []);
 
+app.directive('onFinishRender', function ($timeout) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            if (scope.$last === true) {
+                $timeout(function () {
+                    scope.$emit(attr.onFinishRender);
+                });
+            }
+        }
+    }
+});
+
 // CUSTOM FILTER FOR ALERTS
 app.filter("criteriaMatch", function() {
 
@@ -51,7 +64,7 @@ app.filter("criteriaMatch", function() {
 app.filter('detectURLs', function($sce) {
     return function(text) {
         var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-        return $sce.trustAsHtml(text.replace(exp,"<a target='_blank' href='$1'>$1</a>")); 
+        return $sce.trustAsHtml(text.replace(exp,"<a target='_blank' href='$1'>details here</a>")); 
     };
 });
 
@@ -77,6 +90,11 @@ app.controller('alertsCtrl', function($scope, $filter, $sce, $timeout, $http) {
     };
 
     var baseApiAddress = window.baseApiAddress;
+
+    $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
+        // Init btns tooltips
+        $('[data-toggle="tooltip"]').tooltip();
+    });
 
     //---------------------------------------------------------------------------------------------------
     //--------------------------------------- A L E R T S -----------------------------------------------
@@ -287,6 +305,7 @@ app.controller('alertsCtrl', function($scope, $filter, $sce, $timeout, $http) {
                     $scope.$apply();
                     $(".confirmation-modal").modal('hide');
                     $("#publish_alert").button('reset');
+                    $('[data-toggle="tooltip"]').tooltip();
                 }, 2000);
             }, function errorCallback(response) {
                 $("#publish_alert").button('reset');
@@ -423,7 +442,7 @@ app.controller('alertsCtrl', function($scope, $filter, $sce, $timeout, $http) {
         var geoJSON = { type: "FeatureCollection", features: [] }
 
         // Add alert location
-        var locationFeature = { type: "Feature", geometry: $scope.currAlert.location, properties: { title: $scope.currAlert.title, category: $scope.currAlert.category, severity: $scope.currAlert.severity } }; 
+        var locationFeature = { type: "Feature", geometry: $scope.currAlert.location, properties: { title: $scope.currAlert.title, category: $scope.currAlert.category, severity: "Emergency" } }; 
         geoJSON.features.push(locationFeature);
         
         // Add alert affected area

@@ -219,8 +219,6 @@ function getUrlParameter(name) {
 
 $(document).ready(function () {
 
-	$('[data-toggle="tooltip"]').tooltip();
-
 	// Reference to AngularJS scope
 	scope = angular.element($("body")).scope();
 

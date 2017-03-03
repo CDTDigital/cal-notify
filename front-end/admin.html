@@ -137,34 +137,38 @@
                                 <tr>
                                     <th>Severity</th>
                                     <th>Category</th>
-                                    <th>Title</th>
                                     <th>Description</th>
                                     <th>Status</th>
+                                    <th>Source</th>
                                     <th>Created</th>
                                     <!--<th>Date Sent</th>-->
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="alert in alerts | criteriaMatch:filters">
+                                <tr ng-repeat="alert in alerts | criteriaMatch:filters" on-finish-render="ngRepeatFinished">
                                     <td style="text-align:center">
                                         <span ng-if="alert.severity == 'Emergency'" class="glyphicon glyphicon-exclamation-sign text-danger"></span>
                                         <span ng-if="alert.severity == 'NonEmergency'" class="glyphicon glyphicon-warning-sign text-warning"></span>
                                     </td>
                                     <td>{{ alert.category }}</td>
                                     <td>
-                                        <span><a href="" ng-click="editAlert(alert.id)" title="Edit">{{ alert.title }}</a></span>
+                                        <span><a href="" ng-click="editAlert(alert.id)" title="Edit">{{ alert.title }}</a></span><br/>
+                                        <span ng-bind-html='alert.details | detectURLs'></span>
                                     </td>
-                                    <td><span ng-bind-html='alert.details | detectURLs'></span></td>
+                                    <!--<td><span ng-bind-html='alert.details | detectURLs'></span></td>-->
                                     <td>
-                                        <a ng-if="alert.status == 'Published'" href="notification-detail.html?alertId={{alert.id}}&token={{apiToken}}" title="View Details">Published</a>
-                                        <span ng-if="alert.status != 'Published'">{{alert.status}}</span>
+                                        <span>{{alert.status}}</span><br/>
+                                        <a ng-if="alert.status == 'Published'" href="notification-detail.html?alertId={{alert.id}}&token={{apiToken}}" data-toggle="tooltip" title="Details about notifications sent to users">See User Reach</a>
                                     </td>
+                                    <td><span>{{alert.source}}</span></td>
                                     <td><time datetime="{{alert.created}}" title="{{alert.created | date: 'medium' }}">{{ alert.created | date: 'mediumDate' }}</time></td>
                                     <!--<td><time datetime="{{alert.published}}" title="{{alert.created | date: 'medium' }}">{{ alert.published | date: 'mediumDate' }}</time></td>-->
                                     <td>
-                                        <button ng-if="alert.status != 'Published'" class="btn btn-default publish-btn" data-loading-text="Notifying users..." ng-click="confirmPublishAlert(alert.id)">Publish</button>
-                                        <button ng-if="alert.status == 'Published'" class="btn btn-success republish-btn" data-loading-text="Updating..." ng-click="editAlert(alert.id, true)">Duplicate</button>
+                                        <button ng-if="alert.status != 'Published'" class="btn btn-default" data-toggle="tooltip" title="Edit Alert" ng-click="editAlert(alert.id)"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
+                                        <button ng-if="alert.status != 'Published'" class="btn btn-success publish-btn" data-toggle="tooltip" title="Send alerts to users within the affected area" ng-click="confirmPublishAlert(alert.id)">Publish</button>
+                                        <button ng-if="alert.status == 'Published'" class="btn btn-default republish-btn" data-toggle="tooltip" title="Duplicate current alert" ng-click="editAlert(alert.id, true)"><span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span></button>
+                                        <button ng-if="alert.status == 'Published'" class="btn btn-success republish-btn" data-toggle="tooltip" title="Resend alerts to users within the affected area" ng-click="confirmPublishAlert(alert.id)">Republish</button>
                                     </td>
                                 </tr>
                             </tbody>
