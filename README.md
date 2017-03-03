@@ -5,6 +5,9 @@ Cal-Notify is an emergency notifications system.  Users can register with the sy
 [Signup on Cal-Notify Website to be notified for emergencies in your area!](http://cal-notify.symsoftsolutions.com).  
 If you wish to see the administrative interface please login with username testAdmin1@test.com and password 123testadmin
 
+
+See our technical approach below and refer to [our response to the USDS Digital Services Playbook](https://github.com/SymSoftSolutions/cal-notify/blob/master/documentation/agile-process/USDS-playbook-checklist.pdf)
+
 ## Technical Approach
 
 We used a user-centered design and agile, test-driven deveopment to create this prototype. We used Scrum Agile framework while we adhered to the principles of the agile manifesto for clear communication and workflow amongst the team.
