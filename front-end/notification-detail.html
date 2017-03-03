@@ -13,6 +13,9 @@
 <!-- Bootstrap core CSS -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
 
+<!-- FontAwesome Icons-->
+<link href="css/font-awesome.min.css" rel="stylesheet">
+
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
@@ -23,9 +26,7 @@
 <!-- Leaflet map & drawing styles -->
 <link rel="stylesheet" href="css/leaflet.css" />
 <link rel="stylesheet" href="css/leaflet.draw.css" />
-
-<!-- FontAwesome Icons-->
-<link href="css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/leaflet.awesome-markers.css" />
 
 <!-- Angular -->
 <script src="js/vendor/angular.min.js"></script> 
@@ -45,42 +46,49 @@
             <a class="navbar-brand" href="#"><img src="images/cal-notify-logo.png" class="site-logo" alt="Cal-Notify Logo"><span class="sr-only">Cal-Notify Emergency Alert System</span></a> </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Settings</a></li>
-                <li><a href="#">Profile</a></li>
-                <li><a href="#">Help</a></li>
+                <li><a href="index.html">Logout</a></li>
             </ul>
-            <form class="navbar-form navbar-right">
-                <input type="text" class="form-control" placeholder="Search...">
-            </form>
         </div>
     </div>
 </nav>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-12 main">
-            <h1 class="page-header">{{Alert Title Here}}</h1>
-            <p>{{Short Description Here}}</p>
+<div class="container-fluid main">
+    <div class="row alert-details-header">
+        <div class="col-sm-9">
+            <h1 >{{currAlert.title}}</h1>
+        </div>
+        <div class="col-sm-3 text-right">
+            <a href="admin.html?token={{apiToken}}">Back to dashboard</a>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-8 main">
+    <hr class="alert-detail-hr"/>
+    <div class="text-center" ng-show="alertsLoading">
+        <i class="fa fa-cog fa-spin fa-2x fa-fw"></i><br/>Retrieving alert information...
+    </div>
+    <div class="text-center" ng-show="!alertsLoading && !currAlert.id">
+        <br/><br/>
+        <i class="fa fa-exclamation-circle fa-2x"></i>&nbsp;&nbsp;An error occurred retrieving the alert's information, make sure you're logged in and try again
+        <br/><br/>
+    </div>
+    <div class="row" ng-show="!alertsLoading && currAlert.id">
+        <div class="col-sm-8">
+            <p>{{currAlert.details}}</p>
+            <br/>
             <!-- Alert Meta-->
             <dl class="row">
                 <dt class="col-sm-3 col-xs-4">Severity:</dt>
-                <dd class="col-sm-9 col-xs-8">Major</dd>
+                <dd class="col-sm-9 col-xs-8">{{currAlert.severity}}</dd>
 
                 <dt class="col-sm-3 col-xs-4">Category:</dt>
-                <dd class="col-sm-9 col-xs-8">Flooding</dd>
+                <dd class="col-sm-9 col-xs-8">{{currAlert.category}}</dd>
 
                 <dt class="col-sm-3 col-xs-4">Source:</dt>
-                <dd class="col-sm-9 col-xs-8">NOAA</dd>
+                <dd class="col-sm-9 col-xs-8">{{currAlert.source}}</dd>
 
                 <dt class="col-sm-3 col-xs-4">Created:</dt>
-                <dd class="col-sm-9 col-xs-8">mmm, dd yyyy</dd>
+                <dd class="col-sm-9 col-xs-8"><time datetime="{{currAlert.created}}">{{ currAlert.created | date: 'medium' }}</time></dd>
                 
                 <dt class="col-sm-3 col-xs-4">Published:</dt>
-                <dd class="col-sm-9 col-xs-8">mmm, dd yyyy</dd>
+                <dd class="col-sm-9 col-xs-8"><time datetime="{{currAlert.published}}">{{ currAlert.published | date: 'medium' }}</time></dd>
             </dl>
         </div>
         
@@ -95,7 +103,7 @@
                 </div>
                 <div class="tiles-body">
                     <div class="pull-left"><i class="fa fa-group"></i></div>
-                    <div class="pull-right">125</div>
+                    <div class="pull-right">{{currAlert.sent_total}}</div>
                 </div>
             </a>
             
@@ -108,7 +116,7 @@
                         </div>
                         <div class="tiles-body">
                             <div class="pull-left"><i class="fa fa-mobile"></i></div>
-                            <div class="pull-right">100</div>
+                            <div class="pull-right">{{currAlert.sent_sms}}</div>
                         </div>
                     </a>
                 </div>
@@ -121,7 +129,7 @@
                         </div>
                         <div class="tiles-body">
                             <div class="pull-left"><i class="fa fa-envelope"></i></div>
-                            <div class="pull-right">25</div>
+                            <div class="pull-right">{{currAlert.sent_email}}</div>
                         </div>
                     </a>
                 </div>
@@ -130,14 +138,20 @@
     </div>
     
     <!-- Effected Area Map-->
-    <h3>Map of effected Area</h3>
-    <div class="alert-location-map">map here</div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>Map of affected area</h3>
+            <p>The polygon wrapping all icons is the affected area, each <b>blue icon represents a user</b> that has been notified either by email or sms, and the <b>red icon is the alert's location</b>.</p>
+            <div id="alerts_map"></div>
+        </div>
+    </div>
 </div>
 
 
 <!-- Bootstrap core JavaScript
     ================================================== --> 
 <!-- Placed at the end of the document so the pages load faster --> 
+<script src="js/base.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
 <script>window.jQuery || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script> 
 <script src="js/bootstrap.min.js"></script> 
@@ -148,9 +162,11 @@
 <!-- Leaflet scripts -->
 <script src="js/vendor/leaflet.js"></script>
 <script src="js/vendor/leaflet.draw.js"></script>
+<script src="js/vendor/leaflet-search.min.js"></script>
+<script src="js/vendor/leaflet.awesome-markers.min.js"></script>
+<!-- Admin script -->
 <script src="js/admin.js"></script>
 <!-- Angular modules & controllers -->
-<script src="js/alertsApp.js"></script>
 <script src="js/alertsController.js"></script>
 
 </body>

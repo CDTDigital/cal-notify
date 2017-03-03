@@ -27,6 +27,9 @@
     height: 300px;
     margin-bottom: 10px;
 }
+.map-disclosure {
+    font-size: 15px;
+}
 
 .modal-error-msg {
     padding-top: 5px;
@@ -37,6 +40,71 @@
 
 .highlight {
     background-color: rgba(244, 185, 66, 0.6) !important;
+}
+
+.new-alert-btn {
+    color: #fff;
+    background-color: #333;
+}
+
+// Alerts table
+
+table td:nth-child(2) { 
+    max-width: 400px;
+}
+
+table {
+    .text-danger {
+        color: #e63900;
+        font-size: 22px;
+    }
+    .text-warning {
+        color: #e69900;
+        font-size: 22px;
+    }
+    td {
+        overflow: hidden;
+    }
+}
+
+// Custom modal header
+
+.modal-header {
+    background-color: #222;
+    color: #f2f2f2;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+
+    .close {
+        opacity: 0.5;
+        color: #fff;
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}
+
+// Alert details page
+
+.alert-details-header {
+    h1 {
+        display: inline-block !important;
+    }
+    a {
+        vertical-align: bottom;
+        &:hover {
+
+        }
+    }
+}
+
+.alert-detail-hr {
+    margin-top: 0px;
+    margin-bottom: 40px;
 }
 
 // PREVIEW TOGGLE CONTROLS

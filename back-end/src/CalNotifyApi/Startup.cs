@@ -86,7 +86,7 @@ namespace CalNotifyApi
                 .Enrich.FromLogContext().Enrich.WithProperty("SourceContext", AssemblyName)
                 // Application level events
                 .WriteTo.Logger(lc => lc
-                                    .Filter.ByIncludingOnly(Matching.FromSource("AssemblyName"))
+                                    .Filter.ByIncludingOnly(Matching.FromSource(AssemblyName))
                                     .WriteTo.Console().WriteTo.RollingFile("logs/api-{Date}.txt"))
                 // DB logging
                 .WriteTo.Logger(lc => lc
@@ -131,7 +131,6 @@ namespace CalNotifyApi
 
                 ConfigureConfigRoot(services);  // Global configuration
 
-                services.AddTransient<GeocodeIO>();
                 ConfigureMemoryCaches(services); // short lived, memory based persistance
                 ConfigureTokens(services);      // jwt service provider
                 ConfigureSwagger(services);

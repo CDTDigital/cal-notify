@@ -13,7 +13,7 @@ namespace CalNotifyApi.Events
         [DataMember(Name ="token")]
         public string Token { get; set; }
 
-        [DataMember(Name ="password"), Required, MinLength(6)]
+        [DataMember(Name ="password"), Required, MinLength(6), MaxLength(80)]
         public string Password { get; set; }
     }
 }

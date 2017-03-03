@@ -603,6 +603,9 @@ a.shortcut-tiles {
   height: 300px;
   margin-bottom: 10px;
 }
+.map-disclosure {
+  font-size: 15px;
+}
 .modal-error-msg {
   padding-top: 5px;
   padding-right: 20px;
@@ -611,6 +614,51 @@ a.shortcut-tiles {
 }
 .highlight {
   background-color: rgba(244, 185, 66, 0.6) !important;
+}
+.new-alert-btn {
+  color: #fff;
+  background-color: #333;
+}
+table td:nth-child(2) {
+  max-width: 400px;
+}
+table .text-danger {
+  color: #e63900;
+  font-size: 22px;
+}
+table .text-warning {
+  color: #e69900;
+  font-size: 22px;
+}
+table td {
+  overflow: hidden;
+}
+.modal-header {
+  background-color: #222;
+  color: #f2f2f2;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.modal-header .close {
+  opacity: 0.5;
+  color: #fff;
+}
+.modal-header .close:hover {
+  opacity: 0.8;
+}
+.alert-details-header h1 {
+  display: inline-block !important;
+}
+.alert-details-header a {
+  vertical-align: bottom;
+}
+.alert-detail-hr {
+  margin-top: 0px;
+  margin-bottom: 40px;
 }
 .preview-toggle {
   margin-bottom: 10px;

@@ -1,15 +1,73 @@
 var app = angular.module('alertsApp', []);
 
-app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
+// CUSTOM FILTER FOR ALERTS
+app.filter("criteriaMatch", function() {
+
+    function categoryCriteria(alert, filters) {
+        if(typeof filters.category === 'undefined' || filters.category == "Any")
+            return true;
+        else
+            return alert.category === filters.category;
+    }
+
+    function severityCriteria(alert, filters) {
+        var match = false;
+
+        if(!filters.severityEmergency && !filters.severityNonEmergency) {
+            return true;
+        } else {
+            if(filters.severityEmergency && alert.severity == "Emergency")
+                match = true;
+            if(filters.severityNonEmergency && alert.severity == "NonEmergency")
+                match = true;
+        }
+        
+        return match;
+    }
+
+    function sourceCriteria(alert, filters) {
+        if(typeof filters.source === 'undefined' || filters.source == "Any")
+            return true;
+        else
+            return alert.source === filters.source;
+    }
+
+    function datesCriteria(alert, filters) {
+        if(typeof filters.startDate !== 'undefined' && typeof filters.endDate !== 'undefined') {
+            var startDate = new Date(filters.startDate);
+            var endDate = new Date(filters.endDate);
+            return (alert.created >= startDate && alert.created <= endDate);
+        }
+        return true;
+    }
+
+    return function(alert, filters) {
+        return alert.filter(function(element) { 
+            return categoryCriteria(element,filters) && severityCriteria(element,filters) && sourceCriteria(element,filters) && datesCriteria(element, filters);
+        });
+    };
+});
+
+app.filter('detectURLs', function($sce) {
+    return function(text) {
+        var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+        return $sce.trustAsHtml(text.replace(exp,"<a target='_blank' href='$1'>$1</a>")); 
+    };
+});
+
+app.controller('alertsCtrl', function($scope, $filter, $sce, $timeout, $http) {
         
     //---------------------------------------------------------------------------------------------------
     //-------------------------------------- I N I T  V A R S -------------------------------------------
     //---------------------------------------------------------------------------------------------------
 
     $scope.categories = ['Any', 'Fire', 'Flood', 'Weather', 'Tsunami', 'Earthquake'];
-    $scope.sources = ['Any', 'NOAA', 'GIS', '...'];
+    $scope.sources = ['Any', 'NOAA', 'USGS', 'Manual entry'];
     $scope.severities = ['Emergency', 'NonEmergency'];
     $scope.alertsLoading = true;
+    $scope.missingAffectedArea = false;
+    $scope.publishAlertId = null;
+    $scope.filters = { category: "Any", source: "Any", severityEmergency: false, severityNonEmergency: false };
 
     // API Token used as authorization on each API call
     $scope.apiToken = "";
@@ -47,6 +105,7 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
             self.published_by = null;
         } else {
             self = obj;
+
             // Convert string date to date objects
             self.created = (self.created && self.created != "" ? new Date(self.created) : self.created);
             self.published = (self.published && self.published != "" ? new Date(self.published) : self.published);
@@ -69,8 +128,16 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
             } else {
                 // Create JSON object in case it was converted to string
                 self.location = (typeof self.location == 'object' ? self.location : JSON.parse(self.location));
-                self.affected_area = (typeof self.affected_area == 'object' ? self.affected_area : JSON.parse(self.affected_area));
+                self.affected_area = (typeof self.affected_area == 'object' ? self.affected_area : (self.affected_area != "" ? JSON.parse(self.affected_area) : self.affected_area));
             }
+        }
+
+        self.addBroadcastDetails = function (log) {
+            self.sent_email = log.sent_email;
+            self.sent_sms = log.sent_sms;
+            self.sent_total = self.sent_email + self.sent_sms;
+            self.published = new Date(log.published);
+            self.sent_locations = log.sent_locations;
         }
 
         self.convertDatesToString = function () {
@@ -114,7 +181,7 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
             // This callback will be called asynchronously when the response is available
             var alerts = response.data.result;
             for(var i = 0, size = alerts.length; i < size; i++) {
-                $scope.alerts.push(new Alert(alerts[i], true));
+                $scope.alerts.unshift(new Alert(alerts[i], true));
             }
             updateMap();
         }, function errorCallback(response) {
@@ -179,40 +246,99 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
         $scope.currAlert = new Alert(alert);
 
         var location = typeof $scope.currAlert.location == 'object' ? $scope.currAlert.location : JSON.parse($scope.currAlert.location);
-        var area = typeof $scope.currAlert.affected_area == 'object' ? $scope.currAlert.affected_area : JSON.parse($scope.currAlert.affected_area);
+        var area = typeof $scope.currAlert.affected_area == 'object' ? $scope.currAlert.affected_area : ($scope.currAlert.affected_area != "" ? JSON.parse($scope.currAlert.affected_area) : null);
         setCoverageMap(location, area || {});
+
 		$(".alert-modal").modal('show');
     }
 
-    $scope.publishAlert = function(id) {
-        $("#publish_btn_" + id).button('loading');
+    $scope.confirmPublishAlert = function(id) {
         // Retrieve alert by id 
-    	var alert = $filter("filter")($scope.alerts, { id: id }, true)[0];
-        var alertIndex = $scope.alerts.indexOf(alert);
+        var alert = $filter("filter")($scope.alerts, { id: id }, true)[0];
+        // Check if alert already has an affected area defined, if it doesn't open the edit modal
+        if(!alert.affected_area || alert.affected_area == "") {
+            $scope.missingAffectedArea = true;
+            $scope.editAlert(id);
+        } else {
+            $scope.publishAlertId = id;
+            $(".confirmation-modal").modal('show');
+        }
+    };
 
-        // Broadcast the notification to the affected users
+    $scope.publishAlert = function() {
+        if($scope.publishAlertId) {
+            $("#publish_alert").button('loading');
+            
+            // Retrieve alert by id 
+            var alert = $filter("filter")($scope.alerts, { id: $scope.publishAlertId }, true)[0];
+            var alertIndex = $scope.alerts.indexOf(alert);
+
+            // Broadcast the notification to the affected users
+            $http({
+                method: 'PUT',
+                url: baseApiAddress + '/v1/notification/' + alert.id,
+                headers: { 'Content-Type': 'application/json' }
+            }).then(function successCallback(response) {
+                setTimeout(function() { 
+                    // Update alert status
+                    alert.status = "Published";
+                    alert.published = new Date();
+                    $scope.alerts[alertIndex] = alert;
+                    $scope.$apply();
+                    $(".confirmation-modal").modal('hide');
+                    $("#publish_alert").button('reset');
+                }, 2000);
+            }, function errorCallback(response) {
+                $("#publish_alert").button('reset');
+                $(".modal-error-msg").text(response.data.meta.message);
+            });
+        }
+    }
+
+    $scope.getAlert = function(id) {
         $http({
-            method: 'PUT',
-            url: baseApiAddress + '/v1/notification/' + alert.id,
+            method: 'GET',
+            url: baseApiAddress + '/v1/notification/' + id,
             headers: { 'Content-Type': 'application/json' }
         }).then(function successCallback(response) {
-            setTimeout(function() { 
-                // Update alert status
-                alert.status = "Published";
-                alert.published = new Date();
-                $scope.alerts[alertIndex] = alert;
-                $scope.$apply();
-                $("#publish_btn_" + id).button('reset'); 
-            }, 2000);
+            // Update current alert based on returned object
+            $scope.currAlert = new Alert(response.data.result, true);
+            // Get broadcast details of alert
+            $scope.getAlertDetails(id);
         }, function errorCallback(response) {
-            console.log(response.data.meta.message);
-            $("#publish_btn_" + id).button('reset');
+            $scope.alertsLoading = false;
+        });
+    };
+
+    $scope.getAlertDetails = function(id) {
+        $http({
+            method: 'GET',
+            url: baseApiAddress + '/v1/notification/' + id + '/log',
+            headers: { 'Content-Type': 'application/json' }
+        }).then(function successCallback(response) {
+            // Update alert details based on returned object
+            $scope.currAlert.addBroadcastDetails(response.data.result);
+            updateMapForCurrentAlert();
+            $scope.alertsLoading = false;
+        }, function errorCallback(response) {
+            $scope.alertsLoading = false;
         });
     };
 
     $scope.resetAlert = function() {
         $scope.currAlert = new Alert();
     };
+
+    $scope.updateAlertsMap = function() {
+        updateMap();
+    };
+
+    // Update map when filters change
+
+    $scope.$watch('filters.category', function(newVal, oldVal){ updateMap(); });
+    $scope.$watch('filters.source', function(newVal, oldVal){ updateMap(); });
+    $scope.$watch('filters.severityEmergency', function(newVal, oldVal){ updateMap(); });
+    $scope.$watch('filters.severityNonEmergency', function(newVal, oldVal){ updateMap(); });
 
     //---------------------------------------------------------------------------------------------------
     //------------------------------ P R I V A T E  M E T H O D S ---------------------------------------
@@ -223,35 +349,42 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
     // Bind infowindows to features
     function onEachFeature(feature, layer) {
         if (feature.properties) {
-            layer.bindPopup("<b>" + feature.properties.category + "</b><br/>" +feature.properties.title);
+            if (feature.properties.category)
+                layer.bindPopup("<b>" + feature.properties.category + "</b><br/>" +feature.properties.title);
+            else
+                layer.bindPopup("<b>" + feature.properties.title + "</b>");
         }
     }
 
     // Style map features, add category icons
     function getCategoryIcons(feature, latlng) {
-        // Marker colors: 'red', 'darkred', 'orange', 'green', 'darkgreen', 'blue', 'purple', 'darkpuple', 'cadetblue'
-        // Categories ['Any', 'Fire', 'Flood', 'Weather', 'Tsunami', 'Earthquake'];
-        var categoryIcon = "";
-        switch(feature.properties.category) {
-            case "Fire":
-                categoryIcon = "fire"; break;
-            case "Flood":
-                categoryIcon = "tint"; break;
-            case "Weather":
-                categoryIcon = "cloud"; break;
-            case "Tsunami":
-                categoryIcon = "flag"; break;
-            case "Earthquake": 
-                categoryIcon = "globe"; break;
-            default:
-                categoryIcon = "star";
-        }
-        var categoryMarker = L.AwesomeMarkers.icon({
-            icon: categoryIcon,
-            markerColor: (feature.properties.severity == "Emergency" ? 'red' : 'blue')
-        });
+        if(feature.properties) {
+            // Marker colors: 'red', 'darkred', 'orange', 'green', 'darkgreen', 'blue', 'purple', 'darkpuple', 'cadetblue'
+            // Categories ['Any', 'Fire', 'Flood', 'Weather', 'Tsunami', 'Earthquake'];
+            var categoryIcon = "";
+            switch(feature.properties.category) {
+                case "Fire":
+                    categoryIcon = "fire"; break;
+                case "Flood":
+                    categoryIcon = "tint"; break;
+                case "Weather":
+                    categoryIcon = "cloud"; break;
+                case "Tsunami":
+                    categoryIcon = "flag"; break;
+                case "Earthquake": 
+                    categoryIcon = "globe"; break;
+                default:
+                    categoryIcon = "star";
+            }
+            var categoryMarker = L.AwesomeMarkers.icon({
+                icon: categoryIcon,
+                markerColor: (feature.properties.severity == "Emergency" ? 'red' : 'blue')
+            });
 
-        return L.marker(latlng, {icon: categoryMarker});
+            return L.marker(latlng, {icon: categoryMarker});
+        } else {
+            return L.marker(latlng, {icon: L.AwesomeMarkers.icon({ icon: 'home', markerColor: 'blue' })});
+        }
     }
 
     function updateMap() {
@@ -259,9 +392,12 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
         if(geoJSONLayer)
             alertsMap.removeLayer(geoJSONLayer);
 
+        // Filter alerts first, then create geoJSON
+        var mapAlerts = $filter('criteriaMatch')($scope.alerts,$scope.filters);
+
         // Collect geometries from alerts and create geoJSON
         var geoJSON = { type: "FeatureCollection", features: [] }
-        $.each($scope.alerts, function( index, alert ) {
+        $.each(mapAlerts, function( index, alert ) {
             // Create JSON object in case it was converted to string
             alert.location = (typeof alert.location == 'object' ? alert.location : JSON.parse(alert.location));
             var newFeature = { type: "Feature", geometry: alert.location, properties: { title: alert.title, category: alert.category, severity: alert.severity } }; 
@@ -271,7 +407,43 @@ app.controller('alertsCtrl', function($scope, $filter, $timeout, $http) {
         if(geoJSON.features.length > 0) {
             // Add geoJSON layer to the map
             geoJSONLayer = L.geoJSON(geoJSON, {
-                //style: style,
+                onEachFeature: onEachFeature,
+                pointToLayer: getCategoryIcons
+            }).addTo(alertsMap);
+            alertsMap.fitBounds(geoJSONLayer.getBounds());
+        }
+    }
+
+    function updateMapForCurrentAlert() {
+        // Clear geoJSON layer
+        if(geoJSONLayer)
+            alertsMap.removeLayer(geoJSONLayer);
+
+        // Collect geometries from alerts and create geoJSON
+        var geoJSON = { type: "FeatureCollection", features: [] }
+
+        // Add alert location
+        var locationFeature = { type: "Feature", geometry: $scope.currAlert.location, properties: { title: $scope.currAlert.title, category: $scope.currAlert.category, severity: $scope.currAlert.severity } }; 
+        geoJSON.features.push(locationFeature);
+        
+        // Add alert affected area
+        var area = $scope.currAlert.affected_area;
+        area.coordinates = [area.coordinates];
+        var areaGeoJSON = { type: "Feature", geometry: area, properties: { title: "Affected area" } }; 
+        geoJSON.features.push(areaGeoJSON);
+
+        // Add sent locations to map
+        $.each($scope.currAlert.sent_locations, function( index, location ) {
+            // Create JSON object in case it was converted to string
+            location = (typeof location == 'object' ? location : JSON.parse(location));
+            var locationGeometry = { type: "Point", coordinates: [location.lng, location.lat] };
+            var newFeature = { type: "Feature", geometry: locationGeometry, properties: { title: "User location" } }; 
+            geoJSON.features.push(newFeature);
+        });
+        
+        if(geoJSON.features.length > 0) {
+            // Add geoJSON layer to the map
+            geoJSONLayer = L.geoJSON(geoJSON, {
                 onEachFeature: onEachFeature,
                 pointToLayer: getCategoryIcons
             }).addTo(alertsMap);

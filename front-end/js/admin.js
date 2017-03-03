@@ -75,13 +75,19 @@ function setCoverageMap(location, area, radius) {
 
 	if (typeof coverageMap !== 'undefined') {
 		drawnItems.clearLayers();
+		$('.coverage-map-coords').val('');
+		$('.coverage-map-area-coords').val('');
 	} else {
 		// Init map
 		coverageMap = new L.map($('.coverage-map')[0]).setView([38.663, -98.454], 4);
 
 		// Set base tiles
-		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+		/*L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 				attribution: settings.mapAttribution
+		}).addTo(coverageMap);*/
+		L.tileLayer('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
+			maxZoom: 18,
+			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 		}).addTo(coverageMap);
 
 		// Add search box
@@ -120,7 +126,7 @@ function setCoverageMap(location, area, radius) {
 				, marker: true
 				, polygon: true
 				, polyline: false
-				, rectangle: true
+				, rectangle: false
 			}
 			, edit: {
 				featureGroup: drawnItems
@@ -209,20 +215,38 @@ function getUrlParameter(name) {
     var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
     var results = regex.exec(location.search);
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-};
+}
 
 $(document).ready(function () {
+
+	$('[data-toggle="tooltip"]').tooltip();
+
 	// Reference to AngularJS scope
 	scope = angular.element($("body")).scope();
 
+	var alertId = getUrlParameter('alertId');
 	// Save token to use on API calls
 	scope.$apply(function(){ 
 		scope.setApiToken(getUrlParameter('token'));
-		// Retrieve alerts from API
-		scope.getAlerts();
+
+		// If alertId is present we're in the alert details page
+		if(alertId != "") {
+			scope.getAlert(alertId);
+		} else {
+			// Retrieve alerts from API
+			scope.getAlerts();
+		}
 	});
 
 	// Alert modal handlers
+
+	$(".alert-modal").on('hidden.bs.modal', function () {
+		// Clear missing area flag so next time the modal is opened the warning msg is gone
+		scope.$apply(function(){ 
+	    	scope.missingAffectedArea = false;
+	    	scope.publishAlertId = null;
+	    });
+	});
 
 	$(".alert-modal").on('shown.bs.modal', function () {
 		// Notify that modal is loaded so the map is resized
@@ -232,6 +256,10 @@ $(document).ready(function () {
 
 	$(".alert-modal").on('show.bs.modal', function () {
 		$(".coverage-map").css("opacity","0");
+		$(".modal-error-msg").text("");
+	});
+
+	$(".confirmation-modal").on('show.bs.modal', function () {
 		$(".modal-error-msg").text("");
 	});
 
@@ -248,6 +276,24 @@ $(document).ready(function () {
 	    });
 		$(".alert-modal").modal('show');
 	});
+
+	// Init datetime pickers
+
+	// If alertId is present we're in the alert details page, in which case we don't need the datepicker
+	if(alertId == "") {
+		$('#filter_start_date').datetimepicker({ format: 'MMM D, YYYY, h:mm a' });
+		$('#filter_end_date').datetimepicker({ format: 'MMM D, YYYY, h:mm a' });
+
+		// Listener to change scope filters
+		$("#filter_start_date").on("dp.change", function() {
+	        scope.filters.startDate = $("#filter_start_date").val();
+	        scope.$apply();
+	    });
+	    $("#filter_end_date").on("dp.change", function() {
+	        scope.filters.endDate = $("#filter_end_date").val();
+	        scope.$apply();
+	    });
+	}
 
 	// -------- Init Alerts Map (tab) --------
 
@@ -296,28 +342,31 @@ $(document).ready(function () {
 		position: 'topright'
 	}));
 
-	// Add legend to map
-	var legend = L.control({position: 'bottomright'});
-	legend.onAdd = function (map) {
+	// If alertId is present we're in the alert details page, in which case we don't add a legend
+	if(alertId == "") {
+		// Add legend to map
+		var legend = L.control({position: 'bottomright'});
+		legend.onAdd = function (map) {
 
-	    var div = L.DomUtil.create('div', 'info legend'),
-	        severities = [{ color: "#CF3C28", name: "Emergency" }, { color: "#37A7DA", name: "Non-Emergency" }],
-	        categories = [{ icon: "fire", name: "Fire" }, { icon: "tint", name: "Flood" }, { icon: "cloud", name: "Weather" }, 
-	        			  { icon: "flag", name: "Tsunami" }, { icon: "globe", name: "Earthquake" }, { icon: "star", name: "Any" }];
+		    var div = L.DomUtil.create('div', 'info legend'),
+		        severities = [{ color: "#CF3C28", name: "Emergency" }, { color: "#37A7DA", name: "Non-Emergency" }],
+		        categories = [{ icon: "fire", name: "Fire" }, { icon: "tint", name: "Flood" }, { icon: "cloud", name: "Weather" }, 
+		        			  { icon: "flag", name: "Tsunami" }, { icon: "globe", name: "Earthquake" }, { icon: "star", name: "Any" }];
 
-	    // Generate a label for each Severity & Category type
-	    for (var i = 0; i < severities.length; i++) {
-	        div.innerHTML += '<div><i style="background:' + severities[i].color + '"></i> ' + severities[i].name + '</div>';
-	    }
-	    div.innerHTML += '<hr/>';
-	    for (var j = 0; j < categories.length; j++) {
-	        div.innerHTML += '<div><i class="fa fa-' + categories[j].icon + '" aria-hidden="true"></i> ' + categories[j].name + '</div>';
-	    }
-	    
-	    return div;
-	};
+		    // Generate a label for each Severity & Category type
+		    for (var i = 0; i < severities.length; i++) {
+		        div.innerHTML += '<div><i style="background:' + severities[i].color + '"></i> ' + severities[i].name + '</div>';
+		    }
+		    div.innerHTML += '<hr/>';
+		    for (var j = 0; j < categories.length; j++) {
+		        div.innerHTML += '<div><i class="fa fa-' + categories[j].icon + '" aria-hidden="true"></i> ' + categories[j].name + '</div>';
+		    }
 
-	legend.addTo(alertsMap);
+		    return div;
+		};
+
+		legend.addTo(alertsMap);
+	}
 
     // Use resize event to set new map height and zoom level
 	window.onresize = function() {

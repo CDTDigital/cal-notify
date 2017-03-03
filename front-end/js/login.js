@@ -13,7 +13,6 @@ $(document).ready(function () {
             contact_info: form.find('[name="contact_info"]').val(),
             password: form.find('[name="password"]').val()
         };
-        console.log(data);
 
         $.ajax({
             url: baseApiAddress + '/v1/users/login',
@@ -28,6 +27,7 @@ $(document).ready(function () {
             },
             error: function (xhr, status, error) {
                 form.find('.alert').remove(); // clear old alerts
+                console.log(xhr.responseJSON);
                 if (xhr.responseJSON !== undefined) {
                     if(xhr.responseJSON.meta.details.length > 0){
                         xhr.responseJSON.meta.details.forEach(function(msg){
@@ -35,7 +35,11 @@ $(document).ready(function () {
                             form.prepend(alert);
                         })
 
+                    } else {
+                        var alert = '<div class="alert alert-danger">' + xhr.responseJSON.meta.message + '</div>'
+                        form.prepend(alert);
                     }
+
 
                 } else {
                     var msg = "unknown server error";
@@ -44,6 +48,22 @@ $(document).ready(function () {
                 }
             }
         });
+    });
+
+    // Check if enter is pressed on clients password login
+    $(".js-form-wrapper-login .js-password-input").keypress(function(e) {
+        // Enter pressed?
+        if(e.which == 10 || e.which == 13) {
+            $(".js-form-wrapper-login .js-login").trigger('click');
+        }
+    });
+
+    // Check if enter is pressed on admin's password login
+    $(".js-form-wrapper-admin-login .js-password-input").keypress(function(e) {
+        // Enter pressed?
+        if(e.which == 10 || e.which == 13) {
+            $(".js-form-wrapper-admin-login .js-login").trigger('click');
+        }
     });
 
 
@@ -77,6 +97,7 @@ $(document).ready(function () {
                 $(".js-form-wrapper-admin-login .js-login").button("reset");
             },
             error: function (xhr, status, error) {
+                console.log(xhr.responseJSON);
                 form.find('.alert').remove(); // clear old alerts
                 if (xhr.responseJSON !== undefined) {
                     if(xhr.responseJSON.meta.details.length > 0){
@@ -85,6 +106,10 @@ $(document).ready(function () {
                             form.prepend(alert);
                         })
 
+
+                    } else {
+                        var alert = '<div class="alert alert-danger">' + xhr.responseJSON.meta.message + '</div>'
+                        form.prepend(alert);
                     }
 
                 } else {

@@ -155,7 +155,7 @@ namespace CalNotifyApi.Controllers
                     if (!string.IsNullOrWhiteSpace(tempUser.Email) && tempUser.Email != user.Email)
                     {
                         user.Email = tempUser.Email;
-                        Log.Information("Sending Email Validation to {user}", tempUser);
+                        Log.Information("Sending Email Validation to {user}", tempUser.Email);
                         var temp = new TempUser(user);
                         await _validation.SendValidationToEmail(temp);
                         _memoryCache.SetForChallenge(temp);
@@ -165,7 +165,7 @@ namespace CalNotifyApi.Controllers
                     if (!string.IsNullOrWhiteSpace(tempUser.PhoneNumber) && tempUser.PhoneNumber != user.PhoneNumber)
                     {
                         user.PhoneNumber = tempUser.PhoneNumber;
-                        Log.Information("Sending SMS Validation to {user}", tempUser);
+                        Log.Information("Sending SMS Validation to {user}", tempUser.PhoneNumber);
                         var temp = new TempUser(user);
                         await _validation.SendValidationToSms(temp);
                         _memoryCache.SetForChallenge(temp);
@@ -190,10 +190,13 @@ namespace CalNotifyApi.Controllers
 
         }
 
-
+        /// <summary>
+        /// Provides an endpoint for user to delete themselves
+        /// </summary>
+        /// <param name="id">Id of the user</param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         [ValidateGenricExists]
-        [Authorize(Constants.AdminRole)] // Lock down deleting a GenericUser
         [SwaggerOperation("DELETE_GenericUser_BY_ID",
             Tags = new[] { Constants.GenericUserEndpoint, Constants.AdminConfigurationEndpoint })]
         [ProducesResponseType(typeof(ResponseShell<MaybeSuccess>), 200)]
@@ -202,6 +205,7 @@ namespace CalNotifyApi.Controllers
 
             var user = _context.Users.FirstOrDefault(u => u.Id == new Guid(id));
             _context.AllUsers.Remove(user);
+            _context.SaveChanges();
             return ResponseShell.Ok(new MaybeSuccess() { Success = true });
         }
 

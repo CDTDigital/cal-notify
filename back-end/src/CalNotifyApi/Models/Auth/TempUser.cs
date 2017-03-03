@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using CalNotifyApi.Models.Addresses;
 using CalNotifyApi.Models.Interfaces;
+using CalNotifyApi.Utils;
 using Newtonsoft.Json;
 
 namespace CalNotifyApi.Models.Auth
@@ -31,13 +32,13 @@ namespace CalNotifyApi.Models.Auth
             PhoneNumber = phone;
         }
 
-        [DataMember(Name = "name")]
+        [DataMember(Name = "name"),Required]
         public virtual string Name { get; set; }
 
-        [DataMember(Name = "password"),Required]
+        [DataMember(Name = "password"),Required, MaxLength(80)]
         public virtual string Password { get; set; }
 
-        [DataMember(Name = "email")]
+        [DataMember(Name = "email"), MaxLength(80)]
         public virtual string Email { get; set; }
 
 
@@ -45,7 +46,7 @@ namespace CalNotifyApi.Models.Auth
         public virtual Guid Id { get; set; }
 
 
-        [DataMember(Name = "phone")]
+        [DataMember(Name = "phone"), MaxLength(20)]
         public virtual string PhoneNumber { get; set; }
 
 
@@ -73,7 +74,10 @@ namespace CalNotifyApi.Models.Auth
                 yield return new ValidationResult("Please provide an address.");
             }
 
-        
+            if (!string.IsNullOrEmpty(PhoneNumber) && !PhoneNumber.IsPhone())
+            {
+                yield return new ValidationResult("Please provide a valid phone number.");
+            }
 
         }
 
@@ -106,7 +110,11 @@ namespace CalNotifyApi.Models.Auth
                 yield return new ValidationResult("Need to provide at least an Email or Phone number.");
             }
 
-    
+
+            if (!string.IsNullOrEmpty(PhoneNumber) && !PhoneNumber.IsPhone())
+            {
+                yield return new ValidationResult("Please provide a valid phone number.");
+            }
 
         }
     }
@@ -117,10 +125,10 @@ namespace CalNotifyApi.Models.Auth
     {
        
 
-        [DataMember(Name = "password")]
+        [DataMember(Name = "password"), MaxLength(80)]
         public virtual string Password { get; set; }
 
-        [DataMember(Name = "email"), EmailAddress]
+        [DataMember(Name = "email"), MaxLength(80)]
         public virtual string Email { get; set; }
 
 
@@ -128,7 +136,7 @@ namespace CalNotifyApi.Models.Auth
         public virtual Guid Id { get; set; }
 
 
-        [DataMember(Name = "phone"), Phone]
+        [DataMember(Name = "phone"), MaxLength(20)]
         public virtual string PhoneNumber { get; set; }
 
 

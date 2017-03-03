@@ -12,6 +12,7 @@
 
 <!-- Bootstrap core CSS -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
 
 <!-- FontAwesome Icons-->
 <link href="css/font-awesome.min.css" rel="stylesheet">
@@ -55,6 +56,10 @@
     <div class="row">
         <div class="col-sm-12 main">
             <h1 class="page-header">Alerts Dashboard</h1>
+            <p>Welcome administrator!</p>
+            <p>The dashboard is <b>populated automatically</b> by constant monitoring of several <b>USGS & NOAA sources</b> for emergencies, but you can manually create alerts or modify those already retrieved from our sources.</p>
+            <p>An alert is not sent to users until the admin selects the publish button associated to the alert, once it's published, a link will appear on the status of the alert, this will redirect you to a page which contains details about users reached in the affected area.</p>
+            <p>The alerts can be presented using the default list view <i class="glyphicon glyphicon-th-list"></i> or within a map separated by category and severity <i class="glyphicon glyphicon-map-marker"></i>. To locate specific alerts please expand the filters section, every change will automatically update the list & map.</p><br/>
             <div class="row">
                 <div class="col-xs-6">
                     <button class="btn btn-default text-left new-alert-btn">Create Alert</button>
@@ -69,6 +74,7 @@
 
             <div class="tab-content">
 
+                <!-- FILTERS -->
                 <div class="panel-group" id="panel-filter" role="tablist" aria-multiselectable="true" ng-show="alerts.length > 0">
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="collapsePanelOne">
@@ -80,17 +86,17 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="filterCategory">Category</label>
+                                                <label for="filterCategory">Category</label>&nbsp;
                                                 <!--<select class="form-control" ng-model="filterCategory" ng-options="x for x in categories"></select>-->
-                                                <select class="form-control" ng-model="filterCategory" id="filterCategory">
+                                                <select class="form-control" ng-model="filters.category" id="filterCategory">
                                                     <option ng-repeat="category in categories" value="{{category}}">{{category}}</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="filterSource">Source</label>
-                                                <select class="form-control" ng-model="filterSource" id="filterSource">
+                                                <label for="filterSource">Source</label>&nbsp;
+                                                <select class="form-control" ng-model="filters.source" id="filterSource">
                                                     <option ng-repeat="source in sources" value="{{source}}">{{source}}</option>
                                                 </select>
                                             </div>
@@ -99,20 +105,21 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <strong>Severity</strong>
-                                                <div class="checkbox" ng-repeat="severity in severities">
-                                                    <label> <input type="checkbox" value=""> {{severity}}</label> &nbsp;
+                                                <strong>Severity</strong>&nbsp;
+                                                <div class="checkbox">
+                                                    <label> <input type="checkbox" value="" ng-model="filters.severityEmergency"> Emergency</label> &nbsp;
+                                                    <label> <input type="checkbox" value="" ng-model="filters.severityNonEmergency"> Non-Emergency</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <strong>Date Range</strong>
+                                                <strong>Date Range</strong>&nbsp;
                                                 <label for="FilterStartDate" class="sr-only">Start Date</label>
-                                                <input type="date" class="form-control" id="FilterStartDate" placeholder="Start">
+                                                <input type="text" class="form-control" ng-model="filters.startDate" id="filter_start_date" placeholder="Start">
                                                 to
                                                 <label for="FilterEndDate" class="sr-only">End Date</label>
-                                                <input type="date" class="form-control" id="FilterEndDate" placeholder="End">
+                                                <input type="text" class="form-control" ng-model="filters.endDate" id="filter_end_date" placeholder="End">
                                             </div>
                                         </div>
                                     </div>
@@ -129,29 +136,34 @@
                             <thead>
                                 <tr>
                                     <th>Severity</th>
+                                    <th>Category</th>
                                     <th>Title</th>
                                     <th>Description</th>
+                                    <th>Status</th>
                                     <th>Created</th>
-                                    <th>Category</th>
-                                    <th>Date Sent</th>
-                                    <th>Publish</th>
+                                    <!--<th>Date Sent</th>-->
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="alert in alerts">
+                                <tr ng-repeat="alert in alerts | criteriaMatch:filters">
                                     <td style="text-align:center">
-                                        <span ng-if="alert.severity == 'Emergency'" class="glyphicon glyphicon-warning-sign text-danger"></span>
+                                        <span ng-if="alert.severity == 'Emergency'" class="glyphicon glyphicon-exclamation-sign text-danger"></span>
                                         <span ng-if="alert.severity == 'NonEmergency'" class="glyphicon glyphicon-warning-sign text-warning"></span>
                                     </td>
+                                    <td>{{ alert.category }}</td>
                                     <td>
-                                        <span class="text-uppercase"><a href="" ng-click="editAlert(alert.id)">{{ alert.title }}</a></span>
+                                        <span><a href="" ng-click="editAlert(alert.id)" title="Edit">{{ alert.title }}</a></span>
                                     </td>
-                                    <td class="text-uppercase">{{ alert.details }}</td>
-                                    <td><time datetime="{{alert.created}}">{{ alert.created | date: 'mediumDate' }}</time></td>
-                                    <td class="text-uppercase">{{ alert.category }}</td>
-                                    <td><time datetime="{{alert.published}}">{{ alert.published | date: 'mediumDate' }}</time></td>
+                                    <td><span ng-bind-html='alert.details | detectURLs'></span></td>
                                     <td>
-                                        <button ng-if="alert.status != 'Published'" id="publish_btn_{{alert.id}}" class="btn btn-default publish-btn" data-loading-text="Notifying users..." ng-click="publishAlert(alert.id)">Publish</button>
+                                        <a ng-if="alert.status == 'Published'" href="notification-detail.html?alertId={{alert.id}}&token={{apiToken}}" title="View Details">Published</a>
+                                        <span ng-if="alert.status != 'Published'">{{alert.status}}</span>
+                                    </td>
+                                    <td><time datetime="{{alert.created}}" title="{{alert.created | date: 'medium' }}">{{ alert.created | date: 'mediumDate' }}</time></td>
+                                    <!--<td><time datetime="{{alert.published}}" title="{{alert.created | date: 'medium' }}">{{ alert.published | date: 'mediumDate' }}</time></td>-->
+                                    <td>
+                                        <button ng-if="alert.status != 'Published'" class="btn btn-default publish-btn" data-loading-text="Notifying users..." ng-click="confirmPublishAlert(alert.id)">Publish</button>
                                         <button ng-if="alert.status == 'Published'" class="btn btn-success republish-btn" data-loading-text="Updating..." ng-click="editAlert(alert.id, true)">Duplicate</button>
                                     </td>
                                 </tr>
@@ -186,10 +198,14 @@
             </div>
             <div class="modal-body">
                 <form name="alertForm" validate-non-visible-controls>
+                    <div ng-if="missingAffectedArea" class="alert alert-warning fade in">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>Missing Affected Area</strong>. To publish, please use the map below to define the area that will be notified about the alert.
+                    </div>
                     <!-- TITLE -->
                     <div class="form-group">
                         <label for="alertTitle">Title</label>
-                        <input type="text" class="form-control" name="title" id="alertTitle" ng-model="currAlert.title" placeholder="Message Title or Subject" required>
+                        <input type="text" class="form-control" name="title" id="alertTitle" ng-model="currAlert.title" placeholder="Message Title or Subject" maxlength="100" required>
                     </div>
 
                     <!-- SEVERITY -->
@@ -219,16 +235,16 @@
                     <!-- SHORT DESCRIPTION -->
                     <div class="form-group">
                         <label for="alertDescription">Short Description</label>
-                        <input type="text" class="form-control" name="description" id="alertDescription" ng-model="currAlert.details" placeholder="Short description less than 90 characters" required>
+                        <input type="text" class="form-control" name="description" id="alertDescription" ng-model="currAlert.details" placeholder="Short description less than 100 characters" maxlength="100" required>
                     </div>
 
                     <!-- MAP -->
                     <div class="form-group">
                         <label>Affected area</label>
-                        <p ng-if="!newAlert" class="affected-area-text">Use the drawing tools to define the area that should receive the alert:</p>
-                        <p ng-if="newAlert" class="affected-area-text">Drop a pin on the alert's location & use the drawing tools to define the affected area: <br><span class="text-danger">(Both pin and polygon are required to create alert)</span></p>
-                        
+                        <p ng-if="!newAlert" class="affected-area-text">Use the <b>drawing tools</b> to <b>define the affected area</b> that should receive the alert:</p>
+                        <p ng-if="newAlert" class="affected-area-text">Use the <b>drawing tools</b> on the map's top right to <b>define the alert's location</b> (pin) & the <b>affected area</b> (polygon):</p>
                         <div class="coverage-map"></div>
+                        <p class="text-danger map-disclosure">* Both pin (alert's location) and polygon (affected area) are required to save alert.</p>
                         <input type="hidden" name="location" class="coverage-map-coords" ng-model="currAlert.location" required>
                         <input type="hidden" name="affectedArea" class=" coverage-map-area-coords" ng-model="currAlert.affected_area" required>
                     </div>
@@ -246,6 +262,26 @@
     </div>
 </div>
 
+<!-- Confirmation modal -->
+<div class="modal fade confirmation-modal" tabindex="-1" role="dialog" aria-labelledby="confirmationModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Publish Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                You are about to send notifications to all users within the affected area, would you like to continue?
+            </div>
+            <div class="modal-footer">
+                <span class="modal-error-msg">An error occurred</span>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="publish_alert" class="btn btn-primary publish-btn" data-loading-text="Notifying users..." ng-click="publishAlert()">Publish</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Bootstrap core JavaScript
     ================================================== --> 
 <!-- Placed at the end of the document so the pages load faster -->
@@ -255,6 +291,9 @@
 <script src="js/bootstrap.min.js"></script> 
 <!-- Just to make our placeholder images work. Don't actually copy the next line! --> 
 <script src="js/vendor/holder.min.js"></script> 
+<!-- Datetime picker -->
+<script src="js/vendor/moment.min.js"></script>
+<script src="js/vendor/bootstrap-datetimepicker.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug --> 
 <!--<script src="js/ie10-viewport-bug-workaround.js"></script>-->
 <!-- Leaflet scripts -->

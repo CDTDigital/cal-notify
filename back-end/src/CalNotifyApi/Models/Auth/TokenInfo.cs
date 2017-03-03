@@ -28,10 +28,5 @@ namespace CalNotifyApi.Models.Auth
         [DataMember(Name = "user_id")]
         public string UserId { get; set; }
 
-        /// <summary>
-        ///     The key to use for google maps reverse geocoding calls
-        /// </summary>
-        [DataMember(Name = "google_services_key")]
-        public string GoogleServicesKey { get; set; }
     }
 }

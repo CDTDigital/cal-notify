@@ -2,6 +2,12 @@
 
 Cal-Notify provides real time updates on emergencies and other events in your area, using official sources that you can trust. Visit the website [here](http://cal-notify.symsoftsolutions.com).
 
+Test Admin account
+
+| Username            | Password     |
+| ------------------- | ------------ |
+| testAdmin1@test.com | 123testadmin |
+
 ## How We Built Cal-Notify
 
 To quickly design and develop a working prototype from start to finish, we used a combination of user-centered design and agile development. We used Scrum as our framework while we adhered to the principles of the agile manifesto for clear communication and workflow amongst the team.

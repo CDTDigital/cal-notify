@@ -4,9 +4,13 @@ To understand the API, a number of concepts are need to be understood: Our **aut
 
 Each concept is described in its own section followed by a miscellaneous section describing the other minor details of the API. 
 
+Please read and watch the example  [GIF](login.gif) on how to login in order to explore most of the swagger endpoints
+
 
 ## Authentication
 To explore and utilize the api requires authentication for most endpoints. The details of how tokens can be obtained is described below.
+
+**To explore the swagger endpoint follow the steps performed in this [GIF](login.gif)**
 
 
 Our authentication follows the **standard bearer token** approach, where our tokens are constructed as a  **JSON web tokens** or jwt. The json web token is  compact and digtially signed, and [holds a bunch of information,](https://jwt.io/introduction/) but for the purposes of our api we can treat it as an opaque token. 

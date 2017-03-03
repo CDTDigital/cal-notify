@@ -40,7 +40,6 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
 <!--                <li><a href="#">About</a></li>-->
-                <li><a href="current-alerts.html">Current Alerts</a></li>
                 <li><a href="javascript:;" data-toggle="modal" data-target=".register-modal">Sign Up</a></li>
                 <li><a href="javascript:;" data-toggle="modal" data-target=".login-modal">Login</a></li>
             </ul>
@@ -52,13 +51,11 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6 col-md-offset-3 text-center m-b-lg">
-                
+
                 <h1 class="m-t-0">Cal-Notify</h1>
                 <p class="lead">Cal-Notify provides real time updates on emergencies and other events in your area, using official sources that you can trust.</p>
-                <p>Sign up and start receiving notifications via email or SMS messages directly on your phone</p>
-                <p><img src="images/notification-type-icons.png" class="m-t" alt=""></p>
-                <button class="btn btn-default btn-lg m-t" data-toggle="modal" data-target=".register-modal">Sign up for Alerts</button>
-                
+                <button class="btn btn-danger btn-lg m-t" data-toggle="modal" data-target=".register-modal">Sign up for Alerts</button>
+
             </div>
         </div>
     </div>
@@ -66,18 +63,18 @@
 
 <div class="section section-default">
     <div class="container">
-        
+
         <div class="row">
            <div class="col-sm-10 col-sm-offset-1">
                <h2>Emergency Notification System</h2>
-               <p>If you live, work or go to school in california and are 18 and over, you may now register your cell phone or VoIP (voice over internet protocol) phone to receive emergency alerts sent by call, text, or email</p>
-               
+               <p>If you live, work or go to school in california and are 18 and over, you may now register to receive emergency alerts sent by text or email.</p>
+
                <h3 class="m-t-lg">Be Sure You are Registered to Get the Emergency Call, Text &amp; Email</h3>
                 <p>Emergency officials use the Cal-Notify Emergency Notification System to deliver incident-specific information or potentially life-saving instruction to the precise geographic area(s) affected. Emergency situations may include:</p>
                 <ul>
-                    <li>flooding, wildfires, and subsequent evacuations</li>
-                    <li>public safety incidents including crimes that affect your neighborhood</li>
-                    <li>and post-disaster information about shelters, transportation, or supplies</li>
+                    <li>Flooding, wildfires, and subsequent evacuations.</li>
+                    <li>Public safety incidents including crimes that affect your neighborhood.</li>
+                    <li>Post-disaster information about shelters, transportation, or supplies.</li>
                 </ul>
             </div>
         </div>
@@ -87,22 +84,34 @@
 <div class="section section-overstated">
     <div class="container">
        <h2 class="text-center">Types of Alerts</h2>
-       <p class="text-center m-b-lg">Cal-Notify may inform you of emergency and inportant non-emergency events occouring in your area including:</p>
+       <p class="text-center m-b-lg lead">Cal-Notify may inform you of emergency and important non-emergency events occurring in your area including:</p>
         <div class="row">
-            <div class="col-sm-4">
-                <img src="images/emergency-fire.png" class="img-responsive center-block" alt="Emergency">
-                <h3 class="text-center">Emergency</h3>
-                <p>Alerts issued when an imminent threat to life or property exists in your area, including severe man-made or natural disasters such as earthquakes, wild fires, flooding, hurricanes, and tornadoes.</p>
+            <div class="col-sm-6">
+                <div class="media">
+                  <div class="media-left">
+                    <a href="#">
+                      <img src="images/emergency-fire.png" class="media-object media-middle img-sm" alt="Emergency">
+                    </a>
+                  </div>
+                  <div class="media-body">
+                    <h3 class="media-heading">Emergency</h3>
+                    <p>Alerts issued when an imminent threat to life or property exists in your area, including severe man-made or natural disasters such as earthquakes, wildfires, flooding, hurricanes, and tornadoes.</p>
+                  </div>
+                </div>
             </div>
-            <div class="col-sm-4">
-                <img src="images/emergency-weather.png" class="img-responsive center-block" alt="Non-Emergency">
-                <h3 class="text-center">Non-Emergency</h3>
-                <p>Alerts issued when events may impact citizens including, road cloasures, weather advisories, AMBER alerts, </p>
-            </div>
-            <div class="col-sm-4">
-                <img src="images/emergency-president.png" class="img-responsive center-block" alt="Official">
-                <h3 class="text-center">Official</h3>
-                <p>Alerts issued by the President or a designee during a national emergency.</p>
+
+            <div class="col-sm-6">
+                <div class="media">
+                  <div class="media-left">
+                    <a href="#">
+                      <img src="images/emergency-weather.png" class="media-object media-middle img-sm" alt="Non-Emergency">
+                    </a>
+                  </div>
+                  <div class="media-body">
+                    <h3 class="media-heading">Non-Emergency</h3>
+                    <p>Alerts issued when events may impact citizens including, road closures, weather advisories, AMBER alerts.</p>
+                  </div>
+                </div>
             </div>
         </div>
     </div>
@@ -129,8 +138,16 @@
             <div class="modal-body">
 
                 <div class="form-group m-y">
+                    <label for="name-input" class="sr-only">Your Location</label>
+                    <p>Please provide an address</p>
+                    <div class="input-group m-b-md">
+                        <span class="input-group-addon" id="bas-name-addon"><i class="fa fa-user" aria-hidden="true"></i></span>
+                        <input type="text" class="form-control input-lg" id="name-input" placeholder="Your Name" aria-describedby="basic-name-addon" >
+                    </div>
+                </div>
+                <div class="form-group m-y">
                     <label for="autocomplete" class="sr-only">Your Location</label>
-                    <p>Please tell us where you live</p>
+                    <p>Please provide an address &nbsp;<a href="#" data-toggle="tooltip" title="The address is used to provide only alerts relevant to your location"><i class="fa fa-question-circle" aria-hidden="true"></i></a></p>
                     <div class="input-group m-b-md">
                         <span class="input-group-addon" id="basic-addon1"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
                         <input type="text" class="form-control input-lg" id="autocomplete" placeholder="Enter Address" aria-describedby="basic-addon1" onFocus="geolocate()">
@@ -138,7 +155,7 @@
                 </div>
 
                 <div class="form-group m-t-lg">
-                    <p>In case on emergency, how would you like to be notified? </p>
+                    <p>In case on emergency, how would you like to be notified? &nbsp;<a href="#" data-toggle="tooltip" title="If both email/phone are provided, the email will be used to confirm your account"><i class="fa fa-question-circle" aria-hidden="true"></i></a></p>
                     <label for="email-input" class="sr-only">Email</label>
                     <div class="input-group m-b-md">
                         <span class="input-group-addon" id="basic-addon2"><i class="fa fa-envelope" aria-hidden="true"></i></span>
@@ -150,10 +167,10 @@
                     <label for="phone-input" class="sr-only">SMS</label>
                     <div class="input-group m-b-md m-t-md">
                         <span class="input-group-addon" id="basic-addon3"><i class="fa fa-mobile" aria-hidden="true"></i></span>
-                        <input type="phone" class="form-control input-lg" id="phone-input" name="phone" placeholder="SMS Text (Mobile Phone)" aria-describedby="basic-addon3">
+                        <input onblur="formatPhone(this);" type="phone" class="form-control input-lg" id="phone-input" name="phone" placeholder="SMS Text (Mobile Phone)" aria-describedby="basic-addon3">
                     </div>
                 </div>
-                
+
                 <div class="form-group m-t-lg">
                     <label for="password-input" class="sr-only">Password</label>
                     <p>Please provide a password so you can manage your account and notification preferences</p>
@@ -162,7 +179,9 @@
                         <input type="password" class="form-control input-lg"id="password-input" name="password" placeholder="Password" aria-describedby="basic-addon4">
                     </div>
                 </div>
-                
+
+                <p class="disclosure">* Your information will only be used to provide you with alerts, it will not be shared with anyone.</p>
+
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary  js-next js-send">Register</button>
@@ -189,14 +208,14 @@
 
                 <div class="input-group m-b-md">
                     <label for="loginPassword" class="sr-only">Password</label>
-                    <span class="input-group-addon" id="addon-password"><i class="fa fa-unlock-alt" aria-hidden="true"></i></span>
+                    <span class="input-group-addon" id="addon-password"><i class="fa fa-key" aria-hidden="true"></i></span>
                     <input type="password" class="form-control js-password-input" placeholder="Password" aria-describedby="addon-password" name="password" id="loginPassword">
                 </div>
 
                 <div class="m-y-md">
                     <a href="index.html">Register</a> or <a href="">Recover Password</a>
                 </div>
-                
+
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary js-login">Login</button>
@@ -235,17 +254,16 @@
 </div>
 
 <!-- Bootstrap core JavaScript
-    ================================================== --> 
+    ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="js/base.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
-<script>window.jQuery || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script> 
-<script src="js/bootstrap.min.js"></script> 
-<!-- Just to make our placeholder images work. Don't actually copy the next line! --> 
-<script src="js/vendor/holder.min.js"></script> 
-<!-- IE10 viewport hack for Surface/desktop Windows 8 bug --> 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMpYPdGvyw2Hxvsg3hw_azxR8u95RgrQU&libraries=places"
-        async defer></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>
+<script src="js/bootstrap.min.js"></script>
+<!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+<script src="js/vendor/holder.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMpYPdGvyw2Hxvsg3hw_azxR8u95RgrQU&libraries=places"></script>
 <script src="js/registration.js" async defer></script>
 <script src="js/login.js" async defer></script>
 
