@@ -1,6 +1,6 @@
 # Cal-Notify
 
-Cal-Notify provides real time updates on emergencies and other events in your area, using official sources that you can trust.
+Cal-Notify provides real time updates on emergencies and other events in your area, using official sources that you can trust. Visit the website [here](http://cal-notify.symsoftsolutions.com).
 
 ## How We Built Cal-Notify
 
@@ -20,7 +20,14 @@ Here is an overview of the activities executed during each sprint.
 - Research and initial users interviews
 - Generated initial wireframes and gather users’ feedback.
 
-By the end of Sprint 0, we generated an HTML version of the application simulating the end-to-end functionality. Then we performed usability tests with users, and collected valuable feedback which was used to improve the next iteration of the prototype.
+The technical architecture and approach was defined in Sprint 0 as follows. Justification for the technologies chosen were evaluated per the USDS playbook.
+- The prototype would be deployed in the Amazon Web Services cloud.
+- The backbone of the prototype would be a ASP.NET Core, Swagger API.
+- The front-end would be developed using Bootstrap and Angular.
+- Unit tests would be conducted with xUnit.
+- Continuous integration would be performed by Jenkins.
+
+By the end of Sprint 0, we generated an HTML version of the application simulating the end-to-end functionality. Then we performed usability tests with users, and collected valuable feedback which was used to improve the next iteration of the prototype. We also had all of our continuous build processes in place, with issue tracking for bugs and usability issues identified from actual users.
 
 ### Sprint 1
 
@@ -47,13 +54,9 @@ We also created a Slack channel for quick communication, and integrated that cha
 
 ## Our User-Centered Approach.
 
-We developed our prototype by keeping this simple idea in mind, Cal-Notify is not out app, it is our user’s app. This allowed us to keep the focus in the users all the time. 
+We developed our prototype by keeping this simple idea in mind, Cal-Notify is not our app, it is our user’s app. This allowed us to keep the focus in the users all the time. 
 
 We started our research by conducting user interviews and a survey to generate concepts and understand user needs. After we collected the initial information we gathered the users again and conducted a condensed version of the Google Ventures Design Sprint. As a result of it, we generated an initial HTML prototype which was presented to the users, and refined based on that feedback. 
-
-## The Technology
-
-ToDo
 
 # The Explicit RFI Requirements
 
@@ -62,7 +65,7 @@ SymSoft Solutions assigned one person - Daniel Calzada - as the leader of the pr
 
 ## Multidisciplinary Team
 
-assembled a multidisciplinary team to deliver the prototype. We created a “war room” where team members worked side-by-side and freely collaborated across all aspects of the solution from the user experience design to the technical programming and usability testing. The team included the following labor categories / team members:
+Assembled a multidisciplinary team to deliver the prototype. We created a “war room” where team members worked side-by-side and freely collaborated across all aspects of the solution from the user experience design to the technical programming and usability testing. The team included the following labor categories / team members:
 
 1. Product Manager - Savita Farooqui
 2. Technical Architect - Abdul Farooqui
