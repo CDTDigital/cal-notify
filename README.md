@@ -5,12 +5,12 @@ Cal-Notify is an emergency notifications system.  Users can register with the sy
 [Signup on Cal-Notify Website to be notified for emergencies in your area!](http://cal-notify.symsoftsolutions.com).  
 If you wish to see the administrative interface please login with username testAdmin1@test.com and password 123testadmin
 
-## Technical Appraoch
+## Technical Approach
 
-To quickly design and develop a working prototype, we used a combination of user-centered design and agile development methods. We used Scrum as our Agile framework while we adhered to the principles of the agile manifesto for clear communication and workflow amongst the team.
+We used a user-centered design and agile, test-driven deveopment to create this prototype. We used Scrum Agile framework while we adhered to the principles of the agile manifesto for clear communication and workflow amongst the team.
 
-We developed the prototype functionality through two Sprints one-week long. By the end of each sprint we generated a potentially shippable product, which put in front of real users for getting their feedback and include that feedback in the next iteration.
-Here is an overview of the activities executed during each sprint.
+We developed the prototype functionality through two Sprints one-week long. By the end of each sprint we generated a shippable product, which put in front of real users for getting their feedback and included that feedback in the next iteration.
+Here is an overview of the activities for each sprint.
 
 ### Sprint 0
 
@@ -24,8 +24,8 @@ Here is an overview of the activities executed during each sprint.
 - Generated [initial wireframes](https://github.com/SymSoftSolutions/cal-notify/blob/master/images/symsoft-solutions-cal-notify_1-wireframes.jpg) and gather users’ feedback.
 - Identify and document [user's journey](https://github.com/SymSoftSolutions/cal-notify/blob/master/documentation/ux/user-research/cal-notify-user-journey.pdf)
 
-#### The technical architecture and approach
-Following decisions were made:
+#### Technology decisions
+Following decisions were made in Sprint 0:
 
 - Prototype would be deployed in the Amazon Web Services cloud.
 - Prototype would use ASP.NET Core, Swagger API.
@@ -62,7 +62,7 @@ We also created a Slack channel for quick communication, and integrated that cha
 
 ## User-Centered Design
 
-We designed the prototype with focus on users. We gathered information about user needs and expectations by running a survey and conducting user interviews. We then worked with the users using  condensed version of the Google Ventures Design Sprint for user experience design of the application. We created storyboards, sketches, wireframes and an interactive prototype with input from users. We tested this prototype with users and refined based on feedback. 
+We designed the prototype with focus on users. We gathered information about user needs and expectations by running a survey and conducting user interviews. We then worked with the users using condensed version of the Google Ventures Design Sprint for user experience design of the application. We created storyboards, sketches, wireframes and an interactive prototype with input from users. We tested this prototype with users and refined based on feedback. 
 
 # The RFI Requirements
 
@@ -96,7 +96,7 @@ We utilized user-centered design that included real world users throughout the d
 
 - User-driven Development. We used Iterative User-driven Development throughout the design and development process to continually test the validity of the design with actual users at each stage of the process from statement of requirements to conceptual story-boarding to interactive prototyping and completed code. We optimized the product based on how users indicated they would want to see the product function versus building it and expecting them to adapt to the user experience we ourselves envisioned. Our multi-disciplinary team brought together a variety of skills and perspectives so that user reactions to the product were propagated across all aspects of the system including the user interface, but also the business rules and the supporting API and data layers of the application. The entire team was informed by user-centered design inputs throughout the iterative development of the solution.
 
-- User Personas. Based on our user research, we created key personas that were used for mapping the user journies for conceptual and detailed design. We used these personas to generate refined versions of users with different characteristics in order to design the user experience. The users we involved in our user-centered design process possessed key elements of these personas. For example, the users included individuals who had been impacted personally by a natural disaster, and individuals whose loved ones were impacted, and individuals who had no first-hand experience were included in the studies and testing. The other persona we looked at was the administrative user who has the responsibility of creating, managing, boradcasting and tracking the emergency and non-emergency notifications.
+- User Personas. Based on our user research, we created key personas that were used for mapping the user journeys for conceptual and detailed design. We used these personas to generate refined versions of users with different characteristics in order to design the user experience. The users we involved in our user-centered design process possessed key elements of these personas. For example, the users included individuals who had been impacted personally by a natural disaster, and individuals whose loved ones were impacted, and individuals who had no first-hand experience were included in the studies and testing. The other persona we looked at was the administrative user who has the responsibility of creating, managing, boradcasting and tracking the emergency and non-emergency notifications.
 
 - Storyboarding, Use Cases and Scenarios. We used storyboarding with real world users that reflected our User Personas in order to identify specific use cases and more detailed scenarios to address in our prototype. We focused storyboarding sessions on generating design concepts that would resolve specific use cases and scenarios that we jointly identified with pool of users. These included “happy path” best case scenarios and also more problematic scenarios such as users who for one reason or another wanted to opt-out of receiving alerts. Our primary focus for the prototype due mainly to time constraints was on high likelihood “typical” scenarios for the User Personas we created. 	
 
