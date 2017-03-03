@@ -1,0 +1,1 @@
+curl -X GET "http://api-cal-notify.symsoftsolutions.com/v1/notification/pull"
