@@ -23,7 +23,9 @@ Here is an overview of the activities executed during each sprint.
 The technical architecture and approach was defined in Sprint 0 as follows. Justification for the technologies chosen were evaluated per the USDS playbook.
 - The prototype would be deployed in the Amazon Web Services cloud.
 - The backbone of the prototype would be a ASP.NET Core, Swagger API.
+- The database used would be PostgreSQL/PostGIS (to support geospatial queries).
 - The front-end would be developed using Bootstrap and Angular.
+- Application flow would be from the front-end, to the Swagger API, and then to the database. See detailed diagram [here - TODO](http://).
 - Unit tests would be conducted with xUnit.
 - Continuous integration would be performed by Jenkins.
 
