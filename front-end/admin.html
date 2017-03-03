@@ -231,7 +231,7 @@
                     <div class="form-group">
                         <label for="alertCategory">Category</label>
                         <select class="form-control" name="category" id="alertCategory" ng-model="currAlert.category" required>
-                            <option ng-repeat="category in categories" value="{{category}}">{{category}}</option>
+                            <option ng-repeat="category in newCategories" value="{{category}}">{{category}}</option>
                         </select>
                     </div>
                     
@@ -239,7 +239,7 @@
                     <div class="form-group">
                         <label for="alertSource">Source</label>
                         <select class="form-control" name="source" id="alertSource" ng-model="currAlert.source" required>
-                            <option ng-repeat="source in sources" value="{{source}}">{{source}}</option>
+                            <option ng-repeat="source in newSources" value="{{source}}">{{source}}</option>
                         </select>
                     </div>                
                     

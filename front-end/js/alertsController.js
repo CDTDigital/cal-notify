@@ -74,6 +74,8 @@ app.controller('alertsCtrl', function($scope, $filter, $sce, $timeout, $http) {
     //-------------------------------------- I N I T  V A R S -------------------------------------------
     //---------------------------------------------------------------------------------------------------
 
+    $scope.newCategories = ['Fire', 'Flood', 'Weather', 'Tsunami', 'Earthquake'];
+    $scope.newSources = ['NOAA', 'USGS', 'Manual entry'];
     $scope.categories = ['Any', 'Fire', 'Flood', 'Weather', 'Tsunami', 'Earthquake'];
     $scope.sources = ['Any', 'NOAA', 'USGS', 'Manual entry'];
     $scope.severities = ['Emergency', 'NonEmergency'];
