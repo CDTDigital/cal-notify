@@ -42,7 +42,16 @@ namespace CalNotifyApi.Events
                         {
                             Log.Information("Sending Email Validation to {user}", tempUser);
 
-                            await validation.SendValidationToEmail(tempUser);
+                            try
+                            {
+                                await validation.SendValidationToEmail(tempUser);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                               throw new ProcessEventException("Could not send verification to that email. Please use a different email address");
+                            }
+                          
                             memoryCache.SetForChallenge(tempUser);
 
                         }
@@ -50,7 +59,16 @@ namespace CalNotifyApi.Events
                         {
                             Log.Information("Sending SMS Validation to {user}", tempUser);
 
-                            await validation.SendValidationToSms(tempUser);
+                            try
+                            {
+                                await validation.SendValidationToSms(tempUser);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                                throw new ProcessEventException("Could not send a verification message to that phone number. Please use a number able to receive texts.");
+                            }
+                         
                             memoryCache.SetForChallenge(tempUser);
 
 

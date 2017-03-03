@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using CalNotifyApi.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.PlatformAbstractions;
@@ -64,6 +65,12 @@ namespace CalNotifyApi.Utils
         public static BusinessDbContext GetBusinessDbContext(this ValidationContext validationContext)
         {
             return (BusinessDbContext)validationContext.GetService(typeof(BusinessDbContext));
+        }
+
+        public static bool IsPhone(this string phone)
+        {
+            var rgx = new Regex(@"^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$");
+            return rgx.IsMatch(phone);
         }
 
 

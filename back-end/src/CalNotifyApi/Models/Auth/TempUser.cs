@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using CalNotifyApi.Models.Addresses;
 using CalNotifyApi.Models.Interfaces;
+using CalNotifyApi.Utils;
 using Newtonsoft.Json;
 
 namespace CalNotifyApi.Models.Auth
@@ -31,7 +32,7 @@ namespace CalNotifyApi.Models.Auth
             PhoneNumber = phone;
         }
 
-        [DataMember(Name = "name")]
+        [DataMember(Name = "name"),Required]
         public virtual string Name { get; set; }
 
         [DataMember(Name = "password"),Required, MaxLength(80)]
@@ -73,7 +74,10 @@ namespace CalNotifyApi.Models.Auth
                 yield return new ValidationResult("Please provide an address.");
             }
 
-        
+            if (!string.IsNullOrEmpty(PhoneNumber) && !PhoneNumber.IsPhone())
+            {
+                yield return new ValidationResult("Please provide a valid phone number.");
+            }
 
         }
 
@@ -106,7 +110,11 @@ namespace CalNotifyApi.Models.Auth
                 yield return new ValidationResult("Need to provide at least an Email or Phone number.");
             }
 
-    
+
+            if (!string.IsNullOrEmpty(PhoneNumber) && !PhoneNumber.IsPhone())
+            {
+                yield return new ValidationResult("Please provide a valid phone number.");
+            }
 
         }
     }

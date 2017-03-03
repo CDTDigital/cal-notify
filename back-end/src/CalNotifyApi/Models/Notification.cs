@@ -14,7 +14,7 @@ namespace CalNotifyApi.Models
     {
 
         [Key]
-        [DataMember(Name = "id")]
+        [DataMember(Name = "id"), MaxLength(50)]
         public long? Id { get; set; }
 
         [DataMember(Name = "title"),Required]
@@ -28,12 +28,11 @@ namespace CalNotifyApi.Models
 
         [DataMember(Name="affected_area")]
         public PostgisPolygon AffectedArea { get; set; }
-
-    
+   
         [DataMember(Name = "category"), Required]
         public Category Category { get; set; }
 
-        [DataMember(Name = "source"), Required]
+        [DataMember(Name = "source"), Required, MaxLength(50)]
         public string Source { get; set; }
 
         [DataMember(Name = "source_id")]
