@@ -86,11 +86,17 @@ namespace CalNotifyApi.Events
 
                     DateTime created;
                     var didGetDate = DateTime.TryParse(attr.ObserveDateTime, out created);
-
+                    string detailStr = "";
+                    if(didFloodParse && observed > flood) {
+                        detailStr = "Water level has passed the flooding stage. \n" + attr.Url;
+                    } else {
+                        detailStr = "Water level is at " + observed + ", action required \n" + attr.Url;
+                    }
+                    
                     var noti = new Notification()
                     {
                         Title = attr.Location + ", "+  attr.Waterbody,
-                        Details = attr.Url,
+                        Details =  detailStr,
                         Location = new PostgisPoint(attr.Longititude, attr.Latitude) { SRID = Constants.SRID },
                         Category = Category.Flood,
                         Source = "NOAA",
@@ -143,7 +149,7 @@ namespace CalNotifyApi.Events
                     var didGetDate = DateTime.TryParse(attr.ObserveDateTime, out created);
                     var noti = new Notification()
                     {
-                        Title = attr.Magnitude + " Earthquake",
+                        Title = attr.Magnitude + " magnitude earthquake",
                         Details = attr.Region,
                         Location = new PostgisPoint(attr.Latitude, attr.Longititude) { SRID = Constants.SRID },
                         Category = Category.Earthquake,
