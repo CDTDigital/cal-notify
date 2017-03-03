@@ -1,6 +1,6 @@
 # Cal-Notify
 
-Cal-Notify is an emergency notifications system.  It provides real time updates for emergencies and other events in their area to its subscribers over email or phone text messages.  Cal-Notify gets the information about potential emergencies from many open data sources.  Administrators of the system can edit and broadcast the notifications.  Give the system a try [here](http://cal-notify.symsoftsolutions.com).  If you wish to see the administrative interface please login with username testAdmin1@test.com and password 123testadmin.
+Cal-Notify is an emergency notifications system.  It provides real time updates for emergencies and other events in their area to its subscribers over email or phone text messages.  Cal-Notify gets the information about potential emergencies from many open data sources.  Administrators of the system can edit and broadcast the notifications.  Give the system a try [here](http://cal-notify.symsoftsolutions.com).  If you wish to see the administrative interface please login with username testAdmin1@test.com and password 123testadmin
 
 ## How we built Cal-Notify
 
