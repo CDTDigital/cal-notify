@@ -134,8 +134,10 @@ in addition to our user-driven development process, we conducted usability testi
 To-Do: Provide the link to the Usability test pages (Mark?)
 
 ## Use an Iterative Approach, Where Feedback Informed Subsequent Work or Versions of the Prototype
+We developed Cal-Notify functionality through two Sprints one-week long each. During each iteration, we followed the [U.S. Digital Services Playbook](https://playbook.cio.gov) and by the end of each Sprint, we released an end-to-end solution which solved our user’s key needs and we conducted multiple usability test with real users. From the collected feedback we improved the following iterations of the prototype.
 
-To-Do: Daniel to add this
+We used Scrum as our framework while adhered to the principles of the agile manifesto, and we rigorously executed all the Scrum Activities. We also used multiple agile tools to facilitate collaboration, for example the integration of GitHub, Jira, Jenkins, AWS and Slack during the development and testing processes. 
+
 
 ## Create a Prototype that works on multiple devices, and presents a responsive design
 We used the open source framework Bootstrap for the prototype sites. Bootstrap is a mobile first framework that provides user interface elements that adapt their presentation for a myriad of devices and viewport sizes. 
